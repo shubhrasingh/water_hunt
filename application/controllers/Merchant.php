@@ -88,6 +88,22 @@ class Merchant extends CI_Controller {
 					}
 					
 				break;
+
+				case "gallery":
+				
+					$rowid=$_GET['rowid'];	
+
+					$getData=$this->Admin_model->getWhere('gallery',array('id' => $rowid));
+					$file_name=$getData[0]->image;
+
+					$del=$this->Admin_model->deleteData('gallery',array('id' => $rowid));
+
+					if($file_name!="")
+					{
+						unlink('assets/front/uploads/gallery/'.$file_name);
+					}
+					
+				break;
 			}
 		}
 		
@@ -191,6 +207,8 @@ class Merchant extends CI_Controller {
 			 $name=$_REQUEST['name'];
 			 $mobile_number=$_REQUEST['mobile_number'];
 			 $waterpark_address=$_REQUEST['waterpark_address'];
+			 $waterpark_city=$_REQUEST['waterpark_city'];
+			 $waterpark_state=$_REQUEST['waterpark_state'];
 			 $alternate_mobile_number=$_REQUEST['alternate_mobile_number'];
 			 $entry_fee_per_person=$_REQUEST['entry_fee_per_person'];
 			 $description=nl2br($_REQUEST['description']); 
@@ -198,9 +216,9 @@ class Merchant extends CI_Controller {
 
 			 $date=date('Y-m-d H:i:s');
 			 
-			 if((!empty($waterpark_name)) && (!empty($name)) && (!empty($mobile_number)) && (!empty($waterpark_address)) && (!empty($entry_fee_per_person)) && (!empty($description)))
+			 if((!empty($waterpark_name)) && (!empty($name)) && (!empty($mobile_number)) && (!empty($waterpark_address)) && (!empty($waterpark_city)) && (!empty($waterpark_state)) && (!empty($entry_fee_per_person)) && (!empty($description)))
 			 {
-				  $upData=array('waterpark_name' => $waterpark_name,'name' => $name,'mobile_number' => $mobile_number,'waterpark_address' => $waterpark_address,'entry_fee_per_person' => $entry_fee_per_person,'description' => $description,'alternate_mobile_number' => $alternate_mobile_number,'updated_on' => $date);
+				  $upData=array('waterpark_name' => $waterpark_name,'name' => $name,'mobile_number' => $mobile_number,'waterpark_address' => $waterpark_address,'waterpark_city' => $waterpark_city,'waterpark_state' => $waterpark_state,'entry_fee_per_person' => $entry_fee_per_person,'description' => $description,'alternate_mobile_number' => $alternate_mobile_number,'updated_on' => $date);
 
 			     $merchantId=$this->session->userdata('WhUserLoggedinId');
 
@@ -628,6 +646,163 @@ class Merchant extends CI_Controller {
 		  }
 
 		  $this->load->view('front/merchant/edit-event-gallery',$data);
+		}
+
+		public function myGallery()
+		{
+		  if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+          
+          $merchantId=$this->session->userdata('WhUserLoggedinId');
+		  $data['getData']=$this->Admin_model->getWhere('gallery',array('merchant_id' => $merchantId,'event_id' => '0'));
+
+		  $this->load->view('front/merchant/gallery',$data);
+		}
+
+		public function addGallery()
+		{
+		  if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+		  
+		  if(isset($_REQUEST['submit']))
+		  {
+             $title=$_REQUEST['title'];
+             $description=nl2br($_REQUEST['description']); 
+
+			
+			 $date=date('Y-m-d H:i:s');
+			 
+			 if((!empty($title)) && (!empty($description)) && (!empty($_FILES['file']['name'])))
+			 {
+
+					$config['upload_path']          = './assets/front/uploads/gallery/';
+					$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
+					$config['encrypt_name']         = TRUE;
+
+
+					$this->load->library('upload', $config);
+
+					if ( ! $this->upload->do_upload('file'))
+					{
+							$error = $this->upload->display_errors();
+							$this->session->set_flashdata('error',$error);
+							redirect('merchant/add-gallery');
+					}
+					else
+					{
+							$data = $this->upload->data();
+							$file_name=$data['file_name'];
+							
+							$merchantId=$this->session->userdata('WhUserLoggedinId');
+
+							$inData=array('merchant_id' => $merchantId,'event_id' => '0','title' => $title,'description' => $description,'image' => $file_name,'added_on' => $date);
+							$this->Admin_model->insertData('gallery',$inData);
+							$this->session->set_flashdata('success','Gallery Added Successfully');
+							redirect('merchant/gallery/');
+							
+					}	
+			 }
+			 else
+			 {
+				$this->session->set_flashdata('error','All fields are required');
+			    redirect('merchant/add-gallery/'); 
+			 }
+		  }
+
+		  $this->load->view('front/merchant/add-gallery',$data);
+		}
+
+
+         public function editGallery($rowId)
+		{
+		  if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+		  
+          
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+		  
+		  $condition=array('id' => $rowId);
+		  $data['getData']=$this->Admin_model->getWhere('gallery',$condition);
+		  
+		  
+		  if(isset($_REQUEST['update']))
+		  {
+			     $rowid=$_REQUEST['rowid'];  
+			     $title=$_REQUEST['title'];
+	             $description=nl2br($_REQUEST['description']); 
+                 
+				 $date=date('Y-m-d H:i:s');
+				 
+				 if((!empty($title)) && (!empty($description)))
+				 {
+                     $upData=array('title' => $title,'description' => $description,'updated_on' => $date);
+					 $this->Admin_model->updateData('gallery',$upData,$rowid);
+					 
+					 if(!empty($_FILES['file']['name']))
+					 {
+						$config['upload_path']          = './assets/front/uploads/gallery/';
+						$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
+						$config['encrypt_name']         = TRUE;
+
+
+						$this->load->library('upload', $config);
+
+						if ( ! $this->upload->do_upload('file'))
+						{
+								$error = $this->upload->display_errors();
+								$this->session->set_flashdata('error',$error);
+								redirect('merchant/edit-gallery/'.$rowid);
+						}
+						else
+						{
+								$data = $this->upload->data();
+								$file_name=$data['file_name'];
+								
+								$getoldData=$this->Admin_model->getWhere('gallery',array('id' => $rowid));
+	                            $oldImg=$getoldData[0]->image;
+	                            
+								$upData=array('image' => $file_name,'updated_on' => $date);
+								$this->Admin_model->updateData('gallery',$upData,$rowid);
+
+								if($oldImg!="")
+								{
+									unlink('assets/front/uploads/gallery/'.$oldImg);
+								}
+
+								$this->session->set_flashdata('success','Gallery Updated Successfully');
+								redirect('merchant/gallery/');
+								
+						}
+					}
+					else
+					{
+					   $this->session->set_flashdata('success','Gallery Updated Successfully');
+					   redirect('merchant/gallery/');
+					}	
+                 }
+                 else
+                 {
+                 	$this->session->set_flashdata('error','All fields are required');
+			        redirect('merchant/edit-gallery/'.$rowid); 
+                 }
+
+                 
+		  }
+
+		  $this->load->view('front/merchant/edit-gallery',$data);
 		}
 
 

@@ -1,5 +1,5 @@
   <header class="header  header-2">
-       <div class="header-top-1" style="background: #bed00d;">
+       <div class="header-top-1" style="background: #25a9e0;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4 col-sm-4 hidden-xs">
@@ -40,7 +40,7 @@
                                                     if($userType=='merchant')
                                                     {
                                                     ?>
-                                                      <li><a href="#">My Gallery</a></li>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/gallery">My Gallery</a></li>
                                                       <li><a href="<?php echo base_url(); ?>merchant/events">Events</a></li>
                                                     <?php
                                                     }
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="header-search">
                                     <div class="search-icon">
-                                        <a href="#"><i class="fa fa-search"></i></a>
+                                        <a href="#"><i class="fa fa-search" style="color: white;"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                 <p> <?php echo $siteDetails['companyData'][0]->company_phone; ?></p>
                             </div>
                             <div class="add-property">
-                                <a href="#" style="background:#bed00d none repeat scroll 0 0">ADD WATER PARK</a>
+                                <a href="#" style="background:#f6921e none repeat scroll 0 0">ADD WATER PARK</a>
                             </div>
                         </div>
                     </div>

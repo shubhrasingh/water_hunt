@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title> <?php echo $userDetails[0]->name; ?> - Water Hunt </title>
+    <title> <?php echo $userDetails[0]->name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?> </title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
@@ -93,7 +93,7 @@
                                     <input type="text" value="<?php echo $getData[0]->title; ?>" name="title" placeholder="Title" required>
                                     <textarea name="description" class="mb0" required placeholder="Description"><?php echo strip_tags($getData[0]->description); ?></textarea>
 
-                                    <input type="file" name="file" required style="margin-top:10px">
+                                    <input type="file" name="file" style="margin-top:10px">
                                     
                                     <img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $getData[0]->image; ?>" style="width:100px;">
 

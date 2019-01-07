@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title> <?php echo $userDetails[0]->name; ?> - Water Hunt </title>
+    <title> <?php echo $userDetails[0]->name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?> </title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
@@ -203,7 +203,7 @@
                             <div class="contact-details">
                                 <div class="contact-title">
                                     <h5>Contact Details</h5>
-                                    <p><i class="fa fa-home"></i> <?php echo $waterpark_address; ?> </p>
+                                    <p><i class="fa fa-home"></i> <?php echo $waterpark_address; ?> ,<?php echo $userDetails[0]->waterpark_city; ?>,<?php echo $userDetails[0]->waterpark_state; ?> </p>
                                 </div>
                                 <div class="contact-list">
                                     <ul>
@@ -262,6 +262,16 @@
                                             <div class="input-filed">
                                                 <label>Water park Address : </label>
                                                 <input type="text" placeholder="Water park address" name="waterpark_address" required value="<?php echo $userDetails[0]->waterpark_address; ?>">
+                                            </div>
+                                        </div>
+                                         <div class="form-top">
+                                            <div class="input-filed">
+                                                <label>City : </label>
+                                                <input type="text" placeholder="Water park city" value="<?php echo $userDetails[0]->waterpark_city; ?>" name="waterpark_city" required  >
+                                            </div>
+                                            <div class="input-filed">
+                                                <label>State : </label>
+                                                <input type="text" placeholder="Water park State" name="waterpark_state" required value="<?php echo $userDetails[0]->waterpark_state; ?>">
                                             </div>
                                         </div>
                                         <div class="form-top">

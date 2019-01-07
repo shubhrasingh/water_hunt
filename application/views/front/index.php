@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Water Hunt | Home</title>
+    <title><?php echo $siteDetails['companyData']['0']->company_name; ?> | Home</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
@@ -213,78 +213,32 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="sale">
                             <div class="property-list">
+                                <?php
+                                foreach($waterParks as $parkRw)
+                                {
+                                ?>
                                 <div class="col-md-4">
                                     <div class="single-property">
                                         <div class="property-img">
                                             <a href="#">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-1.jpg" alt="">
+                                                <img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $parkRw->waterpark_logo; ?>" alt="<?php echo $parkRw->waterpark_name; ?>" style="height: 250px;">
                                             </a>
                                         </div>
                                         <div class="property-desc">
                                             <div class="property-desc-top">
-                                                <h6><a href="#">Anandi water Park</a></h6>
-                                                <h4 class="price">₹ 700 PP</h4>
+                                                <h6><a href="#"><?php echo $parkRw->waterpark_name; ?></a></h6>
+                                                <h4 class="price">₹ <?php echo $parkRw->entry_fee_per_person; ?> / person</h4>
                                                 <div class="property-location">
-                                                    <p><img src="<?php echo base_url(); ?>assets/front/images/icon-5.png" alt=""> Faizabad Road, Lucknow, UP</p>
+                                                    <p><img src="<?php echo base_url(); ?>assets/front/images/icon-5.png" alt=""> <?php echo $parkRw->waterpark_city; ?> , <?php echo $parkRw->waterpark_state; ?></p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="single-property">
-                                        <div class="property-img">
-                                            <a href="#">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-2.jpg" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="property-desc">
-                                            <div class="property-desc-top">
-                                                <h6><a href="#">Nilansh Theme Park</a></h6>
-                                                <h4 class="price">₹ 900 PP</h4>
-                                                <div class="property-location">
-                                                    <p><img src="<?php echo base_url(); ?>assets/front/images/icon-5.png" alt="">Itaunja Bridge, UP</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="single-property">
-                                            <div class="property-img">
-                                                <a href="#">
-                                                    <img src="<?php echo base_url(); ?>assets/front/images/water-3.jpg" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="property-desc">
-                                                <div class="property-desc-top">
-                                                    <h6><a href="#">Dreamworld Park</a></h6>
-                                                    <h4 class="price">₹ 700 PP</h4>
-                                                    <div class="property-location">
-                                                        <p><img src="<?php echo base_url(); ?>assets/front/images/icon-5.png" alt=""> Lucknow, Uttar Pradesh</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="single-property">
-                                        <div class="property-img">
-                                            <a href="#">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-4.jpg" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="property-desc">
-                                            <div class="property-desc-top">
-                                                <h6><a href="#">Amrapali water Park</a></h6>
-                                                <h4 class="price">₹ 700 PP</h4>
-                                                <div class="property-location">
-                                                    <p><img src="<?php echo base_url(); ?>assets/front/images/icon-5.png" alt=""> Malihabad, UP</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                <?php
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -312,7 +266,7 @@
                                         </div>
                                         <div class="services-desc">
                                             <h6>Low Cost</h6>
-                                            <p>Low cost provides yur best for <br> elit, sed do eiusmod tempe</p>
+                                            <p>Get yourself registered at very  <br> low and earn more.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -323,7 +277,7 @@
                                         </div>
                                         <div class="services-desc">
                                             <h6>Good Marketing </h6>
-                                            <p>Low cost provides yur best for <br> elit, sed do eiusmod tempe</p>
+                                            <p>Registering yourself with us<br>will give you good marketing.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -334,7 +288,7 @@
                                         </div>
                                         <div class="services-desc">
                                             <h6>Easy to Find</h6>
-                                            <p>Low cost provides yur best for <br> elit, sed do eiusmod tempe</p>
+                                            <p>Visit us to find your water<br>  park easily.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -345,7 +299,7 @@
                                         </div>
                                         <div class="services-desc">
                                             <h6>Reliable</h6>
-                                            <p>Low cost provides yur best for <br> elit, sed do eiusmod tempe</p>
+                                            <p>Reliable in both,listing <br>  your park and booking ticket. </p>
                                         </div>
                                     </div>
                                 </div>
@@ -367,44 +321,45 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="section-title text-center">
                             <h3>OUR <span>SERVICES</span></h3>
-                            <p>Haven  the best theme for  elit, sed do eiusmod tempor dolor sit amet, conse ctetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et lorna aliquatd minimam, quis nostrud exercitation.</p>
+                            <p>We have multiple services.You can list your water park to get more and more people in your park.You can also buy online tickets for any water park.</p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4 col-sm-4 col-sm-12">
-                        <div class="single-services wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">
+                        <div class="single-services wow fadeInUp text-center" data-wow-duration="1.3s" data-wow-delay="0.2s">
                             <div class="single-services-img">
                                 <img src="<?php echo base_url(); ?>assets/front/images/service-3.png" alt="">
                             </div>
                             <div class="single-services-desc">
                                 <h5>Online Ticket Booking</h5>
-                                <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
+                                <p>You can book tickets for any water park.Fill your detail and pay the amount to get the tickets.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-4 col-sm-4 col-sm-12">
+                        <div class="single-services wow fadeInUp text-center" data-wow-duration="1.5s" data-wow-delay="0.4s">
+                            <div class="single-services-img">
+                                <img src="<?php echo base_url(); ?>assets/front/images/service-1.png" alt="">
+                            </div>
+                            <div class="single-services-desc">
+                                <h5>Water Park Listing</h5>
+                                <p>List your water park to get more and more people.People can buy tickets for your water park online..</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-4 col-sm-12">
-                        <div class="single-services wow fadeInUp" data-wow-duration="1.4s" data-wow-delay="0.2s">
+                        <div class="single-services wow fadeInUp text-center" data-wow-duration="1.4s" data-wow-delay="0.2s">
                             <div class="single-services-img">
                                 <img src="<?php echo base_url(); ?>assets/front/images/service-2.png" alt="">
                             </div>
                             <div class="single-services-desc">
                                 <h5>Theme Parties</h5>
-                                <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
+                                <p>List your events and parties which are going to be organised in your water park.People can buy tickets for it online.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-4 col-sm-12">
-                        <div class="single-services wow fadeInUp" data-wow-duration="1.5s" data-wow-delay="0.4s">
-                            <div class="single-services-img">
-                                <img src="<?php echo base_url(); ?>assets/front/images/service-1.png" alt="">
-                            </div>
-                            <div class="single-services-desc">
-                                <h5>Resort Booking</h5>
-                                <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>
@@ -415,96 +370,45 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="section-title text-center">
                             <h3>OUR <span>EVENTS</span></h3>
-                            <p>Water Hunt  the best theme for  elit, sed do eiusmod tempor dolor sit amet, conse ctetur adipiscing elit, sed do eiusmod tempor.</p>
+                            <p>These events provide Water hunt members with the opportunity to connect with their fellow water leisure professionals, either in person or through online meetings. </p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
 				<div class="property_list">
                                 <div class="single_property_list">
+                                    <?php
+                                    foreach($recentEvents as $rwEv)
+                                    {
+                                        $eventId=$rwEv->id;
+                                        $merchantId=$rwEv->merchant_id;
+                                        $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+                                        $eventName=strtolower($rwEv->name);
+
+                                        $eventName = preg_replace('/\s+/', '-', $eventName);
+                                        $randPrefix=rand(100,999);
+                                        $randSubfix=rand(100,999);
+                                        $urlId=$randPrefix.$eventId.$randSubfix;
+                                        $urlKey=$eventName.'-'.$urlId;
+                                    ?>
                                     <div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div class="single_property mb-30">
-                                            <div class="single_propert_img">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-4.jpg" alt="">
-                                            </div>
-                                            <div class="single_property-text">
-                                                <div class="single_property_inner">
-                                                    <h4><a href="#">Pool Dance <br> <small style="font-size: 12px;color: white;">Anandi Water Park</small></a></h4>
-                                                    <p>25th Jan</p>
+                                         <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>">
+                                            <div class="single_property mb-30">
+                                                <div class="single_propert_img">
+                                                    <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><img src="<?php echo base_url(); ?>assets/front/images/water-4.jpg" alt=""></a>
+                                                </div>
+                                                <div class="single_property-text">
+                                                    <div class="single_property_inner">
+                                                        <h4><a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><?php echo $rwEv->name; ?> <br> <small style="font-size: 12px;color: white;"><?php echo $getMerchant[0]->waterpark_name; ?></small></a></h4>
+                                                        <p><?php echo date('j F,Y',strtotime($rwEv->start_date)); ?></p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                         </a>
                                     </div>
-									
-									<div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div class="single_property mb-30">
-                                            <div class="single_propert_img">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-3.jpg" alt="">
-                                            </div>
-                                            <div class="single_property-text">
-                                                <div class="single_property_inner">
-                                                    <h4><a href="#">Retro Pool Party <br> <small style="font-size: 12px;color: white;">Nilansh Water Park</small></a></h4>
-                                                    <p>14th Feb</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-									
-									<div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div class="single_property mb-30">
-                                            <div class="single_propert_img">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-2.jpg" alt="">
-                                            </div>
-                                            <div class="single_property-text">
-                                                <div class="single_property_inner">
-                                                    <h4><a href="#">Mountain Winner <br> <small style="font-size: 12px;color: white;">Amarpali Water Park</small></a></h4>
-                                                    <p>10th Jan</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-									
-									<div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div class="single_property mb-30">
-                                            <div class="single_propert_img">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-4.jpg" alt="">
-                                            </div>
-                                            <div class="single_property-text">
-                                                <div class="single_property_inner">
-                                                    <h4><a href="#">Blue Theme Party <br> <small style="font-size: 12px;color: white;">Anandi Water Park</small></a></h4>
-                                                    <p>31st Jan</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-									
-									<div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div class="single_property mb-30">
-                                            <div class="single_propert_img">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-2.jpg" alt="">
-                                            </div>
-                                            <div class="single_property-text">
-                                                <div class="single_property_inner">
-                                                    <h4><a href="#">Playground Party <br> <small style="font-size: 12px;color: white;">Amarpali Water Park</small></a></h4>
-                                                    <p>25th Jan</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-									
-									<div class="col-md-4 col-sm-4 col-xs-12">
-                                        <div class="single_property mb-30">
-                                            <div class="single_propert_img">
-                                                <img src="<?php echo base_url(); ?>assets/front/images/water-3.jpg" alt="">
-                                            </div>
-                                            <div class="single_property-text">
-                                                <div class="single_property_inner">
-                                                    <h4><a href="#">Kitchen Master <br> <small style="font-size: 12px;color: white;">Anandi Water Park</small></a></h4>
-                                                    <p>25 March</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+									<?php
+                                     }
+                                    ?>
                                  
                                 </div>
                             </div>
@@ -695,83 +599,47 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="section-title text-center">
                             <h3>UPCOMING <span>EVENTS</span></h3>
-                            <p>Water hunt  the best theme for  elit, sed do eiusmod tempor dolor sit amet, conse ctetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et lorna aliquatd minimam, quis nostrud exercitation.</p>
+                            <p>Preview the following list of Water hunt Events. These events provide Water hunt members with the opportunity to connect with their fellow water leisure professionals, either in person or through online meetings.  To learn more about an upcoming event, click the event titles in blue</p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
+
+                    <?php
+                    foreach($upcomingEvents as $upr)
+                    {
+                        $startDate=$upr->start_date;
+                        $day=date('j',strtotime($startDate));
+                        $month=date('M',strtotime($startDate));
+                    ?>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="single-blog wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1s">
                             <div class="blog-thubmnail">
                                 <a href="#">
-                                    <img src="<?php echo base_url(); ?>assets/front/images/water-1.jpg" alt="">
+                                    <img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $upr->image; ?>" alt="">
                                 </a>
                                 <div class="blog-post">
                                     <span class="post-day">
-                                        20
+                                        <?php echo $day; ?>
                                     </span>
                                     <span class="post-month">
-                                        March
+                                        <?php echo $month; ?>
                                     </span>
                                 </div>
                             </div>
                             <div class="blog-desc">
-                                <h6><a href="#">Anandi water park event</a></h6>
-								<p class="post-content">Have  the best enjoyment with family and freinds on the event of our park.We have many interesting games for children and other activities for their parents also.</p>
+                                <h6><a href="#"><?php echo $upr->name; ?></a></h6>
+								<p class="post-content"><?php echo substr($upr->description,0,250); ?>...</p>
 								<div class="bolg-continue">
                                     <a href="#">Continure Reading  &gt;</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="single-blog wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1s">
-                            <div class="blog-thubmnail">
-                                <a href="#">
-                                    <img src="<?php echo base_url(); ?>assets/front/images/water-2.jpg" alt="">
-                                </a>
-                                <div class="blog-post">
-                                    <span class="post-day">
-                                        20
-                                    </span>
-                                    <span class="post-month">
-                                        March
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="blog-desc">
-                                <h6><a href="#">Anandi water park event</a></h6>
-								<p class="post-content">Have  the best enjoyment with family and freinds on the event of our park.We have many interesting games for children and other activities for their parents also.</p>
-								<div class="bolg-continue">
-                                    <a href="#">Continure Reading  &gt;</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="single-blog wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1s">
-                            <div class="blog-thubmnail">
-                                <a href="#">
-                                    <img src="<?php echo base_url(); ?>assets/front/images/water-1.jpg" alt="">
-                                </a>
-                                <div class="blog-post">
-                                    <span class="post-day">
-                                        20
-                                    </span>
-                                    <span class="post-month">
-                                        March
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="blog-desc">
-                                <h6><a href="#">Anandi water park event</a></h6>
-								<p class="post-content">Have  the best enjoyment with family and freinds on the event of our park.We have many interesting games for children and other activities for their parents also.</p>
-								<div class="bolg-continue">
-                                    <a href="#">Continure Reading  &gt;</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    <?php
+                      }
+                    ?>
                 </div>
             </div>
         </div>

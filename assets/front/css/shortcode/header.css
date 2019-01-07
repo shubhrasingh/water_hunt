@@ -5,7 +5,7 @@ NOTE: This is Header style file. All Header related style included in this file.
 
 --------------------------------------*/
 .header-top {
-  background: #00a1ff none repeat scroll 0 0;
+  background: #262261 none repeat scroll 0 0;
   position: relative;
 }
 .header-menu ul li {
@@ -88,7 +88,7 @@ NOTE: This is Header style file. All Header related style included in this file.
     Header top bar css here
 --------------*/
 .header-top-1 .haven-call > p {
-  color: #004295;
+  color: #ffffff;
   font-size: 14px;
 }
 .header-top-1 .haven-call {
@@ -160,7 +160,7 @@ NOTE: This is Header style file. All Header related style included in this file.
   display: inline-block;
   font-size: 12px;
   font-weight: 400;
-  color: #303030;
+  color: #ffffff;
 }
 .header-1-top-inner {
     text-align: right;
@@ -386,7 +386,7 @@ NOTE: This is Header style file. All Header related style included in this file.
 
 .logo img {
     margin-top: 2px;
-    width: 97px;
+    width: 100%;
 }
 
 

@@ -44,7 +44,37 @@ class Website extends CI_Controller {
 	{
 		$data['siteDetails']=$this->siteDetails();
 		$data['userDetails']=$this->userDetails();
+
+        $data['waterParks']=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => '1'),'6','0','id','DESC');
+
+		$data['recentEvents']=$this->Admin_model->getwithLimitOrderBy('merchants_events',array('status' => '1'),'6','0','id','DESC');
 		
+		$date=date('Y-m-d');
+		$tbl=$this->db->dbprefix.'merchants_events';
+		$data['upcomingEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE `status`='1' AND (`start_date` > '$date') ORDER BY `start_date` ASC LIMIT 0,3");
+
 		$this->load->view('front/index',$data);
+	}
+
+	public function eventDetail($eventUrl)
+	{
+        $data['siteDetails']=$this->siteDetails();
+		$data['userDetails']=$this->userDetails();
+        
+        $exUrl=explode('-',$eventUrl);
+        $endUrl=end($exUrl);
+		$endUrl=substr($endUrl,3);
+		$eventId=substr($endUrl,0,-3);
+
+		$data['getData']=$this->Admin_model->getWhere('merchants_events',array('id' => $eventId));
+        $merchantId=$data['getData'][0]->merchant_id;
+
+        $data['geteventGallery']=$this->Admin_model->getWhere('gallery',array('event_id' => $eventId));
+
+        $data['getMerchant']=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+        
+        $data['geteventReview']=$this->Admin_model->getWhere('customer_review',array('event_id' => $eventId));
+
+		$this->load->view('front/event-detail',$data);
 	}
 }

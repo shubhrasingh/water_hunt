@@ -1,3 +1,17 @@
+.single-services
+{
+    border: 1px solid #00aeff;
+    padding: 5%;
+}
+.property-desc-top
+{
+    padding: 20px 10px 15px;
+}
+.property-desc-top h4.price
+{
+    font-size: 16px;
+    right: 10px;
+}
 .table>thead>tr>th
 {
     font-weight: bold;
@@ -26,7 +40,7 @@
 .menuName:after {
     content: '';
     border: 5px solid transparent;
-    border-top: 5px solid #343030;
+    border-top: 5px solid #ffffff;
     margin-left: 0px;
     margin-bottom: 0px;
     display: inline-block;
@@ -105,6 +119,60 @@
 {
 	padding-top:5%;
 }
+
+.pb10
+{
+    padding-bottom:10%;
+}
+
+.merchantDIv
+{
+    position: absolute;
+    width: 100%;
+    top: 65%;
+}
+
+.merchantLogo
+{
+  width: 120px;
+  float: left;
+}
+
+.merchantLogo img
+{
+   width:100%;
+   border-radius:50%
+}
+
+.merchantDetail
+{
+    float: left;
+    margin-bottom: 0px;
+    margin-left: 5%;
+    padding-bottom: 0px;
+    padding-top: 10px;
+}
+
+.merchantDetail h5
+{
+    color: white;
+}
+
+.merchantDetail p
+{
+    color: white;
+    margin-bottom: 0px;
+}
+
+.entry_price label
+{
+  font-size: 25px;
+  color: white;
+  font-weight: bold;
+  padding: 4px 11px;
+}
+
+
 label {
     font-weight: 600;
     margin-bottom: 10px;
@@ -138,6 +206,11 @@ label {
 	padding-bottom:6%;
 }
 
+.pb8
+{
+    padding-bottom:8%;
+}
+
 .register-page-form select
 {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -157,3 +230,42 @@ label {
     height: 22px;
     line-height: 20px;
 }
+
+.contact-social  .share-btn
+{
+    background: #f5f9fd none repeat scroll 0 0;
+    border: 1px solid #ebebeb;
+    color: #606060;
+    display: inline-block;
+    font-size: 12px;
+    height: 26px;
+    line-height: 26px;
+    margin-left:0px;
+    text-align: center;
+    width: 28px;
+}
+
+.contact-social  .fb-btn
+{
+    background: #3d5a99;
+    border: #3d5a99;
+}
+
+.contact-social  .tw-btn
+{
+    background: #1da1f2;
+    border: #1da1f2;
+}
+
+.contact-social  .google-plus-btn
+{
+    background: #dd4d42;
+    border: #dd4d42;
+}
+
+.contact-social .share-btn .fa
+{
+    color:white;
+}
+
+
