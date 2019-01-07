@@ -73,39 +73,7 @@ class Merchant extends CI_Controller {
 
 				break;
 
-				case "slider":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('sliders',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('sliders',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/slider/'.$file_name);
-					}
-					
-				break;
-
-				case "staff":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('staff',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('staff',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/staff/'.$file_name);
-					}
-					
-				break;
-
-				case "gallery":
+				case "eventGallery":
 				
 					$rowid=$_GET['rowid'];	
 
@@ -116,27 +84,10 @@ class Merchant extends CI_Controller {
 
 					if($file_name!="")
 					{
-						unlink('assets/front/uploads/gallery/'.$file_name);
+						unlink('assets/front/uploads/events/'.$file_name);
 					}
 					
 				break;
-
-				case "content":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('content',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('content',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/content/'.$file_name);
-					}
-					
-				break;
-			
 			}
 		}
 		
@@ -171,99 +122,6 @@ class Merchant extends CI_Controller {
 					
 				break;
 
-
-				case "slider":
-				    
-					switch($action)
-					{
-						case "activate":
-						  
-						  $rowid=$_GET['rowid'];	
-					
-					      $this->Admin_model->updateData('slider',array('status' => 1),$rowid);
-					
-						break;
-						
-						case "deactivate":
-						   
-						   $rowid=$_GET['rowid'];	
-					
-					       $this->Admin_model->updateData('slider',array('status' => 2),$rowid);
-
-						break;
-					}
-					
-				break;
-
-				case "staff":
-				    
-					switch($action)
-					{
-						case "activate":
-						  
-						  $rowid=$_GET['rowid'];	
-					
-					      $this->Admin_model->updateData('staff',array('status' => 1),$rowid);
-					
-						break;
-						
-						case "deactivate":
-						   
-						   $rowid=$_GET['rowid'];	
-					
-					       $this->Admin_model->updateData('staff',array('status' => 2),$rowid);
-
-						break;
-					}
-					
-				break;
-
-				case "gallery":
-				    
-					switch($action)
-					{
-						case "activate":
-						  
-						  $rowid=$_GET['rowid'];	
-					
-					      $this->Admin_model->updateData('gallery',array('status' => 1),$rowid);
-					
-						break;
-						
-						case "deactivate":
-						   
-						   $rowid=$_GET['rowid'];	
-					
-					       $this->Admin_model->updateData('gallery',array('status' => 2),$rowid);
-
-						break;
-					}
-					
-				break;
-
-				case "content":
-				    
-					switch($action)
-					{
-						case "activate":
-						  
-						  $rowid=$_GET['rowid'];	
-					
-					      $this->Admin_model->updateData('content',array('status' => 1),$rowid);
-					
-						break;
-						
-						case "deactivate":
-						   
-						   $rowid=$_GET['rowid'];	
-					
-					       $this->Admin_model->updateData('content',array('status' => 2),$rowid);
-
-						break;
-					}
-					
-				break;
-			
 			}
 			
 			$data['action']=$action;

@@ -194,7 +194,7 @@ function delData(rid)
  if (confirm('Are you sure you want to delete this?')) {
      
      var base_url='<?php echo base_url(); ?>';
-     var md="event";
+     var md="eventGallery";
      
      $.ajax({
          type: "GET",
