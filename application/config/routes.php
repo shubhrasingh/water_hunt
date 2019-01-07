@@ -63,7 +63,7 @@ $route['register']                                                  = 'websiteAu
 $route['verify-account/(:any)']                                     = 'websiteAuthenticate/accountVerification/$1';
 $route['logout']                                                    = 'websiteAuthenticate/logout';
 
-
+$route['event-detail/(:any)']                                       = 'website/eventDetail/$1';
     //***** Merchant Panel Starts *****//
 
 $route['merchant']                                                  = 'merchant';
@@ -79,6 +79,10 @@ $route['merchant/edit-event/(:any)']                                = 'merchant/
 $route['merchant/event-gallery/(:any)']                             = 'merchant/eventGallery/$1';
 $route['merchant/add-event-gallery/(:any)']                         = 'merchant/addEventGallery/$1';
 $route['merchant/edit-event-gallery/(:any)']                        = 'merchant/editEventGallery/$1';
+
+$route['merchant/gallery']                                          = 'merchant/myGallery';
+$route['merchant/add-gallery']                                      = 'merchant/addGallery';
+$route['merchant/edit-gallery/(:any)']                              = 'merchant/editGallery/$1';
 
     //***** Merchant Panel Ends *****//
 
