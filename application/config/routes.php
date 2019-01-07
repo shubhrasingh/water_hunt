@@ -76,6 +76,10 @@ $route['merchant/events']                                           = 'merchant/
 $route['merchant/add-event']                                        = 'merchant/addEvent';
 $route['merchant/edit-event/(:any)']                                = 'merchant/editEvent/$1';
 
+$route['merchant/event-gallery/(:any)']                             = 'merchant/eventGallery/$1';
+$route['merchant/add-event-gallery/(:any)']                         = 'merchant/addEventGallery/$1';
+$route['merchant/edit-event-gallery/(:any)']                        = 'merchant/editEventGallery/$1';
+
     //***** Merchant Panel Ends *****//
 
 
