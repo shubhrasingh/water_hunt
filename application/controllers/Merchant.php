@@ -611,8 +611,7 @@ class Merchant extends CI_Controller {
 		  $this->load->view('front/merchant/edit-event',$data);
 		}
 		
-
-        public function viewStaff()
+		public function eventGallery($eventId)
 		{
 		  if($this->session->userdata('WhUserLoggedinId')=='')
 			{
@@ -622,40 +621,36 @@ class Merchant extends CI_Controller {
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['userDetails']=$this->userDetails();
 
-		  $data['getData']=$this->Admin_model->getData('staff');
-		  
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/staff',$data);
-		  $this->load->view('admin/common/footer',$data);
+		  $data['getData']=$this->Admin_model->getWhere('gallery',array('event_id' => $eventId));
+          $data['eventId']=$eventId;
+
+		  $this->load->view('front/merchant/event-gallery',$data);
 		}
 
-
-		public function addStaff()
+		public function addEventGallery($eventId)
 		{
 		  if($this->session->userdata('WhUserLoggedinId')=='')
 			{
 			  redirect('login');
 			}
 			
+		  $data['eventId']=$eventId;
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['userDetails']=$this->userDetails();
 		  
 		  if(isset($_REQUEST['submit']))
 		  {
-             $name=$_REQUEST['name']; 
-             $designation=$_REQUEST['designation']; 
-             $description=$_REQUEST['description']; 
-             $facebook_link=$_REQUEST['facebook_link']; 
-             $twitter_link=$_REQUEST['twitter_link']; 
-             $google_plus_link=$_REQUEST['google_plus_link']; 
+             $eventId=$_REQUEST['event_id'];
+             $title=$_REQUEST['title'];
+             $description=nl2br($_REQUEST['description']); 
+
 			
 			 $date=date('Y-m-d H:i:s');
 			 
-			 if((!empty($name)) && (!empty($_FILES['file']['name'])) && (!empty($designation)) && (!empty($description)))
+			 if((!empty($title)) && (!empty($description)) && (!empty($_FILES['file']['name'])))
 			 {
 
-					$config['upload_path']          = './assets/front/uploads/staff/';
+					$config['upload_path']          = './assets/front/uploads/events/';
 					$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
 					$config['encrypt_name']         = TRUE;
 
@@ -666,67 +661,66 @@ class Merchant extends CI_Controller {
 					{
 							$error = $this->upload->display_errors();
 							$this->session->set_flashdata('error',$error);
-							redirect('admin/add-staff');
+							redirect('merchant/add-event-gallery/'.$eventId);
 					}
 					else
 					{
 							$data = $this->upload->data();
 							$file_name=$data['file_name'];
 							
-							$inData=array('name' => $name,'designation' => $designation,'description' => $description,'facebook_link' => $facebook_link,'twitter_link' => $twitter_link,'google_plus_link' => $google_plus_link,'image' => $file_name,'added_on' => $date);
-							$this->Admin_model->insertData('staff',$inData);
-							$this->session->set_flashdata('success','Staff Added Successfully');
-							redirect('admin/staff');
+							$merchantId=$this->session->userdata('WhUserLoggedinId');
+
+							$inData=array('merchant_id' => $merchantId,'event_id' => $eventId,'title' => $title,'description' => $description,'image' => $file_name,'added_on' => $date);
+							$this->Admin_model->insertData('gallery',$inData);
+							$this->session->set_flashdata('success','Event Gallery Added Successfully');
+							redirect('merchant/event-gallery/'.$eventId);
 							
 					}	
 			 }
 			 else
 			 {
-				$this->session->set_flashdata('error','Name,Designation,Description and Image are required fields');
-			    redirect('admin/add-staff'); 
+				$this->session->set_flashdata('error','All fields are required');
+			    redirect('merchant/add-event-gallery/'.$eventId); 
 			 }
 		  }
 
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/add-staff',$data);
-		  $this->load->view('admin/common/footer',$data);
+		  $this->load->view('front/merchant/add-event-gallery',$data);
 		}
 
 
-		public function editStaff($id)
+         public function editEventGallery($rowId)
 		{
 		  if($this->session->userdata('WhUserLoggedinId')=='')
 			{
 			  redirect('login');
 			}
-			
+		  
+          
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['userDetails']=$this->userDetails();
 		  
-		  $condition=array('id' => $id);
-		  $data['getData']=$this->Admin_model->getWhere('staff',$condition);
+		  $condition=array('id' => $rowId);
+		  $data['getData']=$this->Admin_model->getWhere('gallery',$condition);
 		  
 		  
 		  if(isset($_REQUEST['update']))
 		  {
 			     $rowid=$_REQUEST['rowid'];  
-			     $name=$_REQUEST['name']; 
-	             $designation=$_REQUEST['designation']; 
-	             $description=$_REQUEST['description']; 
-	             $facebook_link=$_REQUEST['facebook_link']; 
-	             $twitter_link=$_REQUEST['twitter_link']; 
-	             $google_plus_link=$_REQUEST['google_plus_link'];  
-
-			     $date=date('Y-m-d H:i:s');
-                 if((!empty($name)) && (!empty($designation)) && (!empty($description)))
-                 {
-                     $upData=array('name' => $name,'designation' => $designation,'description' => $description,'facebook_link' => $facebook_link,'twitter_link' => $twitter_link,'google_plus_link' => $google_plus_link,'updated_on' => $date);
-					 $this->Admin_model->updateData('staff',$upData,$rowid);
+			     $title=$_REQUEST['title'];
+	             $description=nl2br($_REQUEST['description']); 
+                 $getoldData=$this->Admin_model->getWhere('gallery',array('id' => $rowid));
+                 $eventId=$getoldData['0']->event_id;
+				
+				 $date=date('Y-m-d H:i:s');
+				 
+				 if((!empty($title)) && (!empty($description)))
+				 {
+                     $upData=array('title' => $title,'description' => $description,'updated_on' => $date);
+					 $this->Admin_model->updateData('gallery',$upData,$rowid);
 					 
 					 if(!empty($_FILES['file']['name']))
 					 {
-						$config['upload_path']          = './assets/front/uploads/staff/';
+						$config['upload_path']          = './assets/front/uploads/events/';
 						$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
 						$config['encrypt_name']         = TRUE;
 
@@ -737,531 +731,47 @@ class Merchant extends CI_Controller {
 						{
 								$error = $this->upload->display_errors();
 								$this->session->set_flashdata('error',$error);
-								redirect('admin/edit-staff/'.$rowid);
+								redirect('merchant/edit-event-gallery/'.$rowid);
 						}
 						else
 						{
 								$data = $this->upload->data();
 								$file_name=$data['file_name'];
 								
-								$getoldData=$this->Admin_model->getWhere('staff',array('id' => $rowid));
+								$getoldData=$this->Admin_model->getWhere('gallery',array('id' => $rowid));
 	                            $oldImg=$getoldData[0]->image;
 	                            
 								$upData=array('image' => $file_name,'updated_on' => $date);
-								$this->Admin_model->updateData('staff',$upData,$rowid);
+								$this->Admin_model->updateData('gallery',$upData,$rowid);
 
 								if($oldImg!="")
 								{
-									unlink('assets/front/uploads/staff/'.$oldImg);
+									unlink('assets/front/uploads/events/'.$oldImg);
 								}
 
-								$this->session->set_flashdata('success','Staff Updated Successfully');
-								redirect('admin/staff');
+								$this->session->set_flashdata('success','Event Gallery Updated Successfully');
+								redirect('merchant/event-gallery/'.$eventId);
 								
 						}
 					}
 					else
 					{
-					   $this->session->set_flashdata('success','Staff Updated Successfully');
-					   redirect('admin/staff');
+					   $this->session->set_flashdata('success','Event Gallery Updated Successfully');
+					   redirect('merchant/event-gallery/'.$eventId);
 					}	
                  }
                  else
                  {
-                 	$this->session->set_flashdata('error','Name,Designation and Description are required fields');
-			        redirect('admin/edit-staff/'.$rowid); 
+                 	$this->session->set_flashdata('error','All fields are required');
+			        redirect('merchant/edit-event-gallery/'.$rowid); 
                  }
 
                  
 		  }
-		  
-		  
-		  
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/edit-staff',$data);
-		  $this->load->view('admin/common/footer',$data);
+
+		  $this->load->view('front/merchant/edit-event-gallery',$data);
 		}
 
-
-		public function viewGallery()
-		{
-		  if($this->session->userdata('WhUserLoggedinId')=='')
-			{
-			  redirect('login');
-			}
-			
-		  $data['siteDetails']=$this->siteDetails();
-		  $data['userDetails']=$this->userDetails();
-
-		  $data['getData']=$this->Admin_model->getData('gallery');
-		  
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/gallery',$data);
-		  $this->load->view('admin/common/footer',$data);
-		}
-
-
-		public function addGallery()
-		{
-		  if($this->session->userdata('WhUserLoggedinId')=='')
-			{
-			  redirect('login');
-			}
-			
-		  $data['siteDetails']=$this->siteDetails();
-		  $data['userDetails']=$this->userDetails();
-		  
-		  if(isset($_REQUEST['submit']))
-		  {
-             $title=$_REQUEST['title']; 
-			
-			 $date=date('Y-m-d H:i:s');
-			 
-			 if((!empty($_FILES['file']['name'])))
-			 {
-
-					$config['upload_path']          = './assets/front/uploads/gallery/';
-					$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
-					$config['encrypt_name']         = TRUE;
-
-
-					$this->load->library('upload', $config);
-
-					if ( ! $this->upload->do_upload('file'))
-					{
-							$error = $this->upload->display_errors();
-							$this->session->set_flashdata('error',$error);
-							redirect('admin/add-gallery');
-					}
-					else
-					{
-							$data = $this->upload->data();
-							$file_name=$data['file_name'];
-							
-							$inData=array('title' => $title,'image' => $file_name,'added_on' => $date);
-							$this->Admin_model->insertData('gallery',$inData);
-							$this->session->set_flashdata('success','Gallery Added Successfully');
-							redirect('admin/gallery');
-							
-					}	
-			 }
-			 else
-			 {
-				$this->session->set_flashdata('error','Gallery image is required field');
-			    redirect('admin/add-gallery'); 
-			 }
-		  }
-
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/add-gallery',$data);
-		  $this->load->view('admin/common/footer',$data);
-		}
-
-
-		public function editGallery($id)
-		{
-		  if($this->session->userdata('WhUserLoggedinId')=='')
-			{
-			  redirect('login');
-			}
-			
-		  $data['siteDetails']=$this->siteDetails();
-		  $data['userDetails']=$this->userDetails();
-		  
-		  $condition=array('id' => $id);
-		  $data['getData']=$this->Admin_model->getWhere('gallery',$condition);
-		  
-		  
-		  if(isset($_REQUEST['update']))
-		  {
-			     $rowid=$_REQUEST['rowid'];  
-			     $title=$_REQUEST['title'];  
-
-			     $date=date('Y-m-d H:i:s');
-                 
-                 $upData=array('title' => $title,'updated_on' => $date);
-				 $this->Admin_model->updateData('gallery',$upData,$rowid);
-				 
-				 if(!empty($_FILES['file']['name']))
-				 {
-					$config['upload_path']          = './assets/front/uploads/gallery/';
-					$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
-					$config['encrypt_name']         = TRUE;
-
-
-					$this->load->library('upload', $config);
-
-					if ( ! $this->upload->do_upload('file'))
-					{
-							$error = $this->upload->display_errors();
-							$this->session->set_flashdata('error',$error);
-							redirect('admin/edit-gallery/'.$rowid);
-					}
-					else
-					{
-							$data = $this->upload->data();
-							$file_name=$data['file_name'];
-							
-							$getoldData=$this->Admin_model->getWhere('gallery',array('id' => $rowid));
-                            $oldImg=$getoldData[0]->image;
-
-							$upData=array('image' => $file_name,'updated_on' => $date);
-							$this->Admin_model->updateData('gallery',$upData,$rowid);
-
-							if($oldImg!="")
-							{
-								unlink('assets/front/uploads/gallery/'.$oldImg);
-							}
-
-							$this->session->set_flashdata('success','Gallery Updated Successfully');
-							redirect('admin/gallery');
-							
-					}
-				}
-				else
-				{
-				   $this->session->set_flashdata('success','Gallery Updated Successfully');
-				   redirect('admin/gallery');
-				}	
-		  }
-		  
-		  
-		  
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/edit-gallery',$data);
-		  $this->load->view('admin/common/footer',$data);
-		}
-
-
-		public function viewContent()
-		{
-		  if($this->session->userdata('WhUserLoggedinId')=='')
-			{
-			  redirect('login');
-			}
-			
-		  $data['siteDetails']=$this->siteDetails();
-		  $data['userDetails']=$this->userDetails();
-
-		  $data['getData']=$this->Admin_model->getData('content');
-
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/content',$data);
-		  $this->load->view('admin/common/footer',$data);
-		}
-
-
-		public function addContent()
-		{
-		  if($this->session->userdata('WhUserLoggedinId')=='')
-			{
-			  redirect('login');
-			}
-			
-		  $data['siteDetails']=$this->siteDetails();
-		  $data['userDetails']=$this->userDetails();
-		  
-		  if(isset($_REQUEST['submit']))
-		  {
-             $menu=$_REQUEST['menu']; 
-             $date=date('Y-m-d H:i:s');
-             
-             if(!empty($menu))
-             {
-	            switch($menu)
-	             {
-	             	case "home":
-	                  
-	                  $position=$_REQUEST['position'];
-
-	                  if(empty($position))
-	                  {
-                         $errAlert="1";
-                         $errMsg="Position is required";
-	                  }
-	                  else
-	                  {
-		                  switch($position)
-		                  {
-		                    case "fourth-row":
-		                        
-		                        $home_teacher_count=$_REQUEST['home_teacher_count'];
-		                        $home_course_count=$_REQUEST['home_course_count'];
-		                        $home_student_count=$_REQUEST['home_student_count'];
-		                        $home_satisfied_client_count=$_REQUEST['home_satisfied_client_count'];
-
-		                        if((!empty($home_teacher_count)) && (!empty($home_course_count)) && (!empty($home_student_count)) && (!empty($home_satisfied_client_count)))
-								 {
-								 	$errAlert="2";
-								 	$inArray=array('menu' => $menu,'position' => $position,'home_teacher_count' => $home_teacher_count,'home_course_count' => $home_course_count,'home_student_count' => $home_student_count,'home_satisfied_client_count' => $home_satisfied_client_count,'added_on' => $date);
-								 }
-								 else
-								 {
-								 	$errAlert="1";
-                                    $errMsg="Stats fro Teacher,Courses,Students and satisfied clients are required";
-								 }
-
-		                    break;
-
-		                    default:
-
-		                        $title=$_REQUEST['title'];
-		                        $description=nl2br($_REQUEST['description']);
-
-		                        if((!empty($title)) && (!empty($description)))
-								 {
-								 	$errAlert="2";
-								 	$inArray=array('menu' => $menu,'position' => $position,'title' => $title,'description' => $description,'added_on' => $date);
-								 }
-								 else
-								 {
-								 	$errAlert="1";
-                                    $errMsg="Title and description are required";
-								 }
-
-		                    break;
-		                  }
-	                  }
-
-	             	break;
-
-	             	default:
-	                        $title=$_REQUEST['title'];
-	                        $description=$_REQUEST['description'];
-echo $description;
-exit;
-	                        if((!empty($title)) && (!empty($description)))
-							{
-								$errAlert="2";
-								$inArray=array('menu' => $menu,'position' => '','title' => $title,'description' => $description,'added_on' => $date);
-							}
-							else
-							{
-								$errAlert="1";
-                                $errMsg="Title and description are required";
-							}
-	             	break;
-	             }
-
-	             if($errAlert==1)
-	             {
-				    $this->session->set_flashdata('error',$errMsg);
-			        redirect('admin/add-content'); 	
-	             }
-	             else
-	             {
-             	   $lastId=$this->Admin_model->insertData('content',$inArray);
-                   
-                   if(!empty($_FILES['file']['name']))
-                   {
-	             	    $config['upload_path']          = './assets/front/uploads/content/';
-						$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
-						$config['encrypt_name']         = TRUE;
-
-
-						$this->load->library('upload', $config);
-
-						if ( ! $this->upload->do_upload('file'))
-						{
-								$err = $this->upload->display_errors();
-								$error="Content added successfully but unable to save image".$err;
-								$this->session->set_flashdata('error',$error);
-								redirect('admin/content');
-						}
-						else
-						{
-								$data = $this->upload->data();
-								$file_name=$data['file_name'];
-								
-								$inImg=array('image' => $file_name);
-								$this->Admin_model->updateData('content',$inImg,$lastId);
-								$this->session->set_flashdata('success','Content Added Successfully');
-								redirect('admin/content');
-								
-						}	
-				   }
-				   else
-				   {
-				       	$this->session->set_flashdata('success','Content Added Successfully');
-						redirect('admin/content');
-				   }
-	             }
-            }
-            else
-			 {
-				$this->session->set_flashdata('error','Menu is required');
-			    redirect('admin/add-content'); 
-			 }
-
-		  }
-
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/add-content',$data);
-		  $this->load->view('admin/common/footer',$data);
-		}
-
-
-		public function editContent($id)
-		{
-		  if($this->session->userdata('WhUserLoggedinId')=='')
-			{
-			  redirect('login');
-			}
-			
-		  $data['siteDetails']=$this->siteDetails();
-		  $data['userDetails']=$this->userDetails();
-		  
-		  $condition=array('id' => $id);
-		  $data['getData']=$this->Admin_model->getWhere('content',$condition);
-		  
-		  
-		  if(isset($_REQUEST['update']))
-		  {
-			 $rowid=$_REQUEST['rowid'];  
-			 $menu=$_REQUEST['menu']; 
-             $date=date('Y-m-d H:i:s');
-             
-             if(!empty($menu))
-             {
-	            switch($menu)
-	             {
-	             	case "home":
-	                  
-	                  $position=$_REQUEST['position'];
-
-	                  if(empty($position))
-	                  {
-                         $errAlert="1";
-                         $errMsg="Position is required";
-	                  }
-	                  else
-	                  {
-		                  switch($position)
-		                  {
-		                    case "fourth-row":
-		                        
-		                        $home_teacher_count=$_REQUEST['home_teacher_count'];
-		                        $home_course_count=$_REQUEST['home_course_count'];
-		                        $home_student_count=$_REQUEST['home_student_count'];
-		                        $home_satisfied_client_count=$_REQUEST['home_satisfied_client_count'];
-
-		                        if((!empty($home_teacher_count)) && (!empty($home_course_count)) && (!empty($home_student_count)) && (!empty($home_satisfied_client_count)))
-								 {
-								 	$errAlert="2";
-								 	$inArray=array('menu' => $menu,'position' => $position,'home_teacher_count' => $home_teacher_count,'home_course_count' => $home_course_count,'home_student_count' => $home_student_count,'home_satisfied_client_count' => $home_satisfied_client_count,'title' => '','description' => '','image' => '','updated_on' => $date);
-								 }
-								 else
-								 {
-								 	$errAlert="1";
-                                    $errMsg="Stats fro Teacher,Courses,Students and satisfied clients are required";
-								 }
-
-		                    break;
-
-		                    default:
-
-		                        $title=$_REQUEST['title'];
-		                        $description=$_REQUEST['description'];
-
-		                        if((!empty($title)) && (!empty($description)))
-								 {
-								 	$errAlert="2";
-								 	$inArray=array('menu' => $menu,'position' => $position,'home_teacher_count' => '0','home_course_count' => '0','home_student_count' => '0','home_satisfied_client_count' => '0','title' => $title,'description' => $description,'updated_on' => $date);
-								 }
-								 else
-								 {
-								 	$errAlert="1";
-                                    $errMsg="Title and description are required";
-								 }
-
-		                    break;
-		                  }
-	                  }
-
-	             	break;
-
-	             	default:
-	                        $title=$_REQUEST['title'];
-	                        $description=$_REQUEST['description'];
-
-	                        if((!empty($title)) && (!empty($description)))
-							{
-								$errAlert="2";
-								$inArray=array('menu' => $menu,'position' => '','home_teacher_count' => '0','home_course_count' => '0','home_student_count' => '0','home_satisfied_client_count' => '0','title' => $title,'description' => $description,'updated_on' => $date);
-							}
-							else
-							{
-								$errAlert="1";
-                                $errMsg="Title and description are required";
-							}
-	             	break;
-	             }
-
-	             if($errAlert==1)
-	             {
-				    $this->session->set_flashdata('error',$errMsg);
-			        redirect('admin/edit-content/'.$rowid);
-	             }
-	             else
-	             {
-             	   $this->Admin_model->updateData('content',$inArray,$rowid);
-                   
-                   if(!empty($_FILES['file']['name']))
-                   {
-	             	    $config['upload_path']          = './assets/front/uploads/content/';
-						$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
-						$config['encrypt_name']         = TRUE;
-
-
-						$this->load->library('upload', $config);
-
-						if ( ! $this->upload->do_upload('file'))
-						{
-								$err = $this->upload->display_errors();
-								$error="Content added successfully but unable to save image".$err;
-								$this->session->set_flashdata('error',$error);
-								redirect('admin/content');
-						}
-						else
-						{
-								$data = $this->upload->data();
-								$file_name=$data['file_name'];
-								
-								$inImg=array('image' => $file_name);
-								$this->Admin_model->updateData('content',$inImg,$rowid);
-								$this->session->set_flashdata('success','Content Updated Successfully');
-								redirect('admin/content');
-								
-						}	
-				   }
-				   else
-				   {
-				       	$this->session->set_flashdata('success','Content Updated Successfully');
-						redirect('admin/content');
-				   }
-	             }
-            }
-            else
-			 {
-				$this->session->set_flashdata('error','Menu is required');
-			    redirect('admin/edit-content/'.$rowid); 
-			 }
-                 
-		  }
-		  
-		  
-		  
-		  $this->load->view('admin/common/header',$data);
-		  $this->load->view('admin/common/sidebar',$data);
-		  $this->load->view('admin/edit-content',$data);
-		  $this->load->view('admin/common/footer',$data);
-		}
 
 }
 ?>
