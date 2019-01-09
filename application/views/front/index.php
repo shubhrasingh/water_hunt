@@ -395,7 +395,7 @@
                                          <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>">
                                             <div class="single_property mb-30">
                                                 <div class="single_propert_img">
-                                                    <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><img src="<?php echo base_url(); ?>assets/front/images/water-4.jpg" alt=""></a>
+                                                    <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $rwEv->image; ?>" alt="" style="width:100%;height:210px"></a>
                                                 </div>
                                                 <div class="single_property-text">
                                                     <div class="single_property_inner">
@@ -611,11 +611,20 @@
                         $startDate=$upr->start_date;
                         $day=date('j',strtotime($startDate));
                         $month=date('M',strtotime($startDate));
+
+                        $eventId=$upr->id;
+                        $eventName=strtolower($upr->name);
+
+                        $eventName = preg_replace('/\s+/', '-', $eventName);
+                        $randPrefix=rand(100,999);
+                        $randSubfix=rand(100,999);
+                        $urlId=$randPrefix.$eventId.$randSubfix;
+                        $urlKey=$eventName.'-'.$urlId;
                     ?>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="single-blog wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1s">
                             <div class="blog-thubmnail">
-                                <a href="#">
+                                <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>">
                                     <img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $upr->image; ?>" alt="">
                                 </a>
                                 <div class="blog-post">
@@ -628,10 +637,10 @@
                                 </div>
                             </div>
                             <div class="blog-desc">
-                                <h6><a href="#"><?php echo $upr->name; ?></a></h6>
+                                <h6><a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><?php echo $upr->name; ?></a></h6>
 								<p class="post-content"><?php echo substr($upr->description,0,250); ?>...</p>
 								<div class="bolg-continue">
-                                    <a href="#">Continure Reading  &gt;</a>
+                                    <a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>">Continure Reading  &gt;</a>
                                 </div>
                             </div>
                         </div>

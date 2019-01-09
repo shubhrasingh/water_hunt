@@ -139,7 +139,20 @@
                                 <p> <?php echo $siteDetails['companyData'][0]->company_phone; ?></p>
                             </div>
                             <div class="add-property">
-                                <a href="#" style="background:#f6921e none repeat scroll 0 0">ADD WATER PARK</a>
+                                <?php
+                                 if(($this->session->userdata('WhUserLoggedinId')!="") && ($this->session->userdata('WhUserLoggedinId')!='0') && ($this->session->userdata('WhLoggedInUserType')=='merchant'))
+                                 {
+                                    ?>
+                                    <a href="<?php echo base_url(); ?>merchant/add-event" style="background:#f6921e none repeat scroll 0 0">ADD EVENT</a>
+                                  <?php
+                                   }
+                                   else
+                                   {
+                                    ?>
+                                     <a href="#" style="background:#f6921e none repeat scroll 0 0">BOOK TICKET</a>
+                                    <?php
+                                    }
+                                   ?>
                             </div>
                         </div>
                     </div>

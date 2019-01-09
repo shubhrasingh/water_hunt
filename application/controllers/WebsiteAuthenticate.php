@@ -54,24 +54,61 @@ class websiteAuthenticate extends CI_Controller {
 			  
 			if(isset($_REQUEST['submit']))
 			  {
+				  $page_type=$_REQUEST['page_type'];
 				  $user_type=$_REQUEST['user_type'];
 				  $username=$_REQUEST['email'];
 				  $password=$_REQUEST['password'];
                   
+		          switch($page_type)
+		          {
+		            case "login":
+		                switch($user_type)
+		                  {
+		                  	case "merchant":
+		                  	   $tbl="merchants";
+		                  	   $folder="merchant";
+		                  	break;
+
+		                  	case "user":
+		                  	   $tbl="users";
+		                  	   $folder="user";
+		                  	break;
+		                  }
+		               $redirectUrl=$folder.'/dashboard';
+		            break;
+
+		            default:  //**** if it is from event or park detail page ****
+		                switch($user_type)
+		                  {
+		                  	case "merchant":
+		                  	  $tbl="merchants";
+		                  	break;
+
+		                  	case "user":
+		                  	  $tbl="users";
+		                  	break;
+		                  }
+
+		                  $exPage=explode('_',$page_type);
+
+		                  $exPageType=$exPage[0];
+		                  $exPageLink=$exPage[1];
+                          if($exPageType=="event")
+                          {
+                            $folder="event-detail";
+                          }
+                          else
+                          {
+                            $folder="park-detail";
+                          }
+		                  $redirectUrl=$folder.'/'.$exPageLink;
+		            break;
+		          }
+
+
                   if((!empty($user_type)) && (!empty($username)) && (!empty($password)))
                   {
-                  	   switch($user_type)
-                  	   {
-                  	   	 case "merchant":
-                  	   	   $tbl="merchants";
-                  	   	   $folder="merchant";
-                  	   	 break;
 
-                  	   	 case "user":
-                  	   	   $tbl="users";
-                  	   	   $folder="user";
-                  	   	 break;
-                  	   }
 
 	                   $where=array('email' => $username,'password' => $password,'status' => 1);
 					   $queryCount=$this->Admin_model->getWhere($tbl,$where);
@@ -83,16 +120,21 @@ class websiteAuthenticate extends CI_Controller {
 							  $this->session->set_userdata('WhUserLoggedinId',$uid);
 							  $this->session->set_userdata('WhLoggedInUserType',$user_type);
 							  $this->session->set_flashdata('success','Welcome to your portal');
-							  redirect($folder.'/dashboard');
+							  $this->session->unset_userdata('errorLogin');
+							  redirect($redirectUrl);
 						  }
 						  else
 						  {
 							   $this->session->set_flashdata('error','Invalid Login Details');
+							   $this->session->set_flashdata('errorLogin','1');
+							   redirect($redirectUrl);
 						  }
                   }
                   else
                   {
                   	$this->session->set_flashdata('error','All fields are required');
+                  	$this->session->set_flashdata('errorLogin','1');
+                  	redirect($redirectUrl);
                   }
 
 			  }
@@ -172,7 +214,7 @@ class websiteAuthenticate extends CI_Controller {
 										 <table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
 										   
 										   <tbody><tr> 
-											<td style="padding:5px;background:#00a1ff;font-weight:bold;font-size:26px" align="center"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width: 80px;"></a></font></td> 
+											<td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center;"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width:120px;"></a></font></td> 
 										   </tr> 
 										   <tr align="center"> 
 											<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello <span class="il">'.$name.'</span> </td> 
@@ -205,7 +247,7 @@ class websiteAuthenticate extends CI_Controller {
 										 <table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
 										   
 										   <tbody><tr> 
-											<td style="padding:5px;background:#00a1ff;font-weight:bold;font-size:26px" align="center"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width: 80px;"></a></font></td> 
+											<td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width: 120px;"></a></font></td> 
 										   </tr> 
 										   <tr align="center"> 
 											<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello <span class="il">'.$name.'</span> </td> 
@@ -220,7 +262,7 @@ class websiteAuthenticate extends CI_Controller {
 											<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Password : </b> '.$password.'</td> 
 										   </tr> 
 										   <tr> 
-											<td style="background:#000;padding-top:25px;padding-bottom:25px" align="center"><a style="outline:none;border:0px;padding-top:10px;padding-bottom:10px;padding-left:30px;padding-right:30px;border-radius:50px;text-decoration:none;color:#000;font-weight:bold;font-size:14px;background-color:#fff" href="'.base_url().'login" target="_blank" data-saferedirecturl="'.base_url().'verify-account">Login Now</a></td> 
+											<td style="background:#000;padding-top:25px;padding-bottom:25px" align="center"><a style="outline:none;border:0px;padding-top:10px;padding-bottom:10px;padding-left:30px;padding-right:30px;border-radius:50px;text-decoration:none;color:#000;font-weight:bold;font-size:14px;background-color:#fff" href="'.base_url().'login" target="_blank" data-saferedirecturl="'.base_url().'login">Login Now</a></td> 
 										   </tr> 
 										   
 										 </tbody></table> 

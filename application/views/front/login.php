@@ -81,6 +81,7 @@
                             //  $attributes=array('autocomplete' => 'off');
                               echo form_open();
                             ?>
+							    <input type="hidden" name="page_type" value="login">
                                 <div class="username">
                                     <select name="user_type">
                                         <option value="merchant">Merchant</option>
