@@ -1739,7 +1739,7 @@ aside.single-side-box.tags {
 .feedback-title > h5 {
     color: #303030;
     font-weight: 400;
-    margin-bottom: 47px;
+    margin-bottom: 27px;
 }
 .feedback {
     margin-top: 53px;
@@ -1747,13 +1747,13 @@ aside.single-side-box.tags {
 .feedback-img {
     display: inline-block;
     float: left;
-    width: 11%;
+    width: 5%;
 }
 .feedback-desc {
     display: inline-block;
     float: left;
-    padding-left: 22px;
-    width: 89%;
+    padding-left: 13px;
+    width: 95%;
 }
 .feedback-title > h6 {
     color: #303030;

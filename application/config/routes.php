@@ -64,12 +64,23 @@ $route['verify-account/(:any)']                                     = 'websiteAu
 $route['logout']                                                    = 'websiteAuthenticate/logout';
 
 $route['event-detail/(:any)']                                       = 'website/eventDetail/$1';
+
+$route['submit-review']                                             = 'website/submitReview';
+$route['ticket-request']                                            = 'website/submitTicketRequest';
+$route['billing-detail']                                            = 'website/billingDetails';
+$route['pay-now']                                                   = 'website/payNow';
+$route['paymentsuccess']                                            = 'website/paymentSuccess';
+$route['paymentfailure']                                            = 'website/paymentFailure';
+$route['thank-you']                                                 = 'website/thankYou';
+$route['payment-failed']                                            = 'website/paymentFailed';
+
     //***** Merchant Panel Starts *****//
 
 $route['merchant']                                                  = 'merchant';
 $route['merchant/dashboard']                                        = 'merchant';
 $route['merchant/profile']                                          = 'merchant/myProfile';
 $route['merchant/edit-profile']                                     = 'merchant/editProfile';
+$route['merchant/edit-timing']                                      = 'merchant/editTiming';
 $route['merchant/change-password']                                  = 'merchant/changePassword';
 
 $route['merchant/events']                                           = 'merchant/myEvents';

@@ -187,7 +187,7 @@ class Merchant extends CI_Controller {
 			
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['userDetails']=$this->userDetails();
-		  
+
 		  $this->load->view('front/merchant/profile',$data);
 		}
 
@@ -278,6 +278,65 @@ class Merchant extends CI_Controller {
 		  $this->load->view('front/merchant/edit-profile',$data);
 		}
 		
+		public function editTiming()
+		{
+			if($this->session->userdata('WhUserLoggedinId')=='')
+		  {
+			  redirect('login');
+		  }
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+		  
+		  if(isset($_REQUEST['submit']))
+		  {
+			 $dCount=$_REQUEST['day_name']; 
+			 
+			 if(count($dCount)!=0)
+			 {
+			 	$limit=count($dCount);
+			 	for($a=0;$a<$limit;$a++)
+			 	{
+			 		$day_name=$_REQUEST['day_name'][$a];
+			 		$closed=$_REQUEST['closed'][$a];
+			 		$start_time=$_REQUEST['start_time'][$a];
+			 		$end_time=$_REQUEST['end_time'][$a];
+                    
+                    $merchantId=$this->session->userdata('WhUserLoggedinId');
+
+			 		if($closed!='1')
+			 		{
+			 			$dtArray=array('merchant_id' => $merchantId,'day_name' => $day_name,'closed_status ' => '0','start_time' => $start_time,'end_time' => $end_time);
+			 		}
+			 		else
+			 		{
+			 			$dtArray=array('merchant_id' => $merchantId,'day_name' => $day_name,'closed_status ' => '1','start_time' => '','end_time' => '');
+			 		}
+
+			 	   $getDt=$this->Admin_model->getWhere('merchant_timing',array('merchant_id' => $merchantId,'day_name' =>$day_name));
+                   if(count($getDt)!=0)
+                   {
+                   	  $rid=$getDt[0]->id;
+                   	  $this->Admin_model->updateData('merchant_timing',$dtArray,$rid);
+                   }
+                   else
+                   {
+                    	$this->Admin_model->insertData('merchant_timing',$dtArray);
+                   }
+			 	}
+			 	$this->session->set_flashdata('success','Timings updated successfully');
+				redirect('merchant/profile');	
+			 }
+			 else
+			 {
+			 	$this->session->set_flashdata('error','Something went wrong');
+				redirect('merchant/edit-timing');	
+			 }
+			 
+		  }
+
+		  $this->load->view('front/merchant/edit-timing',$data);
+		}
 		
 		public function changePassword()
 		{

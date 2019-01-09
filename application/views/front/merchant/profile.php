@@ -172,6 +172,63 @@
                                     <?php echo $description; ?>
                                 </div>
                             </div>
+							
+							<div class="agent-description mt10">
+							   <h4 class="pb2" style="border-bottom: 1px solid #ddd;"> Timings  <a href="<?php echo base_url(); ?>merchant/edit-timing" class="btn btn-mini btn-success pull-right">Update Timing</a> </h4>
+                               <div class="table-responsive" style="background: #f5f9fd;padding: 3%;">
+									<table class="table">
+										<thead> 
+											<tr>
+												<th>#</th> 
+												<th>Day</th>
+												<th>Timing</th> 
+											</tr> 
+										</thead>
+										<tbody> 
+										   <?php
+										   $a=1;
+										   $merchantId=$this->session->userdata('WhUserLoggedinId');
+										   $arr='mon,tue,wed,thur,fri,sat,sun';
+										   $DayArray=array('mon' => 'Monday','tue' => 'Tuesday' ,'wed' => 'Wednesday' , 'thur' => 'Thursday' ,'fri' => 'Friday', 'sat' => 'Saturday' ,'sun' => 'Sunday');
+										   foreach($DayArray as $key => $val)
+										   {
+											   $getDt=$this->Admin_model->getWhere('merchant_timing',array('merchant_id' => $merchantId,'day_name' =>$val));
+											   if(count($getDt)!=0)
+											   {
+												   $closed_status=$getDt[0]->closed_status;
+												   switch($closed_status)
+												   {
+													   case "1":
+													     $time='<span style="color:red">Closed</span>';
+													   break;
+													   
+													   case "0":
+													     $start_time=date('g:i a',strtotime($getDt[0]->start_time));
+													     $end_time=date('g:i a',strtotime($getDt[0]->end_time));
+													     $time='<span >'.$start_time.' to '.$end_time.'</span>';
+													   break;
+												   }
+											   }
+											   else
+											   {
+												   $time="Update Timings";
+											   }
+											   ?>
+											  <tr>
+												<td scope="row"><?php echo $a; ?></td>
+												<td><?php echo $val; ?></td> 
+												<td><?php echo $time; ?></td> 
+											  </tr>   
+											   <?php
+											   $a++;
+										   }
+										   ?>
+										</tbody> 
+									</table>    
+								</div>
+                            </div>
+							
+							
                         </div>
 
                         <?php
@@ -333,9 +390,6 @@
            
         </div>
     
-        
-        
-        
         
         <?php $this->load->view('front/common/footer.php'); ?>
 		
