@@ -64,6 +64,16 @@ $route['verify-account/(:any)']                                     = 'websiteAu
 $route['logout']                                                    = 'websiteAuthenticate/logout';
 
 $route['event-detail/(:any)']                                       = 'website/eventDetail/$1';
+$route['park-detail/(:any)']                                        = 'website/parkDetail/$1';
+
+$route['parks']                                                     = 'website/allParks';
+$route['parks/(:any)']                                              = 'website/allParks/$1';
+
+$route['parks/city/(:any)']                                         = 'website/cityParks/$1';
+$route['parks/city/(:any)/(:any)']                                  = 'website/cityParks/$1/$2';
+
+$route['events']                                                    = 'website/allEvents';
+$route['events/(:any)']                                             = 'website/allEvents/$1';
 
 $route['submit-review']                                             = 'website/submitReview';
 $route['ticket-request']                                            = 'website/submitTicketRequest';
@@ -80,8 +90,13 @@ $route['merchant']                                                  = 'merchant'
 $route['merchant/dashboard']                                        = 'merchant';
 $route['merchant/profile']                                          = 'merchant/myProfile';
 $route['merchant/edit-profile']                                     = 'merchant/editProfile';
-$route['merchant/edit-timing']                                      = 'merchant/editTiming';
 $route['merchant/change-password']                                  = 'merchant/changePassword';
+
+$route['merchant/timing']                                           = 'merchant/viewTiming';
+$route['merchant/edit-timing']                                      = 'merchant/editTiming';
+
+$route['merchant/profile-cover']                                    = 'merchant/profileCover';
+$route['merchant/map-location']                                     = 'merchant/mapLocation';
 
 $route['merchant/events']                                           = 'merchant/myEvents';
 $route['merchant/add-event']                                        = 'merchant/addEvent';
@@ -95,6 +110,9 @@ $route['merchant/gallery']                                          = 'merchant/
 $route['merchant/add-gallery']                                      = 'merchant/addGallery';
 $route['merchant/edit-gallery/(:any)']                              = 'merchant/editGallery/$1';
 
+$route['merchant/bookings']                                         = 'merchant/myBookings';
+$route['merchant/enquiries']                                        = 'merchant/myEnquiries';
+
     //***** Merchant Panel Ends *****//
 
 
@@ -105,6 +123,9 @@ $route['user/dashboard']                                            = 'user';
 $route['user/profile']                                              = 'user/myProfile';
 $route['user/edit-profile']                                         = 'user/editProfile';
 $route['user/change-password']                                      = 'user/changePassword';
+
+$route['user/bookings']                                             = 'user/myBookings';
+$route['user/enquiries']                                            = 'user/myEnquiries';
 
     //***** User Panel Ends *****//
 
@@ -122,11 +143,21 @@ $route['admin/dashboard']                                            = 'admin/in
 $route['admin/edit-company-profile']                                 = 'admin/editCompanyprofile';
 $route['admin/change-password']                                      = 'admin/changePassword';
 
-$route['admin/test-setting']                                         = 'admin/testSetting';
-$route['admin/edit-test-setting']                                    = 'admin/editTestSetting';
+$route['admin/merchant']                                             = 'admin/merchant';
+$route['admin/allmerchant']                                          ='admin/allmerchant';
+$route['admin/edit-merchant/(:any)']                                 ='admin/edit_merchant/$1';
+$route['admin/addevent']                                             = 'admin/addevent';
+$route['admin/allevent']                                             ='admin/allevent';  
+$route['admin/edit-event/(:any)']                                    = 'admin/editevent/$1'; 
+$route['admin/edit-timing/(:any)']                                   ='admin/editTiming/$1'; 
 
-$route['admin/sliders']                                              = 'admin/viewSlider';
-$route['admin/add-slider']                                           = 'admin/addSlider';
-$route['admin/edit-slider/(:any)']                                   = 'admin/editSlider/$1';
+$route['admin/add-gallery/(:any)']                                   ='admin/addgallery/$1'; 
+$route['admin/edit-gallery/(:any)/(:any)']                           ='admin/editgallery/$1/$2'; 
+
+$route['admin/event-gallery/(:any)']                                 ='admin/eventgallery/$1'; 
+$route['admin/edit-event-gallery/(:any)/(:any)/(:any)']              ='admin/editeventgallery/$1/$2/$3'; 
+
+$route['admin/allusers']                                             ='admin/allusers'; 
+$route['admin/bookticket']                                           ='admin/bookticket';
 
 /*##################  ADMIN ROUTES STARTS ####################*/  
