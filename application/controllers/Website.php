@@ -184,7 +184,56 @@ class Website extends CI_Controller {
 
 	    $this->load->view('front/events',$data);
     }
+    
+    public function findResult()
+    {
+    	$search=$_REQUEST['find'];
+    	$searchFor=strtolower($search);
+    	$searchFor = preg_replace('/\s+/', '-', $searchFor);
+    	redirect('search/'.$searchFor);
+    }
 
+    public function searchResult($findFor,$page=0)
+    {
+       $data['siteDetails']=$this->siteDetails();
+
+		if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+		{
+		  $data['userDetails']=$this->userDetails();
+	    }
+
+        $data['fetchLimit']=8;
+        $fetchLimit=$data['fetchLimit'];
+		if($page==0)
+        {
+          $limit=0;
+        }
+        else
+        {
+          $limit=($page - 1) * $data['fetchLimit'];
+        }
+
+        $arr = explode("-",$findFor);
+        $matchWith = implode(" ",$arr);
+        
+        $tblMerchant=$this->db->dbprefix.'merchants';
+
+        $getCount=$this->Admin_model->getQuery("SELECT id FROM $tblMerchant WHERE `status`='1' AND ((lower(waterpark_name) LIKE '%$matchWith%') OR (lower(waterpark_city) LIKE '%$matchWith%'))");
+        $data['parkCount']=count($getCount);
+
+        $data['getParks']=$this->Admin_model->getQuery("SELECT * FROM $tblMerchant WHERE `status`='1' AND ((lower(waterpark_name) LIKE '%$matchWith%') OR (lower(waterpark_city) LIKE '%$matchWith%')) ORDER BY id DESC LIMIT $limit,$fetchLimit");
+
+        $this->load->library('pagination');
+
+	    $config['base_url'] = base_url().'search/'.$findFor;
+	    $config['total_rows'] = $data['parkCount'];
+		$config['per_page'] = $data['fetchLimit'];
+        $config['use_page_numbers'] = TRUE;
+
+		$this->pagination->initialize($config);
+
+	    $this->load->view('front/search-parks',$data);
+    }
 
 	public function eventDetail($eventUrl)
 	{
@@ -406,7 +455,7 @@ class Website extends CI_Controller {
                                         
                                         $fromName=$data['siteDetails']['companyData'][0]->company_name;
                                         $subject="Enquiry submitted on ".$fromName;
-                                        $from="no-reply@domain.name";
+                                        $from="no-reply@compaddicts.org";
                                      	$this->mailHtml($email,$subject,$html,$fromName,$from);
 
             $htmlAdmin='<center> 
@@ -446,8 +495,8 @@ class Website extends CI_Controller {
 
                 $fromName=$data['siteDetails']['companyData'][0]->company_name;
                 $subjectAdmin="Enquiry received on ".$fromName;
-                $from="no-reply@domain.name";
-                $to="info@domain.name";
+                $from="no-reply@compaddicts.org";
+                $to="shubhra.compaddicts@gmail.com";
 				$this->mailHtml($to,$subjectAdmin,$htmlAdmin,$fromName,$from);
 
 				$this->session->set_flashdata('successMsg','Request Submitted Successfully');
@@ -903,10 +952,10 @@ class Website extends CI_Controller {
 			</center>';
 
 		$fromName=$data['siteDetails']['companyData'][0]->company_name;
-		$from="no-reply@domain.name";
+		$from="no-reply@compaddicts.org";
 
         $subjectAdmin="Ticket Booked ".$mailtxt;
-        $to='info@domain.name';
+        $to='shubhra.compaddicts@gmail.com';
 		$this->mailHtml($to,$subjectAdmin,$htmlAdmin,$fromName,$from);
 
 		$htmlMerchant='<center> 

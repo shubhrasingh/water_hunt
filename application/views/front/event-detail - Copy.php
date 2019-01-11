@@ -49,21 +49,8 @@
 	 
 	 <link  href="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet"> <!-- 3 KB -->
 	 <script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script> <!-- 16 KB -->
-     
-	 <?php
-	 $profile_cover=$getMerchant[0]->profile_cover;
-     if(empty($profile_cover))
-     {
-        $profile_cover="default-cover.jpg";
-     }
 
-	 ?>
-	  <style type="text/css">
-	  	.breadcrumbsDetail
-		{
-			background: url(<?php echo base_url(); ?>assets/front/uploads/merchant-cover/<?php echo $profile_cover; ?>)no-repeat scroll center center / cover;
-		}
-	  </style>						
+								
 </head>
 
 <body>
@@ -94,165 +81,69 @@
             {
                 $finalReview='1';
             }
-            
-			                            $parkId=$getMerchant[0]->id;
-                                        $parkName=strtolower($getMerchant[0]->waterpark_name);
 
-                                        $parkName = preg_replace('/\s+/', '-', $parkName);
-                                        $randPrefix=rand(100,999);
-                                        $randSubfix=rand(100,999);
-                                        $urlId=$randPrefix.$parkId.$randSubfix;
-                                        $urlParkKey=$parkName.'-'.$urlId;
-										
           ?>
 		  
           <!--Breadcrumbs start-->
-        <div class="breadcrumbs breadcrumbsDetail overlay-black" style="padding: 200px 0 20px;">
+        <div class="breadcrumbs overlay-black p0" >
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="breadcrumbs-inner">
                             
                             <div class="breadcrumbs-menu pull-right pt6 pb10">
-                                <!--<ul>
+                                <ul>
                                     <li><a href="<?php echo base_url(); ?>">Home /</a></li>
                                     <li><?php echo $getData[0]->name; ?> </li>
-                                </ul>-->
+                                </ul>
                               
                             </div>
 							
                         </div>
 						
 						<div class="merchantDIv">
-							<div class="col-md-2 col-sm-2 col-xs-2 ">
+							<div class="col-md-6 col-sm-6 col-xs-12 ">
 								<div class="merchantLogo" >
-									<a href="<?php echo base_url(); ?>park-detail/<?php echo $urlParkKey; ?>"><img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getMerchant[0]->waterpark_logo; ?>" ></a>
+									<img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getMerchant[0]->waterpark_logo; ?>" >
+								</div>
+								
+								<div class="merchantDetail" >
+									<h5><?php echo $getMerchant[0]->waterpark_name; ?></h5>
+									<p><i class="fa fa-home"></i> <?php echo $getMerchant[0]->waterpark_city; ?> , <?php echo $getMerchant[0]->waterpark_state; ?></p>
+								</div>
+								
+							</div>
+							
+							<div class="col-md-6 col-sm-6 col-xs-12 ">
+								<div class="entry_price text-right pt5">
+									<label><i class="fa fa-inr"></i> <?php echo $getData[0]->entry_fee_per_person; ?> / person</label>
 								</div>
 							</div>
-
-							<div class="col-md-10 col-sm-10 col-xs-10 ">
-								
-									<div class="col-md-9 col-sm-9 col-xs-9 p0">
-										<div class="merchantDetail" >
-											<h5><a href="<?php echo base_url(); ?>park-detail/<?php echo $urlParkKey; ?>"><?php echo $getMerchant[0]->waterpark_name; ?></a></h5>
-											<p><i class="fa fa-home"></i> <?php echo $getMerchant[0]->waterpark_city; ?> , <?php echo $getMerchant[0]->waterpark_state; ?></p>
-											<p><i class="fa fa-calendar"></i>  <?php echo date('j M,Y',strtotime($getData[0]->start_date)); ?> To <?php echo date('j M,Y',strtotime($getData[0]->end_date)); ?></p>
-										</div>
-										
-									</div>
-									
-									<div class="col-md-3 col-sm-3 col-xs-3 p0">
-										<div class="entry_price share-options text-right pt5">
-											<div class="contact-social pull-right">
-			                                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn fb-btn" target="_blank"><i class="fa fa-facebook"></i></a>
-			                                    <a href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw&text=<?php echo $getData[0]->name; ?>&tw_p=tweetbutton&url=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn tw-btn" target="_blank"><i class="fa fa-twitter"></i></a>
-			                                    <a href="https://plus.google.com/share?url=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn google-plus-btn" target="_blank"><i class="fa fa-google-plus"></i></a>
-			                                    <a href="whatsapp://send?text=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn whatsapp-btn" target="_blank"><i class="fa fa-whatsapp"></i></a>
-			                                </div>
-										</div>
-									</div>
-							</div>
-
 						</div>
-
-
-						<div class="merchantRatingDetail">
-				
-							<div class="col-md-10 col-sm-10 col-xs-10 col-md-offset-2">
-								
-									<div class="col-md-12 col-sm-12 col-xs-12 p0">
-									
-										<div class="merchantDetail col-xs-12 p0" >
-											<div class="col-sm-3 col-xs-12 p0">
-												<div class="detailCounter">
-													<h4 ><?php echo $finalReview; ?></h4> 
-				                                    <h5>  
-				                                    	<?php
-				                                         for($x=1;$x<=$finalReview;$x++)
-				                                         {
-				                                         ?>
-				                                           <i class="fa fa-star eventStarTop"></i> 
-				                                         <?php
-				                                         }
-				                                         ?>
-				                                     </h5>
-			                                    </div> 
-											</div>
-											<div class="col-sm-3 col-xs-12 p0">
-												<div class="detailCounter">
-												   <h4 ><i class="fa fa-clock-o"></i></h4> 
-			                                       <h5><?php echo date('g:i a',strtotime($getData[0]->time)); ?></h5>
-			                                    </div>
-											</div>
-											<div class="col-sm-3 col-xs-12 p0">
-												<div class="detailCounter">
-												  <h4 >Fee</h4> 
-			                                      <h5><i class="fa fa-inr"></i> <?php echo $getData[0]->entry_fee_per_person; ?> / person</h5>
-											  </div>
-											</div>
-											<div class="col-sm-3 col-xs-12 p0">
-												<div class="detailCounter">
-												  <h4 ><i class="fa fa-comment"></i></h4> 
-			                                      <h5><?php echo count($geteventReview); ?>  Reviews</h5>
-											  </div>
-											</div>
-										</div>
-										
-									</div>
-							</div>
-
-						</div>
-					   
-
+							
                     </div>
 					
 							
                 </div>
             </div>
-
-            <div class="overlayCover"></div>	
-
         </div>
         <!--Breadcrumbs end-->
      
 	 
-	    <div class="feature-property properties-list pt-70 pb5">
+	    <div class="feature-property properties-list pt-50 pb5">
 		
-		              
-
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-sm-12 col-xs-12 ">
                         <div class="single-property-details">
 						    <div class="section-title">
-                              <h3 style="padding-bottom: 15px;border-bottom: 1px solid #ccc;"><?php echo $getData[0]->name; ?> 
-			                      <?php
-			                      $cDate=date('Y-m-d');
-			                      $startDate=$getData[0]->start_date;
-			                      $endDate=$getData[0]->end_date;
-			                      if($cDate>$endDate)
-			                      {
-			                      ?>
-			                       <span class="pull-right" style="background:red;padding:0 5px;font-size: 12px;color: white;">Finished</span>
-			                      <?php
-			                        $bookShow="0";
-			                      }
-			                      else if(($cDate<=$endDate) && ($cDate>=$startDate))
-			                      {
-			                      ?>
-			                       <span class="pull-right" style="background:#15539e;padding:0 5px;font-size: 12px;color: white;">Ongoing</span>
-			                      <?php
-			                       $bookShow="1";
-			                      }
-			                      else
-			                      {
-			                      ?>
-			                       <span class="pull-right" style="background:green;padding:0 5px;font-size: 12px;color: white;">Upcoming</span>
-			                      <?php
-			                       $bookShow="1";
-			                      }
-			                      ?>
-                          </h3>
+                              <h3 style="padding-bottom: 15px;border-bottom: 1px solid #ccc;"><?php echo $getData[0]->name; ?> <div class="contact-social pull-right">
+							        <label style="font-size: 12px;">Share : </label>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn fb-btn" target="_blank"><i class="fa fa-facebook"></i></a>
+                                    <a href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw&text=<?php echo $getData[0]->name; ?>&tw_p=tweetbutton&url=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn tw-btn" target="_blank"><i class="fa fa-twitter"></i></a>
+                                    <a href="https://plus.google.com/share?url=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn google-plus-btn" target="_blank"><i class="fa fa-google-plus"></i></a>
+                                    <a href="whatsapp://send?text=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn whatsapp-btn" target="_blank"><i class="fa fa-whatsapp"></i></a>
+                                </div></h3>
                             </div>
 							
                             <div class="property-details-img">
@@ -280,7 +171,43 @@
                                    
                                 </div>
                             </div>
-							
+                            <div class="condition-amenities" style="padding-top: 2%;">
+                                <div class="row">
+								
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="property-condition">
+                                            <div class="condtion-title">
+                                                <h5 style="margin-bottom: 20px;">Event Timing</h5>
+                                            </div>
+                                            <div class="property-condition-list">
+                                                
+                                                    <p><label>Start Date : </label> <?php echo date('F j,Y',strtotime($getData[0]->start_date)); ?></p>
+                                       
+                                                    <p><label>End Date : </label> <?php echo date('F j,Y',strtotime($getData[0]->end_date)); ?></p>
+                                                
+                                                    <p><label>Timing : </label> <?php echo date('g:i a',strtotime($getData[0]->time)); ?></p>
+                                             
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="property-condition">
+                                            <div class="condtion-title">
+                                                <h5 style="margin-bottom: 20px;">Contact Details</h5>
+                                            </div>
+                                            <div class="property-condition-list">
+                                                
+                                                    <p><label>Email : </label> <?php echo $getMerchant[0]->email; ?></p>
+                                       
+                                                    <p><label>Contact : </label> <?php echo $getMerchant[0]->mobile_number; ?></p>
+                                                
+                                                    <p><label>Address : </label> <?php echo $getMerchant[0]->waterpark_address; ?> ,<?php echo $getMerchant[0]->waterpark_city; ?> , <?php echo $getMerchant[0]->waterpark_state; ?></p>
+                                             
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 							<?php
 							if(count($geteventReview)!=0)
 							{
@@ -330,8 +257,6 @@
 							?>
 
 							 <?php
-
-							 
                                 if(($this->session->userdata('WhUserLoggedinId')=="") || ($this->session->userdata('WhUserLoggedinId')=='0') || ($this->session->userdata('WhLoggedInUserType')=='user'))
 			                    {
 			                    	if(($this->session->userdata('WhUserLoggedinId')=="") || ($this->session->userdata('WhUserLoggedinId')=='0'))
@@ -383,7 +308,6 @@
                                          <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->merchant_id; ?>">
                                          <input type="hidden" id="review_user_id" name="user_id" value="<?php echo $userId; ?>">
                                          <input type="hidden" name="page_type" value="event_<?php echo $eventUrl; ?>">
-
 	                                         
                                     	<div class="form-top" style="margin-bottom: 18px;">
                                             <div class='starrr' id='star2'></div>
@@ -406,7 +330,23 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="sidebar right-side pt-50">
+                        <div class="sidebar right-side">
+                           
+                           <aside class="single-side-box search-property ratingSection mb33">
+                                <div class="aside-title text-center ratingDiv">
+                                    <h4 ><?php echo $finalReview; ?></h4> 
+                                    <h5>  
+                                    	<?php
+                                         for($x=1;$x<=$finalReview;$x++)
+                                         {
+                                         ?>
+                                           <i class="fa fa-star eventStar"></i> 
+                                         <?php
+                                         }
+                                         ?>
+                                     </h5>
+                                </div>
+                            </aside>
 
                            <aside class="single-side-box search-property">
                                 <!--<div class="aside-title">
@@ -438,35 +378,16 @@
 		                                          
 		                                <?php
 		                                }
-
-		                                if($bookShow==1)
-		                                {
-		                                	$clsBook="active";
-		                                	$clsEnquire="";
-		                                	$style='';
-
-		                                	$clsBookDiv="in active";
-		                                	$clsEnquireDiv="";
-		                                }
-		                                else
-		                                {
-		                                	$clsBook="";
-		                                	$clsEnquire="active";
-		                                	$style='style="display:none"';
-
-		                                	$clsBookDiv="";
-		                                	$clsEnquireDiv="in active";
-		                                }
 		                                ?>
                                      <div class="elements-tab-1">
 				                           
 				                            <ul class="nav nav-tabs requestTabNav" >
-				                            	<li class="<?php echo $clsBook; ?>" <?php echo $style; ?>><a href="#profile_1"  data-toggle="tab">Book Now</a></li>
-				                                <li class="<?php echo $clsEnquire; ?>"><a href="#profile_2"  data-toggle="tab">Enquire Now</a></li>
+				                            	<li class="active"><a href="#profile_1"  data-toggle="tab">Book Now</a></li>
+				                                <li><a href="#profile_2"  data-toggle="tab">Enquire Now</a></li>
 				                            </ul>
 				                            <!-- Tab panes -->
 				                            <div class="tab-content">
-				                                <div class="tab-pane form_tab fade <?php echo $clsBookDiv; ?>" id="profile_1" <?php echo $style; ?>>
+				                                <div class="tab-pane form_tab fade in active" id="profile_1">
 				                                     <div class="find_home-box" style="padding:10px 5px">
 				                                     	<p style="color: white;text-align: center;">Book your ticket now and enjoy your day.</p>
 					                                    <div class="find_home-box-inner">
@@ -474,15 +395,6 @@
 					                                        $arrtributes=array('id' => 'booking_form');
                                                             echo form_open('ticket-request',$arrtributes);
 					                                       
-					                                       if($this->session->userdata('WhLoggedInUserType')=='merchant') { 
-							                                $user_type_booking="merchant";
-							                               }
-							                               else
-							                               {
-							                                $user_type_booking="user";
-							                               }
-
-
 						                                   if(($this->session->userdata('WhUserLoggedinId')=="") || ($this->session->userdata('WhUserLoggedinId')=='0') || ($this->session->userdata('WhLoggedInUserType')=='merchant'))
 									                    	{
 									                    		$userId="0";
@@ -497,7 +409,7 @@
 					                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->merchant_id; ?>">
 					                                         <input type="hidden" id="booking_user_id" name="user_id" value="<?php echo $userId; ?>">
 					                                         <input type="hidden" name="page_type" value="event_<?php echo $eventUrl; ?>">
-						                                     <input type="hidden" id="booking_user_type" name="booking_user_type" value="<?php echo $user_type_booking; ?>"> 
+						                                         
 
 					                                            <div class="find-home-cagtegory">
 					                                                <div class="row">
@@ -555,7 +467,7 @@
 					                                        </div>
 					                                    </div>
 				                                </div>
-				                                <div class="tab-pane form_tab fade <?php echo $clsEnquireDiv; ?>" id="profile_2">
+				                                <div class="tab-pane form_tab fade" id="profile_2">
 				                                    <div class="find_home-box" style="padding:10px 5px">
 				                                    	<p style="color: white;text-align:center;">Have any query? Feel free to ask.</p>
 					                                    <div class="find_home-box-inner">
@@ -641,161 +553,6 @@
 				                        </div>
                                     </div>
                             </aside>
-							
-							<?php
-								$mapLocation=$getMerchant[0]->map_iframe;
-								if($mapLocation!="")
-								{
-							?>
-							
-							<aside class="single-side-box guide">
-                                <div class="property-buying-guide">
-                                    <div class="single-guide" style="height: auto;padding: 0 10px;">
-                                        <div class="guide-title" style="width: 100%;margin-left: 0px;">
-                                            <h5 class="text-center pt5" ><a href="#" style="font-weight: bold;border-bottom: 1px solid #000;font-size:15px"><?php echo $getMerchant[0]->waterpark_city; ?> , <?php echo $getMerchant[0]->waterpark_state; ?></a></h5>
-											<div id="mapLoc">
-											  <?php echo $mapLocation; ?>
-											</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </aside>
-							
-							<?php
-								}
-							?>
-                            
-							<?php
-
-                            if((count($upcomingEvents)!=0) || (count($pastEvents)!=0))
-							{
-								if((count($upcomingEvents)!=0))
-								{
-									$clsUpcoming="active";
-									$clsPast="";
-									$clsUpcomingDiv="in active";
-									$clsPastDiv="";
-								}
-								else
-								{
-									$clsUpcoming="";
-									$clsPast="active";
-									$clsUpcomingDiv="";
-									$clsPastDiv="in active";
-								}
-							?>
-							<aside class="single-side-box feature">
-                                <div class="aside-title">
-                                    <h5>Other Events</h5>
-                                </div>
-                                <div class="feature-property">
-                                    <div class="row">
-									<div class="elements-tab-1">
-				                           
-				                            <ul class="nav nav-tabs requestTabNav" >
-				                            	<li class="<?php echo $clsUpcoming; ?>"><a href="#upcoming_events"  data-toggle="tab">Upcoming Events</a></li>
-				                                <li class="<?php echo $clsPast; ?>"><a href="#past_events"  data-toggle="tab">Past Events</a></li>
-				                            </ul>
-				                            <!-- Tab panes -->
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade <?php echo $clsUpcomingDiv; ?> pt5" id="upcoming_events">
-				                                     
-														   <?php
-														   if(count($upcomingEvents)!=0)
-														   {
-														     foreach($upcomingEvents as $rto)
-														     {
-																$eventId=$rto->id;
-																$merchantId=$rto->merchant_id;
-																$getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
-																$eventName=strtolower($rto->name);
-
-																$eventName = preg_replace('/\s+/', '-', $eventName);
-																$randPrefix=rand(100,999);
-																$randSubfix=rand(100,999);
-																$urlId=$randPrefix.$eventId.$randSubfix;
-																$urlKey=$eventName.'-'.$urlId;
-														   ?>
-															<div class="col-md-6 col-sm-6 col-xs-12">
-																<div class="single-property">
-																	<div class="property-img">
-																		<a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>">
-																			<img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $rto->image; ?>" alt="" style="width:165px;height:130px">
-																		</a>
-																	</div>
-																	<div class="property-desc text-center" style="background: #262261 none repeat scroll 0 0;">
-																		<div class="property-desc-top">
-																			<h6 style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;"><a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><?php echo $rto->name; ?></a></h6>
-																			<h4 class="price" >on <?php echo date('j F,Y',strtotime($rto->start_date)); ?></h4>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															<?php
-															}
-														  }
-														  else
-														  {
-														  	?>
-                                                            <h5 class="text-center">No Upcoming Events</h5>
-														  	<?php
-														  }
-															?>
-				                                </div>
-				                                <div class="tab-pane fade <?php echo $clsPastDiv; ?> pt5" id="past_events" >
-				                                    <?php
-														   if(count($pastEvents)!=0)
-														   {
-														   foreach($pastEvents as $rtop)
-														   {
-																$eventId=$rtop->id;
-																$merchantId=$rtop->merchant_id;
-																$getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
-																$eventName=strtolower($rtop->name);
-
-																$eventName = preg_replace('/\s+/', '-', $eventName);
-																$randPrefix=rand(100,999);
-																$randSubfix=rand(100,999);
-																$urlId=$randPrefix.$eventId.$randSubfix;
-																$urlKey=$eventName.'-'.$urlId;
-														   ?>
-															<div class="col-md-6 col-sm-6 col-xs-12">
-																<div class="single-property">
-																	<div class="property-img">
-																		<a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>">
-																			<img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $rtop->image; ?>" alt="" style="width:165px;height:130px">
-																		</a>
-																	</div>
-																	<div class="property-desc text-center" style="background: #262261 none repeat scroll 0 0;">
-																		<div class="property-desc-top">
-																			<h6 style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;"><a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><?php echo $rtop->name; ?></a></h6>
-																			<h4 class="price">on <?php echo date('j F,Y',strtotime($rtop->start_date)); ?></h4>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															<?php
-															}
-														  }
-														  else
-														  {
-														  	?>
-                                                            <h5 class="text-center">No Past Events</h5>
-														  	<?php
-														  }
-															?>
-				                                </div>
-				                            </div>
-				                        </div>
-										
-                                    </div>
-                                </div>
-                            </aside>
-
-                            <?php
-                             }
-                            ?>
-							
                         </div>
                     </div>
                 </div>
@@ -921,25 +678,16 @@ $('.datepicker').datepicker();
 
   $('#booking_form').on('submit', function() {
   	   
-  	       var uid=$('#booking_user_id').val();
-           var utype=$('#booking_user_type').val();
-           if(utype=='merchant')
-           {
-                 alert('Please login as user to buy ticket')
-                 return false;
-           }
-           else
-           {
-               if(uid=='0')
-               {
-                 $('#quick-view').modal('show');
-                 return false;
-               }
-               else
-               {
-                return true;
-               }
-           }
+  	   var uid=$('#booking_user_id').val();
+  	   if(uid=='0')
+  	   {
+  	   	 $('#quick-view').modal('show');
+         return false;
+  	   }
+  	   else
+  	   {
+  	   	 return true;
+  	   }
      });
 
   </script>

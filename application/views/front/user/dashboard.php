@@ -58,16 +58,24 @@
                           <?php
 
                             $totalTcktCount=$totalTickets[0]->cnt;
-                            if($totalTcktCount!="")
+                            if($totalTcktCount=="")
                             {
                                 $totalTcktCount='0';
                             }
 
                             $totalRvw=$totalReviews[0]->cnt;
-                            if($totalRvw!="")
+                            if($totalRvw=="")
                             {
                                 $totalRvw='0';
                             }
+
+                            $totalEnqCount=$totalEnqTickets[0]->cnt;
+                            if($totalEnqCount=="")
+                            {
+                                $totalEnqCount='0';
+                            }
+
+                            
                           ?>
                            <div class="agent-funt-fact">
                                         <div class="row">
@@ -78,7 +86,7 @@
                                                             <i class="fa fa-ticket"></i>
                                                         </div>
                                                         <div class="fun-count">
-                                                            <h3 class="counter"><?php echo $totalTcktCount; ?></h3>
+                                                            <h3 class="count"><?php echo $totalTcktCount; ?></h3>
                                                         </div>
                                                     </div>
                                                     <div class="fun-text">
@@ -93,11 +101,26 @@
                                                             <i class="fa fa-comment"></i>
                                                         </div>
                                                         <div class="fun-count">
-                                                            <h3 class="counter"><?php echo $totalRvw; ?></h3>
+                                                            <h3 class="count"><?php echo $totalRvw; ?></h3>
                                                         </div>
                                                     </div>
                                                     <div class="fun-text">
-                                                        <p>Customer's Comments</p>
+                                                        <p>Your's Comments</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <div class="singe-fun-fact dashboardCount">
+                                                    <div class="fun-head">
+                                                        <div class="fun-icon">
+                                                            <i class="fa fa-question"></i>
+                                                        </div>
+                                                        <div class="fun-count">
+                                                            <h3 class="count"><?php echo $totalEnqCount; ?></h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fun-text">
+                                                        <p>Total Enquiries</p>
                                                     </div>
                                                 </div>
                                             </div>

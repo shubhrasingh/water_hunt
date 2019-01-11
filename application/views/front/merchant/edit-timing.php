@@ -32,8 +32,8 @@
     <?php
             $merchantId=$this->session->userdata('WhUserLoggedinId');
             $tblRvw=$this->db->dbprefix.'customer_review';
-            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId'");
-            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId'");
+            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
+            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
 
             $reviewRate=$getReview[0]->reviewRate;
             $userCount=$getReviewCount[0]->cnt_rw;
@@ -90,40 +90,9 @@
             <div class="agent-details">
                 <div class="container">
                     <div class="row">
+                      
                         <div class="col-md-3 col-sm-4 col-xs-12">
-						
-						    <?php
-                             $image=$userDetails[0]->waterpark_logo;
-                             $description=$userDetails[0]->description;
-                             if(empty($image))
-                             {
-                                $image="avatar.png";
-                             }
-
-                             if(empty($description))
-                             {
-                                $description="Update Description of your water park";
-                             }
-                            ?>
-                            <div class="agent-profile">
-                                <div class="single-team">
-                                    <div class="team-img">
-                                        <img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $image; ?>" alt="">
-                                    </div>
-                                    <div class="team-desc sidebar-team-desc">
-                                        <div class="team-member-title">
-                                            <h6><?php echo $userDetails[0]->name; ?></h6>
-                                            <p><?php echo $userDetails[0]->waterpark_name; ?></p>
-                                            <p style="margin: 10px 0px;"><a class="btn btn-sm btn-info btn-profile" href="<?php echo base_url(); ?>merchant/edit-profile">Edit Profile</a> <a class="btn btn-sm btn-danger btn-profile" href="<?php echo base_url(); ?>merchant/change-password">Change Password</a></p>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-						   
+						                   <?php  $this->load->view('front/common/merchant-sidebar'); ?>
                         </div>
 						
                          <div class="col-md-9 col-sm-8 col-xs-12">
@@ -168,16 +137,17 @@
                                               <th class="text-center">Day</th>
                                               <th class="text-center">Closed</th> 
                                               <th  class="text-center">Timing</th> 
+                                              <th  class="text-center"></th> 
                                               
                                             </tr> 
                                           </thead>
                                           <tbody> 
                                              <?php
-                                             $a=1;
+                                             $a=0;
                                              $merchantId=$this->session->userdata('WhUserLoggedinId');
                                              $arr='mon,tue,wed,thur,fri,sat,sun';
-                                             $DayArray=array('mon' => 'Monday','tue' => 'Tuesday' ,'wed' => 'Wednesday' , 'thur' => 'Thursday' ,'fri' => 'Friday', 'sat' => 'Saturday' ,'sun' => 'Sunday');
-                                             foreach($DayArray as $key => $val)
+                                             $DayArray=array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday');
+                                             foreach($DayArray as  $val)
                                              {
                                                $getDt=$this->Admin_model->getWhere('merchant_timing',array('merchant_id' => $merchantId,'day_name' =>$val));
                                                if(count($getDt)!=0)
@@ -190,10 +160,10 @@
                                                ?>
                                               <tr>
                                                  <input type="hidden" name="day_name[]" value="<?php echo $val; ?>">
-                                              <td  class="text-center" scope="row"><?php echo $a; ?></td>
+                                              <td  class="text-center" scope="row"><?php echo $a + 1; ?></td>
                                               <td  class="text-center"><?php echo $val; ?></td> 
                                               <td  class="text-center">
-                                                <select name="closed[]" onchange="getClosedStatus(this.value,'<?php echo $a; ?>')" required style="padding-left:0px;height: 30px;">
+                                                <select name="closed[]" id="closed_<?php echo $a; ?>" onchange="getClosedStatus(this.value,'<?php echo $a; ?>')" required style="padding-left:0px;height: 30px;">
                                                    <option value="0" <?php if((count($getDt)!=0) && ($closed_status=='0')) { echo "selected"; }?>>Open</option>
                                                    <option value="1" <?php if((count($getDt)!=0) && ($closed_status=='1')) { echo "selected"; }?>>Closed</option>
                                                 </select>
@@ -204,7 +174,7 @@
                                                  </div>
                                                  
                                                  <div class="col-sm-4">                          
-                                                       <input type="time" class="timing<?php echo $a; ?>" name="start_time[]" <?php if(count($getDt)!=0) { ?> value="<?php echo $start_time; ?>" <?php } ?> required placeholder="Start Time" style="height: 30px;background:white">
+                                                       <input type="time" id="start_time_<?php echo $a; ?>" class="timing<?php echo $a; ?>" name="start_time[]" <?php if(count($getDt)!=0) { ?> value="<?php echo $start_time; ?>" <?php } ?> required placeholder="Start Time" style="height: 30px;background:white">
                                                   </div>
                                                   
                                                   <div class="col-sm-2">
@@ -212,9 +182,21 @@
                                                  </div>
                                                  
                                                   <div class="col-sm-4">
-                                                       <input type="time" class="timing<?php echo $a; ?>" name="end_time[]" <?php if(count($getDt)!=0) { ?> value="<?php echo $end_time; ?>" <?php } ?>  required style="height: 30px;background:white" placeholder="End Time">
+                                                       <input type="time" id="end_time_<?php echo $a; ?>" class="timing<?php echo $a; ?>" name="end_time[]" <?php if(count($getDt)!=0) { ?> value="<?php echo $end_time; ?>" <?php } ?>  required style="height: 30px;background:white" placeholder="End Time">
                                                   </div>
                                               </td> 
+                                              <td>
+                                                <?php
+                                                 if($a!=0)
+                                                 {
+                                                  $b=$a-1;
+                                                  $prevDay=$DayArray[$b];
+                                                  ?>
+                                                    <input type="checkbox" value="1" onchange="getTimeCheck('<?php echo $a; ?>','<?php echo $b; ?>')" id="checkDay_<?php echo $a; ?>"> <label for="checkDay_<?php echo $a; ?>" style="font-weight:normal;font-size: 13px;cursor:pointer">Same as <?php echo $prevDay; ?></label>
+                                                  <?php
+                                                 }
+                                                ?>
+                                              </td>
                                               </tr>   
                                                <?php
                                                $a++;
@@ -266,6 +248,52 @@
           $('.timing' + rid).prop('style','background:#fff;height:30px');
          break;
        }
+    }
+
+    function getTimeCheck(cid,pid)
+    {
+      var chk=document.getElementById('checkDay_' + cid).checked;
+      if(chk==true)
+      {
+        var cls=$('#closed_' + pid).val();
+        $('#closed_' + cid).val(cls);
+        switch(cls)
+        {
+          case "1":
+
+            $('#start_time_' + cid).val('');
+            $('#end_time_' + cid).val('');
+
+            $('.timing' + cid).prop('readonly',true);
+            $('.timing' + cid).prop('style','background:#eceff8;height:30px');
+
+          break;
+
+          case "0":
+
+            var pst=$('#start_time_' + pid).val();
+            var pet=$('#end_time_' + pid).val();
+
+            $('#start_time_' + cid).val(pst);
+            $('#end_time_' + cid).val(pet);
+
+             $('.timing' + cid).prop('readonly',false);
+             $('.timing' + cid).prop('style','background:#fff;height:30px');
+
+          break;
+        }
+      }
+      else
+      {
+           $('#closed_' + cid).val('0');
+           $('#start_time_' + cid).val('');
+           $('#end_time_' + cid).val('');
+
+           $('.timing' + cid).prop('readonly',false);
+          $('.timing' + cid).prop('style','background:#fff;height:30px');
+      }
+      
+
     }
   </script>  
 </body>

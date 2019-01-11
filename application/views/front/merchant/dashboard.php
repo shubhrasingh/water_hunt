@@ -23,8 +23,8 @@
           <?php
             $merchantId=$this->session->userdata('WhUserLoggedinId');
             $tblRvw=$this->db->dbprefix.'customer_review';
-            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId'");
-            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId'");
+            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
+            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
 
             $reviewRate=$getReview[0]->reviewRate;
             $userCount=$getReviewCount[0]->cnt_rw;

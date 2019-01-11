@@ -45,7 +45,8 @@
                                                     <?php
                                                     }
                                                     ?>
-                                                    <li><a href="#">Bookings</a></li>
+                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/bookings">Bookings</a></li>
+                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/enquiries">Enquiries</a></li>
                                                 </ul>
                                             </li>
                                            <li><a href="<?php echo base_url(); ?>logout" style="    padding: 0px;"><i class="fa fa-lock"></i> Logout</a></li>
@@ -88,13 +89,33 @@
                                             <li><a href="#">About Us</a></li>
                                             <li><a href="#"> Water Park</a>
                                                 <ul class="dropdown_menu">
-                                                    <li><a href="#">Nilansh Theme Park</a></li>
-                                                    <li><a href="#">Anadi Water Park</a></li>
-                                                    <li><a href="#">Disney Water Wonder park</a></li>
-                                                    <li><a href="#">Diamond Aqua Park</a></li>
+                                                    <?php
+                                                    $prkCount=$this->Admin_model->getDataCount('merchants',array('status' => 1));
+                                                    $getWaterPark=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => 1),'6','0','id','DESC');
+                                                    foreach($getWaterPark as $prk)
+                                                    {
+                                                        $parkId=$prk->id;
+                                                        $parkName=strtolower($prk->waterpark_name);
+
+                                                        $parkName = preg_replace('/\s+/', '-', $parkName);
+                                                        $randPrefix=rand(100,999);
+                                                        $randSubfix=rand(100,999);
+                                                        $urlId=$randPrefix.$parkId.$randSubfix;
+                                                        $urlKey=$parkName.'-'.$urlId;
+                                                    ?>
+                                                      <li><a href="<?php echo base_url(); ?>park-detail/<?php echo $urlKey; ?>"><?php echo $prk->waterpark_name; ?></a></li>
+                                                    <?php
+                                                    }
+                                                    if($prkCount>2)
+                                                    {
+                                                        ?>
+                                                        <li style="background: #25a9e0;"><a style="color: white;" href="<?php echo base_url(); ?>parks">View More</a></li>
+                                                        <?php
+                                                    }
+                                                    ?>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Events</a></li>
+                                            <li><a href="<?php echo base_url() ?>events">Events</a></li>
                                             <li><a href="#">Services</a></li>
                                             <li><a href="#"> Contact Us</a></li>
                                            
@@ -114,17 +135,83 @@
                                     <li><a href="#">About Us</a></li>
                                     <li><a href="#"> Water Park</a>
                                         <ul class="dropdown_menu">
-                                            <li><a href="#">Nilansh Theme Park</a></li>
-                                            <li><a href="#">Anadi Water Park</a></li>
-                                            <li><a href="#">Disney Water Wonder park</a></li>
-                                            <li><a href="#">Diamond Aqua Park</a></li>
-                                        </ul>
+                                                    <?php
+                                                    $prkCount=$this->Admin_model->getDataCount('merchants',array('status' => 1));
+                                                    $getWaterPark=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => 1),'6','0','id','DESC');
+                                                    foreach($getWaterPark as $prk)
+                                                    {
+                                                        $parkId=$prk->id;
+                                                        $parkName=strtolower($prk->waterpark_name);
+
+                                                        $parkName = preg_replace('/\s+/', '-', $parkName);
+                                                        $randPrefix=rand(100,999);
+                                                        $randSubfix=rand(100,999);
+                                                        $urlId=$randPrefix.$parkId.$randSubfix;
+                                                        $urlKey=$parkName.'-'.$urlId;
+                                                    ?>
+                                                      <li><a href="<?php echo base_url(); ?>park-detail/<?php echo $urlKey; ?>"><?php echo $prk->waterpark_name; ?></a></li>
+                                                    <?php
+                                                    }
+                                                    if($prkCount>2)
+                                                    {
+                                                        ?>
+                                                        <li style="background: #25a9e0;"><a style="color: white;" href="<?php echo base_url(); ?>parks">View More</a></li>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </ul>
                                     </li>
-                                    <li><a href="#">Events</a></li>
+                                    <li><a href="<?php echo base_url() ?>events">Events</a></li>
                                     <li><a href="#">Services</a></li>
                                     <li><a href="#"> Contact Us</a></li>
-                                    <li><a href="<?php echo base_url(); ?>login">Login</a></li>
-                                    <li><a href="<?php echo base_url(); ?>register">Register</a></li>
+                                    <?php
+                                        if(($this->session->userdata('WhUserLoggedinId')!="") && ($this->session->userdata('WhUserLoggedinId')!='0'))
+                                        {
+                                         $userId=$this->session->userdata('WhUserLoggedinId');
+                                         $userType=$this->session->userdata('WhLoggedInUserType');
+                                         switch($userType)
+                                         {
+                                            case "merchant":
+                                               $folder="merchant";
+                                            break;
+
+                                            case "user":
+                                               $folder="user";
+                                            break;
+                                         }
+
+                                         $name=$userDetails[0]->name;
+                                         $exName=explode(' ',$name);
+                                         $name=$exName[0];
+                                        ?>
+                                           <li><a  href="<?php echo base_url(); ?><?php echo $folder ?>" > Welcome <?php echo $name; ?> </a>
+                                                <ul class="dropdown_menu">
+                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/dashboard">Dashboard</a></li>
+                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/profile">Profile</a></li>
+                                                    <?php
+                                                    if($userType=='merchant')
+                                                    {
+                                                    ?>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/gallery">My Gallery</a></li>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/events">Events</a></li>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/bookings">Bookings</a></li>
+                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/enquiries">Enquiries</a></li>
+                                                </ul>
+                                            </li>
+                                           <li><a href="<?php echo base_url(); ?>logout" ><i class="fa fa-lock"></i> Logout</a></li>
+                                        <?php
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                           <li><a href="<?php echo base_url(); ?>login"> Login</a></li>
+                                           <li><a href="<?php echo base_url(); ?>register"> Register</a></li>
+                                        <?php
+                                        }
+                                        ?>
                                 </ul>
                             </nav>
                         </div>
@@ -149,7 +236,7 @@
                                    else
                                    {
                                     ?>
-                                     <a href="#" style="background:#f6921e none repeat scroll 0 0">BOOK TICKET</a>
+                                     <a href="<?php echo base_url(); ?>parks" style="background:#f6921e none repeat scroll 0 0">BOOK TICKET</a>
                                     <?php
                                     }
                                    ?>
@@ -166,10 +253,15 @@
                         <div class="col-md-12">
                             <div class="search-form">
                                 <div class="search-form-inner">
-                                    <form action="#">
-                                        <input type="text" placeholder="Search..">
+                                    <?php
+                                    $attr=array('onsubmit' => 'getSearch()');
+                                    echo form_open('find',$attr);
+                                    ?>
+                                        <input type="text" id="find_search" name="find" placeholder="Search..">
                                         <button type="submit"><i class="icofont icofont-search-alt-1"></i></button>
-                                    </form>
+                                   <?php
+                                   echo form_close();
+                                   ?>
                                 </div>
                                 <div class="search-close-btn">
                                     <a href="#"><i class="zmdi zmdi-close"></i></a>

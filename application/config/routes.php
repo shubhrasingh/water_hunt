@@ -75,6 +75,11 @@ $route['parks/city/(:any)/(:any)']                                  = 'website/c
 $route['events']                                                    = 'website/allEvents';
 $route['events/(:any)']                                             = 'website/allEvents/$1';
 
+$route['find']                                                      = 'website/findResult';
+
+$route['search/(:any)']                                             = 'website/searchResult/$1';
+$route['search/(:any)/(:any)']                                      = 'website/searchResult/$1/$2';
+
 $route['submit-review']                                             = 'website/submitReview';
 $route['ticket-request']                                            = 'website/submitTicketRequest';
 $route['billing-detail']                                            = 'website/billingDetails';

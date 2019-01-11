@@ -23,8 +23,8 @@
     <?php
             $merchantId=$this->session->userdata('WhUserLoggedinId');
             $tblRvw=$this->db->dbprefix.'customer_review';
-            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId'");
-            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId'");
+            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
+            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
 
             $reviewRate=$getReview[0]->reviewRate;
             $userCount=$getReviewCount[0]->cnt_rw;
@@ -82,39 +82,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3 col-sm-4 col-xs-12">
-						
-						    <?php
-                             $image=$userDetails[0]->waterpark_logo;
-                             $description=$userDetails[0]->description;
-                             if(empty($image))
-                             {
-                                $image="avatar.png";
-                             }
-
-                             if(empty($description))
-                             {
-                                $description="Update Description of your water park";
-                             }
-                            ?>
-                            <div class="agent-profile">
-                                <div class="single-team">
-                                    <div class="team-img">
-                                        <img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $image; ?>" alt="">
-                                    </div>
-                                    <div class="team-desc sidebar-team-desc">
-                                        <div class="team-member-title">
-                                            <h6><?php echo $userDetails[0]->name; ?></h6>
-                                            <p><?php echo $userDetails[0]->waterpark_name; ?></p>
-                                            <p style="margin: 10px 0px;"><a class="btn btn-sm btn-info btn-profile" href="<?php echo base_url(); ?>merchant/edit-profile">Edit Profile</a> <a class="btn btn-sm btn-danger btn-profile" href="<?php echo base_url(); ?>merchant/change-password">Change Password</a></p>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-						   
+						   <?php  $this->load->view('front/common/merchant-sidebar'); ?>
                         </div>
 						
                          <?php

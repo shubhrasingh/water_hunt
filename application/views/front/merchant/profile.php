@@ -23,8 +23,8 @@
     <?php
             $merchantId=$this->session->userdata('WhUserLoggedinId');
             $tblRvw=$this->db->dbprefix.'customer_review';
-            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId'");
-            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId'");
+            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
+            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$merchantId' and `event_id`='0'");
 
             $reviewRate=$getReview[0]->reviewRate;
             $userCount=$getReviewCount[0]->cnt_rw;
@@ -109,37 +109,7 @@
                                 ?>
 
                         <div class="col-md-3 col-sm-4 col-xs-12">
-                             <?php
-                             $image=$userDetails[0]->waterpark_logo;
-                             $description=$userDetails[0]->description;
-                             if(empty($image))
-                             {
-                                $image="avatar.png";
-                             }
-
-                             if(empty($description))
-                             {
-                                $description="Update Description of your water park";
-                             }
-                            ?>
-                            <div class="agent-profile">
-                                <div class="single-team">
-                                    <div class="team-img">
-                                        <img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $image; ?>" alt="">
-                                    </div>
-                                    <div class="team-desc sidebar-team-desc">
-                                        <div class="team-member-title">
-                                            <h6><?php echo $userDetails[0]->name; ?></h6>
-                                            <p><?php echo $userDetails[0]->waterpark_name; ?></p>
-                                            <p style="margin: 10px 0px;"><a class="btn btn-sm btn-info btn-profile" href="<?php echo base_url(); ?>merchant/edit-profile">Edit Profile</a> <a class="btn btn-sm btn-danger btn-profile" href="<?php echo base_url(); ?>merchant/change-password">Change Password</a></p>
-                                            
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
+                             <?php  $this->load->view('front/common/merchant-sidebar'); ?>
                         </div>
 
                          <?php
@@ -173,62 +143,6 @@
                                 </div>
                             </div>
 							
-							<div class="agent-description mt10">
-							   <h4 class="pb2" style="border-bottom: 1px solid #ddd;"> Timings  <a href="<?php echo base_url(); ?>merchant/edit-timing" class="btn btn-mini btn-success pull-right">Update Timing</a> </h4>
-                               <div class="table-responsive" style="background: #f5f9fd;padding: 3%;">
-									<table class="table">
-										<thead> 
-											<tr>
-												<th>#</th> 
-												<th>Day</th>
-												<th>Timing</th> 
-											</tr> 
-										</thead>
-										<tbody> 
-										   <?php
-										   $a=1;
-										   $merchantId=$this->session->userdata('WhUserLoggedinId');
-										   $arr='mon,tue,wed,thur,fri,sat,sun';
-										   $DayArray=array('mon' => 'Monday','tue' => 'Tuesday' ,'wed' => 'Wednesday' , 'thur' => 'Thursday' ,'fri' => 'Friday', 'sat' => 'Saturday' ,'sun' => 'Sunday');
-										   foreach($DayArray as $key => $val)
-										   {
-											   $getDt=$this->Admin_model->getWhere('merchant_timing',array('merchant_id' => $merchantId,'day_name' =>$val));
-											   if(count($getDt)!=0)
-											   {
-												   $closed_status=$getDt[0]->closed_status;
-												   switch($closed_status)
-												   {
-													   case "1":
-													     $time='<span style="color:red">Closed</span>';
-													   break;
-													   
-													   case "0":
-													     $start_time=date('g:i a',strtotime($getDt[0]->start_time));
-													     $end_time=date('g:i a',strtotime($getDt[0]->end_time));
-													     $time='<span >'.$start_time.' to '.$end_time.'</span>';
-													   break;
-												   }
-											   }
-											   else
-											   {
-												   $time="Update Timings";
-											   }
-											   ?>
-											  <tr>
-												<td scope="row"><?php echo $a; ?></td>
-												<td><?php echo $val; ?></td> 
-												<td><?php echo $time; ?></td> 
-											  </tr>   
-											   <?php
-											   $a++;
-										   }
-										   ?>
-										</tbody> 
-									</table>    
-								</div>
-                            </div>
-							
-							
                         </div>
 
                         <?php
@@ -256,7 +170,7 @@
                            $entry_fee_per_person='<i class="fa fa-inr"></i> '.$entry_fee_per_person .' / person';
                          }
                         ?>
-                        <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 bg-1" style="padding: 2%;">
                             <div class="contact-details">
                                 <div class="contact-title">
                                     <h5>Contact Details</h5>

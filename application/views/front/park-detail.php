@@ -3,28 +3,28 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title><?php echo $getData[0]->name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?></title>
-    <meta name="keyword" content="<?php echo $getData[0]->name; ?> , <?php echo $siteDetails['companyData']['0']->company_name; ?>">
+    <title><?php echo $getData[0]->waterpark_name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?></title>
+    <meta name="keyword" content="<?php echo $getData[0]->waterpark_name; ?> , <?php echo $siteDetails['companyData']['0']->company_name; ?>">
     <meta name="description" content="<?php echo $getData[0]->description; ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Schema.org for Google -->
 
-    <meta itemprop="name" content="<?php echo $getData[0]->name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?>">
+    <meta itemprop="name" content="<?php echo $getData[0]->waterpark_name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?>">
     <meta itemprop="description" content="<?php echo $getData[0]->description; ?>">
     <meta itemprop="type" content="image"/>
-    <meta itemprop="image" content="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $getData[0]->image; ?>" />
+    <meta itemprop="image" content="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getData[0]->waterpark_logo; ?>" />
                         
                         
                         
                         
     <!-- Open Graph general (Facebook, Pinterest & Google+) -->
-    <meta name="og:title" content="<?php echo $getData[0]->name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?>">
+    <meta name="og:title" content="<?php echo $getData[0]->waterpark_name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?>">
     <meta name="og:description" content="<?php echo $getData[0]->description; ?>">
-    <meta name="og:image" content="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $getData[0]->image; ?>">
+    <meta name="og:image" content="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getData[0]->waterpark_logo; ?>">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="506">
-    <meta name="og:url" content="<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>">
+    <meta name="og:url" content="<?php echo base_url(); ?>park-detail/<?php echo $parkUrl; ?>">
     <meta name="og:site_name" content="<?php echo $siteDetails['companyData']['0']->company_name; ?>">
     <meta name="og:type" content="website">
             <!-------------End Facebook--------->
@@ -36,7 +36,7 @@
     <meta name="twitter:site" content="<?php echo $siteDetails['companyData']['0']->company_name; ?>">
     <meta name="twitter:title" content="<?php echo $getData[0]->name; ?> - <?php echo $siteDetails['companyData']['0']->company_name; ?>">
     <meta name="twitter:description" content="<?php echo $getData[0]->description; ?>">
-    <meta name="twitter:image" content="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $getData[0]->image; ?>">
+    <meta name="twitter:image" content="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getData[0]->waterpark_logo; ?>">
 
 
 
@@ -51,7 +51,7 @@
 	 <script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script> <!-- 16 KB -->
      
 	 <?php
-	 $profile_cover=$getMerchant[0]->profile_cover;
+	 $profile_cover=$getData[0]->profile_cover;
      if(empty($profile_cover))
      {
         $profile_cover="default-cover.jpg";
@@ -77,10 +77,10 @@
         <!--Feature property section start-->
     
 	      <?php
-            $eventId=$getData[0]->id;
+            $parkId=$getData[0]->id;
             $tblRvw=$this->db->dbprefix.'customer_review';
-            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE event_id='$eventId'");
-            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE event_id='$eventId'");
+            $getReview=$this->Admin_model->getQuery("SELECT SUM(rating) as reviewRate FROM $tblRvw WHERE merchant_id='$parkId' and `event_id`='0'");
+            $getReviewCount=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt_rw FROM $tblRvw WHERE merchant_id='$parkId' and `event_id`='0'");
 
             $reviewRate=$getReview[0]->reviewRate;
             $userCount=$getReviewCount[0]->cnt_rw;
@@ -95,8 +95,8 @@
                 $finalReview='1';
             }
             
-			                            $parkId=$getMerchant[0]->id;
-                                        $parkName=strtolower($getMerchant[0]->waterpark_name);
+			                            $parkId=$getData[0]->id;
+                                        $parkName=strtolower($getData[0]->waterpark_name);
 
                                         $parkName = preg_replace('/\s+/', '-', $parkName);
                                         $randPrefix=rand(100,999);
@@ -114,9 +114,9 @@
                         <div class="breadcrumbs-inner">
                             
                             <div class="breadcrumbs-menu pull-right pt6 pb10">
-                                <!--<ul>
+                               <!--<ul>
                                     <li><a href="<?php echo base_url(); ?>">Home /</a></li>
-                                    <li><?php echo $getData[0]->name; ?> </li>
+                                    <li><?php echo $getData[0]->waterpark_name; ?> </li>
                                 </ul>-->
                               
                             </div>
@@ -126,7 +126,7 @@
 						<div class="merchantDIv">
 							<div class="col-md-2 col-sm-2 col-xs-2 ">
 								<div class="merchantLogo" >
-									<a href="<?php echo base_url(); ?>park-detail/<?php echo $urlParkKey; ?>"><img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getMerchant[0]->waterpark_logo; ?>" ></a>
+									<a href="<?php echo base_url(); ?>park-detail/<?php echo $urlParkKey; ?>"><img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getData[0]->waterpark_logo; ?>" ></a>
 								</div>
 							</div>
 
@@ -134,9 +134,20 @@
 								
 									<div class="col-md-9 col-sm-9 col-xs-9 p0">
 										<div class="merchantDetail" >
-											<h5><a href="<?php echo base_url(); ?>park-detail/<?php echo $urlParkKey; ?>"><?php echo $getMerchant[0]->waterpark_name; ?></a></h5>
-											<p><i class="fa fa-home"></i> <?php echo $getMerchant[0]->waterpark_city; ?> , <?php echo $getMerchant[0]->waterpark_state; ?></p>
-											<p><i class="fa fa-calendar"></i>  <?php echo date('j M,Y',strtotime($getData[0]->start_date)); ?> To <?php echo date('j M,Y',strtotime($getData[0]->end_date)); ?></p>
+											<h5><a href="<?php echo base_url(); ?>park-detail/<?php echo $urlParkKey; ?>"><?php echo $getData[0]->waterpark_name; ?></a></h5>
+											<p><i class="fa fa-home"></i> <?php echo $getData[0]->waterpark_city; ?> , <?php echo $getData[0]->waterpark_state; ?></p>
+											<?php
+                                            $closed_on=$getClosedTiming[0]->closed_on;
+                                            if($closed_on!="")
+                                            {
+                                            	?>
+
+                                             <p><i class="fa fa-adjust"></i> Closed on <?php echo $closed_on; ?></p>
+                                            	<?php
+                                            }
+                                           
+											?>
+											
 										</div>
 										
 									</div>
@@ -144,21 +155,20 @@
 									<div class="col-md-3 col-sm-3 col-xs-3 p0">
 										<div class="entry_price share-options text-right pt5">
 											<div class="contact-social pull-right">
-			                                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn fb-btn" target="_blank"><i class="fa fa-facebook"></i></a>
-			                                    <a href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw&text=<?php echo $getData[0]->name; ?>&tw_p=tweetbutton&url=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn tw-btn" target="_blank"><i class="fa fa-twitter"></i></a>
-			                                    <a href="https://plus.google.com/share?url=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn google-plus-btn" target="_blank"><i class="fa fa-google-plus"></i></a>
-			                                    <a href="whatsapp://send?text=<?php echo base_url(); ?>event-detail/<?php echo $eventUrl; ?>" class="share-btn whatsapp-btn" target="_blank"><i class="fa fa-whatsapp"></i></a>
+			                                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo base_url(); ?>park-detail/<?php echo $parkUrl; ?>" class="share-btn fb-btn" target="_blank"><i class="fa fa-facebook"></i></a>
+			                                    <a href="https://twitter.com/intent/tweet?ref_src=twsrc%5Etfw&text=<?php echo $getData[0]->waterpark_name; ?>&tw_p=tweetbutton&url=<?php echo base_url(); ?>park-detail/<?php echo $parkUrl; ?>" class="share-btn tw-btn" target="_blank"><i class="fa fa-twitter"></i></a>
+			                                    <a href="https://plus.google.com/share?url=<?php echo base_url(); ?>park-detail/<?php echo $parkUrl; ?>" class="share-btn google-plus-btn" target="_blank"><i class="fa fa-google-plus"></i></a>
+			                                    <a href="whatsapp://send?text=<?php echo base_url(); ?>park-detail/<?php echo $parkUrl; ?>" class="share-btn whatsapp-btn" target="_blank"><i class="fa fa-whatsapp"></i></a>
 			                                </div>
 										</div>
 									</div>
 							</div>
 
-						</div>
 
 
-						<div class="merchantRatingDetail">
+						<div class="merchantRatingDetail" style="width: 83%;top: 93px;left: 16%;">
 				
-							<div class="col-md-10 col-sm-10 col-xs-10 col-md-offset-2">
+							<div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px;margin: 0px;">
 								
 									<div class="col-md-12 col-sm-12 col-xs-12 p0">
 									
@@ -180,12 +190,6 @@
 											</div>
 											<div class="col-sm-3 col-xs-12 p0">
 												<div class="detailCounter">
-												   <h4 ><i class="fa fa-clock-o"></i></h4> 
-			                                       <h5><?php echo date('g:i a',strtotime($getData[0]->time)); ?></h5>
-			                                    </div>
-											</div>
-											<div class="col-sm-3 col-xs-12 p0">
-												<div class="detailCounter">
 												  <h4 >Fee</h4> 
 			                                      <h5><i class="fa fa-inr"></i> <?php echo $getData[0]->entry_fee_per_person; ?> / person</h5>
 											  </div>
@@ -193,15 +197,25 @@
 											<div class="col-sm-3 col-xs-12 p0">
 												<div class="detailCounter">
 												  <h4 ><i class="fa fa-comment"></i></h4> 
-			                                      <h5><?php echo count($geteventReview); ?>  Reviews</h5>
+			                                      <h5><?php echo count($getReview); ?>  Reviews</h5>
 											  </div>
 											</div>
+
+											<div class="col-sm-3 col-xs-12 p0">
+												<div class="detailCounter">
+												  <a class="btn btn-sm btn-info" onclick="gotodiv()" style="background: #262261;border: 1px solid #262261;margin-top: 10px;"> BOOK TICKET</a>
+											  </div>
+											</div>
+
 										</div>
 										
 									</div>
 							</div>
 
 						</div>
+
+						</div>
+
 					   
 
                     </div>
@@ -218,54 +232,25 @@
 	 
 	    <div class="feature-property properties-list pt-70 pb5">
 		
-		              
-
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-sm-12 col-xs-12 ">
                         <div class="single-property-details">
 						    <div class="section-title">
-                              <h3 style="padding-bottom: 15px;border-bottom: 1px solid #ccc;"><?php echo $getData[0]->name; ?> 
-			                      <?php
-			                      $cDate=date('Y-m-d');
-			                      $startDate=$getData[0]->start_date;
-			                      $endDate=$getData[0]->end_date;
-			                      if($cDate>$endDate)
-			                      {
-			                      ?>
-			                       <span class="pull-right" style="background:red;padding:0 5px;font-size: 12px;color: white;">Finished</span>
-			                      <?php
-			                        $bookShow="0";
-			                      }
-			                      else if(($cDate<=$endDate) && ($cDate>=$startDate))
-			                      {
-			                      ?>
-			                       <span class="pull-right" style="background:#15539e;padding:0 5px;font-size: 12px;color: white;">Ongoing</span>
-			                      <?php
-			                       $bookShow="1";
-			                      }
-			                      else
-			                      {
-			                      ?>
-			                       <span class="pull-right" style="background:green;padding:0 5px;font-size: 12px;color: white;">Upcoming</span>
-			                      <?php
-			                       $bookShow="1";
-			                      }
-			                      ?>
-                          </h3>
+                              <h3 style="padding-bottom: 15px;border-bottom: 1px solid #ccc;"><?php echo $getData[0]->waterpark_name; ?> </h3>
                             </div>
 							
                             <div class="property-details-img">
 							   
 								<!-- 2. Add images to <div class="fotorama"></div>. -->
 								<div class="fotorama" data-nav="thumbs" data-width="700" data-ratio="700/467" data-max-width="100%">
-								  <img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $getData[0]->image; ?>">
+								  <img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $getData[0]->waterpark_logo; ?>">
 								  
 								  <?php
-								  foreach($geteventGallery as $grt)
+								  foreach($getGallery as $grt)
 								  {
 									  ?>
-									   <img src="<?php echo base_url(); ?>assets/front/uploads/events/<?php echo $grt->image; ?>">
+									   <img src="<?php echo base_url(); ?>assets/front/uploads/gallery/<?php echo $grt->image; ?>">
 									  <?php
 								  }
 								  ?>
@@ -282,15 +267,16 @@
                             </div>
 							
 							<?php
-							if(count($geteventReview)!=0)
+
+							if(count($getMerchantReview)!=0)
 							{
 							?>
                             <div class="feedback">
                                 <div class="feedback-title">
-                                    <h5 style="border-bottom: 1px solid #ccc;padding-bottom: 1%;"><?php echo count($geteventReview); ?> Reviews</h5>
+                                    <h5 style="border-bottom: 1px solid #ccc;padding-bottom: 1%;"><?php echo count($getMerchantReview); ?> Reviews</h5>
                                 </div>
 								<?php
-								foreach($geteventReview as $rvw)
+								foreach($getMerchantReview as $rvw)
 								{
 									$user_id=$rvw->user_id;
 									$rating=$rvw->rating;
@@ -330,8 +316,6 @@
 							?>
 
 							 <?php
-
-							 
                                 if(($this->session->userdata('WhUserLoggedinId')=="") || ($this->session->userdata('WhUserLoggedinId')=='0') || ($this->session->userdata('WhLoggedInUserType')=='user'))
 			                    {
 			                    	if(($this->session->userdata('WhUserLoggedinId')=="") || ($this->session->userdata('WhUserLoggedinId')=='0'))
@@ -379,11 +363,10 @@
 		                              echo form_open('submit-review',$attributes);
 		                            ?>
 
-                                         <input type="hidden" name="event_id" value="<?php echo $getData[0]->id; ?>">
-                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->merchant_id; ?>">
+                                         <input type="hidden" name="event_id" value="0">
+                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->id; ?>">
                                          <input type="hidden" id="review_user_id" name="user_id" value="<?php echo $userId; ?>">
-                                         <input type="hidden" name="page_type" value="event_<?php echo $eventUrl; ?>">
-
+                                         <input type="hidden" name="page_type" value="park_<?php echo $parkUrl; ?>">
 	                                         
                                     	<div class="form-top" style="margin-bottom: 18px;">
                                             <div class='starrr' id='star2'></div>
@@ -408,7 +391,8 @@
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="sidebar right-side pt-50">
 
-                           <aside class="single-side-box search-property">
+                           <aside class="single-side-box search-property" id="bookTicketDiv" <?php if(count($getTiming)!=0) {
+							?> style="display:none" <?php } ?>>
                                 <!--<div class="aside-title">
                                     <h5>Ticket Request</h5>
                                 </div>-->
@@ -438,35 +422,16 @@
 		                                          
 		                                <?php
 		                                }
-
-		                                if($bookShow==1)
-		                                {
-		                                	$clsBook="active";
-		                                	$clsEnquire="";
-		                                	$style='';
-
-		                                	$clsBookDiv="in active";
-		                                	$clsEnquireDiv="";
-		                                }
-		                                else
-		                                {
-		                                	$clsBook="";
-		                                	$clsEnquire="active";
-		                                	$style='style="display:none"';
-
-		                                	$clsBookDiv="";
-		                                	$clsEnquireDiv="in active";
-		                                }
 		                                ?>
                                      <div class="elements-tab-1">
 				                           
 				                            <ul class="nav nav-tabs requestTabNav" >
-				                            	<li class="<?php echo $clsBook; ?>" <?php echo $style; ?>><a href="#profile_1"  data-toggle="tab">Book Now</a></li>
-				                                <li class="<?php echo $clsEnquire; ?>"><a href="#profile_2"  data-toggle="tab">Enquire Now</a></li>
+				                            	<li class="active"><a href="#profile_1"  data-toggle="tab">Book Now</a></li>
+				                                <li><a href="#profile_2"  data-toggle="tab">Enquire Now</a></li>
 				                            </ul>
 				                            <!-- Tab panes -->
 				                            <div class="tab-content">
-				                                <div class="tab-pane form_tab fade <?php echo $clsBookDiv; ?>" id="profile_1" <?php echo $style; ?>>
+				                                <div class="tab-pane form_tab fade in active" id="profile_1">
 				                                     <div class="find_home-box" style="padding:10px 5px">
 				                                     	<p style="color: white;text-align: center;">Book your ticket now and enjoy your day.</p>
 					                                    <div class="find_home-box-inner">
@@ -474,6 +439,7 @@
 					                                        $arrtributes=array('id' => 'booking_form');
                                                             echo form_open('ticket-request',$arrtributes);
 					                                       
+
 					                                       if($this->session->userdata('WhLoggedInUserType')=='merchant') { 
 							                                $user_type_booking="merchant";
 							                               }
@@ -493,11 +459,11 @@
 									                    	}
 			                    	                        ?>
 
-					                                         <input type="hidden" name="event_id" value="<?php echo $getData[0]->id; ?>">
-					                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->merchant_id; ?>">
+					                                         <input type="hidden" name="event_id" value="0">
+					                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->id; ?>">
 					                                         <input type="hidden" id="booking_user_id" name="user_id" value="<?php echo $userId; ?>">
-					                                         <input type="hidden" name="page_type" value="event_<?php echo $eventUrl; ?>">
-						                                     <input type="hidden" id="booking_user_type" name="booking_user_type" value="<?php echo $user_type_booking; ?>"> 
+					                                         <input type="hidden" name="page_type" value="park_<?php echo $parkUrl; ?>">
+						                                     <input type="hidden" id="booking_user_type" name="booking_user_type" value="<?php echo $user_type_booking; ?>">
 
 					                                            <div class="find-home-cagtegory">
 					                                                <div class="row">
@@ -555,7 +521,7 @@
 					                                        </div>
 					                                    </div>
 				                                </div>
-				                                <div class="tab-pane form_tab fade <?php echo $clsEnquireDiv; ?>" id="profile_2">
+				                                <div class="tab-pane form_tab fade" id="profile_2">
 				                                    <div class="find_home-box" style="padding:10px 5px">
 				                                    	<p style="color: white;text-align:center;">Have any query? Feel free to ask.</p>
 					                                    <div class="find_home-box-inner">
@@ -571,10 +537,10 @@
 									                    	}
 			                    	                        ?>
 
-					                                         <input type="hidden" name="event_id" value="<?php echo $getData[0]->id; ?>">
-					                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->merchant_id; ?>">
+					                                         <input type="hidden" name="event_id" value="0">
+					                                         <input type="hidden" name="merchant_id" value="<?php echo $getData[0]->id; ?>">
 					                                         <input type="hidden" id="booking_user_id" name="user_id" value="<?php echo $userId; ?>">
-					                                         <input type="hidden" name="page_type" value="event_<?php echo $eventUrl; ?>">
+					                                         <input type="hidden" name="page_type" value="park_<?php echo $parkUrl; ?>">
 					                                            <div class="find-home-cagtegory">
 					                                                <div class="row">
                                                                         <div class="col-md-6">
@@ -643,7 +609,52 @@
                             </aside>
 							
 							<?php
-								$mapLocation=$getMerchant[0]->map_iframe;
+							if(count($getTiming)!=0)
+							{
+							?>
+							<aside class="single-side-box feature">
+                                <div class="aside-title">
+                                    <h5>Timing</h5>
+                                </div>
+                                <div class="feature-property">
+                                    <div class="row">
+									 <div class="single-guide" style="height: auto;">
+                                        <div class="guide-title" style="width: 100%;margin-left: 0px;padding-top: 20px;">
+                                           
+                                            <?php
+                                            foreach($getTiming as $grt)
+                                            {
+                                            	   $closed_status=$grt->closed_status;
+                                                   switch($closed_status)
+                                                   {
+                                                       case "1":
+                                                         $time='<span style="color:red">Closed</span>';
+                                                       break;
+                                                       
+                                                       case "0":
+                                                         $start_time=date('g:i a',strtotime($grt->start_time));
+                                                         $end_time=date('g:i a',strtotime($grt->end_time));
+                                                         $time='<span >'.$start_time.' to '.$end_time.'</span>';
+                                                       break;
+                                                   }
+                                            ?>
+                                              <p><label><?php echo $grt->day_name; ?> : </label> <span class="pull-right"> <?php echo $time; ?> </span></p>
+                                           <?php
+                                           }
+                                           ?>
+                                        </div>
+                                      </div>
+										
+                                    </div>
+                                </div>
+                            </aside>
+							
+                            <?php
+							}
+							?>
+							
+							<?php
+								$mapLocation=$getData[0]->map_iframe;
 								if($mapLocation!="")
 								{
 							?>
@@ -652,7 +663,7 @@
                                 <div class="property-buying-guide">
                                     <div class="single-guide" style="height: auto;padding: 0 10px;">
                                         <div class="guide-title" style="width: 100%;margin-left: 0px;">
-                                            <h5 class="text-center pt5" ><a href="#" style="font-weight: bold;border-bottom: 1px solid #000;font-size:15px"><?php echo $getMerchant[0]->waterpark_city; ?> , <?php echo $getMerchant[0]->waterpark_state; ?></a></h5>
+                                            <h5 class="text-center pt5" ><a href="#" style="font-weight: bold;border-bottom: 1px solid #000;font-size:15px"><?php echo $getData[0]->waterpark_city; ?> , <?php echo $getData[0]->waterpark_state; ?></a></h5>
 											<div id="mapLoc">
 											  <?php echo $mapLocation; ?>
 											</div>
@@ -669,6 +680,7 @@
 
                             if((count($upcomingEvents)!=0) || (count($pastEvents)!=0))
 							{
+
 								if((count($upcomingEvents)!=0))
 								{
 									$clsUpcoming="active";
@@ -701,10 +713,10 @@
 				                                <div class="tab-pane fade <?php echo $clsUpcomingDiv; ?> pt5" id="upcoming_events">
 				                                     
 														   <?php
-														   if(count($upcomingEvents)!=0)
+														if(count($upcomingEvents)!=0)
+														{
+														   foreach($upcomingEvents as $rto)
 														   {
-														     foreach($upcomingEvents as $rto)
-														     {
 																$eventId=$rto->id;
 																$merchantId=$rto->merchant_id;
 																$getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
@@ -740,12 +752,12 @@
                                                             <h5 class="text-center">No Upcoming Events</h5>
 														  	<?php
 														  }
-															?>
+														?>
 				                                </div>
 				                                <div class="tab-pane fade <?php echo $clsPastDiv; ?> pt5" id="past_events" >
 				                                    <?php
-														   if(count($pastEvents)!=0)
-														   {
+				                                       if(count($pastEvents)!=0)
+													   {
 														   foreach($pastEvents as $rtop)
 														   {
 																$eventId=$rtop->id;
@@ -769,7 +781,7 @@
 																	<div class="property-desc text-center" style="background: #262261 none repeat scroll 0 0;">
 																		<div class="property-desc-top">
 																			<h6 style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;"><a href="<?php echo base_url(); ?>event-detail/<?php echo $urlKey; ?>"><?php echo $rtop->name; ?></a></h6>
-																			<h4 class="price">on <?php echo date('j F,Y',strtotime($rtop->start_date)); ?></h4>
+																			<h4 class="price">on <?php echo date('j F,Y',strtotime($rto->start_date)); ?></h4>
 																		</div>
 																	</div>
 																</div>
@@ -783,7 +795,7 @@
                                                             <h5 class="text-center">No Past Events</h5>
 														  	<?php
 														  }
-															?>
+														 ?>
 				                                </div>
 				                            </div>
 				                        </div>
@@ -793,7 +805,7 @@
                             </aside>
 
                             <?php
-                             }
+                            }
                             ?>
 							
                         </div>
@@ -845,7 +857,7 @@
                         <?php 
                               echo form_open('login');
                         ?>
-                        	<input type="hidden" name="page_type" value="event_<?php echo $eventUrl; ?>">
+                        	<input type="hidden" name="page_type" value="park_<?php echo $parkUrl; ?>">
                         	<input type="hidden" name="user_type" value="user">
                             <div class="username">
                                 <input type="email" name="email" placeholder="Email" required>
@@ -921,7 +933,7 @@ $('.datepicker').datepicker();
 
   $('#booking_form').on('submit', function() {
   	   
-  	       var uid=$('#booking_user_id').val();
+           var uid=$('#booking_user_id').val();
            var utype=$('#booking_user_type').val();
            if(utype=='merchant')
            {
@@ -943,6 +955,19 @@ $('.datepicker').datepicker();
      });
 
   </script>
+
+   <script async type="text/javascript">
+	  
+	  
+	  function gotodiv()
+		{
+			$("#bookTicketDiv").show();
+		$('html,body').animate({
+        scrollTop: $("#bookTicketDiv").offset().top - 160},
+        'slow');
+		}
+		
+    </script>
    
 </body>
 </html>

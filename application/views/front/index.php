@@ -9,6 +9,8 @@
     
 	<?php $this->load->view('front/common/css.php'); ?>
 	
+    <link  href="<?php echo base_url(); ?>assets/front/css/datepicker.css" rel="stylesheet"> <!-- 3 KB -->
+
 </head>
 
 <body>
@@ -117,79 +119,113 @@
                         <div class="find-home-title">
                             <h3>BOOK TICKET</h3>
                         </div>
-                            <form action="#">
+                            <?php
+                              if($this->session->userdata('WhLoggedInUserType')=='merchant') { 
+                                $user_type_booking="merchant";
+                               }
+                               else
+                               {
+                                $user_type_booking="user";
+                               }
+
+                               $attributes=array('id' => 'booking_form');
+                               echo form_open('ticket-request',$attributes);
+
+                               if(($this->session->userdata('WhUserLoggedinId')=="") || ($this->session->userdata('WhUserLoggedinId')=='0') || ($this->session->userdata('WhLoggedInUserType')=='merchant'))
+                               {
+                                   $userId="0";
+                               }
+                               else
+                               {
+                                  $userId=$this->session->userdata('WhUserLoggedinId');
+                               }
+                            ?>
+
+                                <input type="hidden" name="event_id" value="0">
+                                <input type="hidden" id="booking_user_id" name="user_id" value="<?php echo $userId; ?>">
+                                <input type="hidden" name="page_type" value="index">
+                                <input type="hidden" id="booking_user_type" name="booking_user_type" value="<?php echo $user_type_booking; ?>">
+
                                 <div class="find-home-cagtegory">
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="find-home-item custom-select ">                  
-                                                <select class="selectpicker" title="Select Park" data-hide-disabled="true" data-live-search="true">
-                                                    <optgroup disabled="disabled" label="disabled">
-                                                        <option>Hidden</option>
-                                                    </optgroup>
-                                                    <optgroup label="Lucknow">
-                                                        <option>Anandi Water Park</option>
-                                                        <option>Nilansh Theme Park</option>
-                                                        <option>Disney Water</option>
-                                                    </optgroup>
-                                                    <optgroup label="Kanpur">
-                                                        <option>Diamond Aqua Park</option>
-                                                        <option>Blue World</option>
-                                                    </optgroup>
+                                                <select class="selectpicker" name="merchant_id" title="Select Park" data-hide-disabled="true" data-live-search="true" required>
+                                                    <?php
+                                                    $tblMerchants=$this->db->dbprefix.'merchants';
+                                                    $getCity=$this->Admin_model->getQuery("SELECT DISTINCT waterpark_city FROM $tblMerchants WHERE status='1'");
+                                                    foreach($getCity as $crt)
+                                                    {
+                                                        $ctyNm=$crt->waterpark_city;
+                                                        $getPark=$this->Admin_model->getWhere('merchants',array('waterpark_city' => $ctyNm,'status' => 1));
+                                                        ?>
+                                                            <optgroup label="<?php echo $crt->waterpark_city; ?>">
+                                                                <?php
+                                                                 foreach($getPark as $prk)
+                                                                 {
+                                                                ?>
+                                                                  <option value="<?php echo $prk->id; ?>"><?php echo $prk->waterpark_name; ?></option>
+                                                                <?php
+                                                                 }
+                                                                 ?>
+                                                            </optgroup>
+
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                    
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="find-home-item">                  
-                                                <input type="text" name="min-area" placeholder="Your Name">
+                                                <input type="text" name="name" placeholder="Your Name" required>
                                             </div> 
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="find-home-item">
-                                                <input type="text" name="min-area" placeholder="Email Id">
+                                                <input type="email" name="email" placeholder="Email Id" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="find-home-item ">
-                                                <input type="text" name="max-area" placeholder="Phone Number">
+                                                <input type="text" name="mobile" placeholder="Phone Number" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="find-home-item ">
+                                                <input type="text" name="address" placeholder="Address" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="find-home-item ">
+                                                <input type="text" class="datepicker" name="visiting_date" placeholder="Visiting Date" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="find-home-item no-caret  custom-select">                  
-                                                <select class="selectpicker" title="No. of person" data-hide-disabled="true">
-                                                    <optgroup  label="1">
-                                                        <option label="1">1 Person</option>
-                                                        <option>2 Person</option>
-                                                        <option>3 Person</option>
-                                                        <option>4 Person</option>
-                                                        <option>5 Person</option>
-                                                    </optgroup>
-                                                </select>
+                                                <input type="text"  name="number_of_adults" placeholder="Number of Adults" required>
                                             </div> 
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <div class="find-home-item no-caret  custom-select">                  
-                                                <select class="selectpicker" title="No. of Child" data-hide-disabled="true">
-                                                    <optgroup label="2">
-                                                        <option>1 Child</option>
-                                                        <option>2 Child</option>
-                                                        <option>3 Child</option>
-                                                        <option>4 Child</option>
-                                                        <option>5 Child</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
+                                                <input type="text"  name="number_of_children" placeholder="Number of Children" required>
+                                            </div> 
                                         </div>
 
                                     <div class="find-home-bottom">
                                         <div class="col-md-12 col-sm-12 col-xs-12">
                                             <div class="find-home-item">
-                                               <button type="submit">BOOK NOW</button>
+                                               <button type="submit" name="book_now">BOOK NOW</button>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
+                       <?php echo form_close(); ?>
+
                     </div>
                 </div>
             </div>
@@ -216,17 +252,25 @@
                                 <?php
                                 foreach($waterParks as $parkRw)
                                 {
+                                        $parkId=$parkRw->id;
+                                        $parkName=strtolower($parkRw->waterpark_name);
+
+                                        $parkName = preg_replace('/\s+/', '-', $parkName);
+                                        $randPrefix=rand(100,999);
+                                        $randSubfix=rand(100,999);
+                                        $urlId=$randPrefix.$parkId.$randSubfix;
+                                        $urlKey=$parkName.'-'.$urlId;
                                 ?>
                                 <div class="col-md-4">
                                     <div class="single-property">
                                         <div class="property-img">
-                                            <a href="#">
+                                            <a href="<?php echo base_url(); ?>park-detail/<?php echo $urlKey; ?>">
                                                 <img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo $parkRw->waterpark_logo; ?>" alt="<?php echo $parkRw->waterpark_name; ?>" style="height: 250px;">
                                             </a>
                                         </div>
                                         <div class="property-desc">
                                             <div class="property-desc-top">
-                                                <h6><a href="#"><?php echo $parkRw->waterpark_name; ?></a></h6>
+                                                <h6><a href="<?php echo base_url(); ?>park-detail/<?php echo $urlKey; ?>"><?php echo $parkRw->waterpark_name; ?></a></h6>
                                                 <h4 class="price">₹ <?php echo $parkRw->entry_fee_per_person; ?> / person</h4>
                                                 <div class="property-location">
                                                     <p><img src="<?php echo base_url(); ?>assets/front/images/icon-5.png" alt=""> <?php echo $parkRw->waterpark_city; ?> , <?php echo $parkRw->waterpark_state; ?></p>
@@ -804,8 +848,100 @@
         <?php $this->load->view('front/common/footer.php'); ?>
 		
     </div>
+
+     <!-- quick view start -->
+    <div  class="modal fade" role="dialog" tabindex="-1" id="quick-view">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="register-page-form">
+                        <div aria-label="Close" data-dismiss="modal" class="modal-header">
+                            <span>x</span>
+                        </div>
+                        <div class="account-title">
+                            <h5>Login</h5>
+                            <?php
+                                if($this->session->flashdata('error')!='')
+                                {
+                                ?>
+                                <div class="alert alert-danger">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                          <?php echo $this->session->flashdata('error'); ?>
+                                </div>
+                                          
+                                <?php
+                                }
+                                ?>
+                                
+                                <?php
+            
+                                if($this->session->flashdata('success')!='')
+                                {
+                                ?>
+                                <div class="alert alert-success">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                          <?php echo $this->session->flashdata('success'); ?>
+                                </div>
+                                          
+                                <?php
+                                }
+                                ?>
+                        </div>
+                        <?php 
+                              echo form_open('login');
+                        ?>
+                            <input type="hidden" name="page_type" value="index">
+                            <input type="hidden" name="user_type" value="user">
+                            <div class="username">
+                                <input type="email" name="email" placeholder="Email" required>
+                            </div>
+                            <div class="password">
+                                <input type="password" name="password" placeholder="Password" required>
+                            </div>
+                            <div class="lost-password">
+                               <p><a href="<?php echo base_url(); ?>register">Create an account ?</a></p>
+                            </div>
+                            <div class="login">
+                                <button type="submit" name="submit">Sign in</button>
+                            </div>
+                       <?php 
+                              echo form_close();
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 	<?php $this->load->view('front/common/js.php'); ?>
 	
+    <script src="<?php echo base_url(); ?>assets/front/js/bootstrap-datepicker.js"></script>
+
+    
+    <script type="text/javascript">
+        $('.datepicker').datepicker();
+
+        $('#booking_form').on('submit', function() {
+           var uid=$('#booking_user_id').val();
+           var utype=$('#booking_user_type').val();
+           if(utype=='merchant')
+           {
+                 alert('Please login as user to buy ticket')
+                 return false;
+           }
+           else
+           {
+               if(uid=='0')
+               {
+                 $('#quick-view').modal('show');
+                 return false;
+               }
+               else
+               {
+                return true;
+               }
+           }
+     });
+    </script>
 </body>
 </html>
