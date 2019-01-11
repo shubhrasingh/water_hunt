@@ -84,6 +84,13 @@ class Admin_model extends CI_Model {
 			$tbl=$this->db->dbprefix.$tbl;
             $this->db->update($tbl, $data, $where);
 		}
+		
+		public function getDataCount($tbl,$where)
+		{
+		  $tbl=$this->db->dbprefix.$tbl;
+		  $query = $this->db->get_where($tbl,$where);
+		  return $query->num_rows();
+		}
 
 	
 }
