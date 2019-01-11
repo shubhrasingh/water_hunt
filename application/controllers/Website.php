@@ -72,6 +72,119 @@ class Website extends CI_Controller {
         
 		$this->load->view('front/index',$data);
 	}
+    
+    public function allParks($page=0)
+    {
+       $data['siteDetails']=$this->siteDetails();
+
+		if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+		{
+		  $data['userDetails']=$this->userDetails();
+	    }
+        
+        $data['fetchLimit']=8;
+		if($page==0)
+        {
+          $limit=0;
+        }
+        else
+        {
+          $limit=($page - 1) * $data['fetchLimit'];
+        }
+        
+        $data['parkCount']=$this->Admin_model->getDataCount('merchants',array('status' => 1));
+
+        $data['getParks']=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => 1),$data['fetchLimit'],$limit,'id','DESC');
+
+        $this->load->library('pagination');
+
+	    $config['base_url'] = base_url().'parks';
+	    $config['total_rows'] = $data['parkCount'];
+		$config['per_page'] = $data['fetchLimit'];
+        $config['use_page_numbers'] = TRUE;
+
+		$this->pagination->initialize($config);
+
+	    $this->load->view('front/parks',$data);
+    }
+
+    public function cityParks($cityName,$page=0)
+    {
+       $data['siteDetails']=$this->siteDetails();
+
+		if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+		{
+		  $data['userDetails']=$this->userDetails();
+	    }
+        
+        $data['fetchLimit']=8;
+		if($page==0)
+        {
+          $limit=0;
+        }
+        else
+        {
+          $limit=($page - 1) * $data['fetchLimit'];
+        }
+        
+        $city = str_replace(' ', '_', $cityName);
+        
+        $tblMerchant=$this->db->dbprefix.'merchants';
+        
+        $data['parkCount']=$this->Admin_model->getDataCount('merchants',array('lower(waterpark_city)' => $city,'status' => 1));
+
+        $data['getParks']=$this->Admin_model->getwithLimitOrderBy('merchants',array('lower(waterpark_city)' => $city,'status' => 1),$data['fetchLimit'],$limit,'id','DESC');
+
+        $this->load->library('pagination');
+
+	    $config['base_url'] = base_url().'parks/city/'.$cityName;
+	    $config['total_rows'] = $data['parkCount'];
+		$config['per_page'] = $data['fetchLimit'];
+        $config['use_page_numbers'] = TRUE;
+
+		$this->pagination->initialize($config);
+
+	    $this->load->view('front/parks',$data);
+    }
+
+
+    public function allEvents($page=0)
+    {
+       $data['siteDetails']=$this->siteDetails();
+
+		if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+		{
+		  $data['userDetails']=$this->userDetails();
+	    }
+        
+        $data['fetchLimit']=8;
+		if($page==0)
+        {
+          $limit=0;
+        }
+        else
+        {
+          $limit=($page - 1) * $data['fetchLimit'];
+        }
+        
+        $data['eventCount']=$this->Admin_model->getDataCount('merchants_events',array('status' => 1));
+
+        $data['getEvents']=$this->Admin_model->getwithLimitOrderBy('merchants_events',array('status' => 1),$data['fetchLimit'],$limit,'id','DESC');
+
+        $data['getRelatedParks']=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => 1),6,0,'id','DESC');
+
+        $this->load->library('pagination');
+
+	    $config['base_url'] = base_url().'events';
+	    $config['total_rows'] = $data['eventCount'];
+		$config['per_page'] = $data['fetchLimit'];
+        $config['use_page_numbers'] = TRUE;
+
+		$this->pagination->initialize($config);
+
+	    $this->load->view('front/events',$data);
+    }
+
 
 	public function eventDetail($eventUrl)
 	{
@@ -96,8 +209,50 @@ class Website extends CI_Controller {
         $data['getMerchant']=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
         
         $data['geteventReview']=$this->Admin_model->getWhere('customer_review',array('event_id' => $eventId));
+        
+        $date=date('Y-m-d');
+        $tbl=$this->db->dbprefix.'merchants_events';
+        $data['upcomingEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE `status`='1' AND `merchant_id`='$merchantId' AND (`start_date` > '$date') ORDER BY `start_date` ASC LIMIT 0,4");
+
+        $data['pastEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE `status`='1' AND `merchant_id`='$merchantId' AND (`start_date` < '$date') ORDER BY `start_date` DESC LIMIT 0,4");
 
 		$this->load->view('front/event-detail',$data);
+	}
+
+
+    public function parkDetail($parkUrl)
+	{
+        $data['siteDetails']=$this->siteDetails();
+
+		if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+		{
+		  $data['userDetails']=$this->userDetails();
+	    }
+
+        $data['parkUrl']=$parkUrl;
+        $exUrl=explode('-',$parkUrl);
+        $endUrl=end($exUrl);
+		$endUrl=substr($endUrl,3);
+		$parkId=substr($endUrl,0,-3);
+
+		$data['getData']=$this->Admin_model->getWhere('merchants',array('id' => $parkId));
+       
+        $data['getGallery']=$this->Admin_model->getWhere('gallery',array('merchant_id' => $parkId,'event_id' => '0'));
+        
+        $tblTiming=$this->db->dbprefix.'merchant_timing';
+        $data['getClosedTiming']=$this->Admin_model->getQuery("SELECT GROUP_CONCAT(day_name) as closed_on FROM $tblTiming WHERE `closed_status`='1' AND `merchant_id`='$parkId'");
+
+        $data['getTiming']=$this->Admin_model->getWhere('merchant_timing',array('merchant_id' => $parkId));
+
+        $data['getMerchantReview']=$this->Admin_model->getWhere('customer_review',array('merchant_id' => $parkId,'event_id' => '0'));
+        
+        $date=date('Y-m-d');
+        $tbl=$this->db->dbprefix.'merchants_events';
+        $data['upcomingEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE `status`='1' AND `merchant_id`='$parkId' AND (`start_date` > '$date') ORDER BY `start_date` ASC LIMIT 0,4");
+
+        $data['pastEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE `status`='1' AND `merchant_id`='$parkId' AND (`start_date` < '$date') ORDER BY `start_date` DESC LIMIT 0,4");
+
+		$this->load->view('front/park-detail',$data);
 	}
 
 	public function submitReview()
@@ -173,23 +328,33 @@ class Website extends CI_Controller {
 
 	        $exPage=explode('_',$page_type);
 
-			$exPageType=$exPage[0];
-			$exPageLink=$exPage[1];
-	        if($exPageType=="event")
-	        {
-	           $folder="event-detail";
-	        }
-	        else
-	        {
-	           $folder="park-detail";
-	        }
-			$redirectUrl=$folder.'/'.$exPageLink;
+            if(count($exPage) >1)
+            {
+              	$exPageType=$exPage[0];
+				$exPageLink=$exPage[1];
+		        if($exPageType=="event")
+		        {
+		           $folder="event-detail";
+		        }
+		        else
+		        {
+		           $folder="park-detail";
+		        }
+				$redirectUrl=$folder.'/'.$exPageLink;
+            }
+            else
+            {
+            	$redirectUrl=$page_type;
+            }
+
+
 
 			if((!empty($name)) && (!empty($email)) && (!empty($mobile)) && (!empty($address)) && (!empty($number_of_adults)) && (!empty($visiting_date)))
 			{
 
+                $total_visitors=$number_of_adults + $number_of_children;
                 $visiting_date=date('Y-m-d',strtotime($visiting_date));
-				$inArray=array('user_id' => $user_id,'merchant_id' => $merchant_id,'event_id' => $event_id,'name' => $name,'email' => $email,'mobile' => $mobile,'address' => $address,'number_of_adults' => $number_of_adults,'number_of_children' => $number_of_children,'visit_date' => $visiting_date,'message' => $message,'requested_on' => $date,'request_type' => 'enquiry','status' => '1');
+				$inArray=array('user_id' => $user_id,'merchant_id' => $merchant_id,'event_id' => $event_id,'name' => $name,'email' => $email,'mobile' => $mobile,'address' => $address,'number_of_adults' => $number_of_adults,'number_of_children' => $number_of_children,'total_visitors' => $total_visitors,'visit_date' => $visiting_date,'message' => $message,'requested_on' => $date,'request_type' => 'enquiry','status' => '1');
 				$this->Admin_model->insertData('ticket_request',$inArray);
                 
                 if($message!='')
@@ -241,7 +406,7 @@ class Website extends CI_Controller {
                                         
                                         $fromName=$data['siteDetails']['companyData'][0]->company_name;
                                         $subject="Enquiry submitted on ".$fromName;
-                                        $from="no-reply@compaddicts.org";
+                                        $from="no-reply@domain.name";
                                      	$this->mailHtml($email,$subject,$html,$fromName,$from);
 
             $htmlAdmin='<center> 
@@ -281,8 +446,8 @@ class Website extends CI_Controller {
 
                 $fromName=$data['siteDetails']['companyData'][0]->company_name;
                 $subjectAdmin="Enquiry received on ".$fromName;
-                $from="no-reply@compaddicts.org";
-                $to="shubhra.compaddicts@gmail.com";
+                $from="no-reply@domain.name";
+                $to="info@domain.name";
 				$this->mailHtml($to,$subjectAdmin,$htmlAdmin,$fromName,$from);
 
 				$this->session->set_flashdata('successMsg','Request Submitted Successfully');
@@ -313,25 +478,45 @@ class Website extends CI_Controller {
 	        $date=date('Y-m-d');
 
 	        $exPage=explode('_',$page_type);
+            
+            if(count($exPage) >1)
+            {
+              	$exPageType=$exPage[0];
+				$exPageLink=$exPage[1];
+		        if($exPageType=="event")
+		        {
+		           $folder="event-detail";
 
-			$exPageType=$exPage[0];
-			$exPageLink=$exPage[1];
-	        if($exPageType=="event")
-	        {
-	           $folder="event-detail";
+		           $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $event_id));
+		           $ticket_charge_per_person=$getEvent[0]->entry_fee_per_person;
+		          
+		        }
+		        else
+		        {
+		           $folder="park-detail";
 
-	           $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $event_id));
-	           $ticket_charge_per_person=$getEvent[0]->entry_fee_per_person;
-	          
-	        }
-	        else
-	        {
-	           $folder="park-detail";
+		           $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchant_id));
+		           $ticket_charge_per_person=$getMerchant[0]->entry_fee_per_person;
+		        }
+				$redirectUrl=$folder.'/'.$exPageLink;
+            }
+            else
+            {
+            	if(in_array('parks',$exPage))
+            	{
+                   $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchant_id));
+		           $ticket_charge_per_person=$getMerchant[0]->entry_fee_per_person;
+            	}
+            	else
+            	{
+            	   $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $event_id));
+		           $ticket_charge_per_person=$getEvent[0]->entry_fee_per_person;
+            	}
 
-	           $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchant_id));
-	           $ticket_charge_per_person=$getMerchant[0]->entry_fee_per_person;
-	        }
-			$redirectUrl=$folder.'/'.$exPageLink;
+            	$redirectUrl=$page_type;
+            }
+
+			
              
 			if((!empty($name)) && (!empty($email)) && (!empty($mobile)) && (!empty($address)) && (!empty($number_of_adults)) && (!empty($visiting_date)))
 			{
@@ -718,10 +903,10 @@ class Website extends CI_Controller {
 			</center>';
 
 		$fromName=$data['siteDetails']['companyData'][0]->company_name;
-		$from="no-reply@compaddicts.org";
+		$from="no-reply@domain.name";
 
         $subjectAdmin="Ticket Booked ".$mailtxt;
-        $to='shubhra.compaddicts@gmail.com';
+        $to='info@domain.name';
 		$this->mailHtml($to,$subjectAdmin,$htmlAdmin,$fromName,$from);
 
 		$htmlMerchant='<center> 

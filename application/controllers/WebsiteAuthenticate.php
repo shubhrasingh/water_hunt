@@ -58,27 +58,11 @@ class websiteAuthenticate extends CI_Controller {
 				  $user_type=$_REQUEST['user_type'];
 				  $username=$_REQUEST['email'];
 				  $password=$_REQUEST['password'];
-                  
-		          switch($page_type)
-		          {
-		            case "login":
-		                switch($user_type)
-		                  {
-		                  	case "merchant":
-		                  	   $tbl="merchants";
-		                  	   $folder="merchant";
-		                  	break;
+                  $exPage=explode('_',$page_type);
 
-		                  	case "user":
-		                  	   $tbl="users";
-		                  	   $folder="user";
-		                  	break;
-		                  }
-		               $redirectUrl=$folder.'/dashboard';
-		            break;
-
-		            default:  //**** if it is from event or park detail page ****
-		                switch($user_type)
+                  if(count($exPage) >1)
+                  {
+                     switch($user_type)
 		                  {
 		                  	case "merchant":
 		                  	  $tbl="merchants";
@@ -102,8 +86,40 @@ class websiteAuthenticate extends CI_Controller {
                             $folder="park-detail";
                           }
 		                  $redirectUrl=$folder.'/'.$exPageLink;
-		            break;
-		          }
+                  }
+                  else if(in_array('login',$exPage))
+                  {
+                     	switch($user_type)
+		                  {
+		                  	case "merchant":
+		                  	   $tbl="merchants";
+		                  	   $folder="merchant";
+		                  	break;
+
+		                  	case "user":
+		                  	   $tbl="users";
+		                  	   $folder="user";
+		                  	break;
+		                  }
+		               $redirectUrl=$folder.'/dashboard';
+                  }
+                  else
+                  {
+                  	    switch($user_type)
+		                  {
+		                  	case "merchant":
+		                  	   $tbl="merchants";
+		                  	   $folder="merchant";
+		                  	break;
+
+		                  	case "user":
+		                  	   $tbl="users";
+		                  	   $folder="user";
+		                  	break;
+		                  }
+		               $redirectUrl=$page_type;
+                  }
+		        
 
 
                   if((!empty($user_type)) && (!empty($username)) && (!empty($password)))

@@ -58,12 +58,14 @@ class User extends CI_Controller {
           $date=date('Y-m-d');
 
           $tblTicket=$this->db->dbprefix.'ticket_request';
-		  $data['totalTickets']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblTicket WHERE `user_id`='$userId'");
+		  $data['totalTickets']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblTicket WHERE `user_id`='$userId' and `request_type`='booking' and `payment_status`='1'");
+
+		  $data['totalEnqTickets']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblTicket WHERE `user_id`='$userId' and `request_type`='enquiry'");
 
 		  $tblRvw=$this->db->dbprefix.'customer_review';
 		  $data['totalReviews']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblRvw WHERE `user_id`='$userId'");
 
-          $data['bookedTickets']=$this->Admin_model->getwithLimitOrderBy('ticket_request',array('user_id' => $userId),10,0,'id','DESC');
+          $data['bookedTickets']=$this->Admin_model->getwithLimitOrderBy('ticket_request',array('request_type' => 'booking','payment_status' => '1','user_id' => $userId),10,0,'id','DESC');
 
 		  $this->load->view('front/user/dashboard',$data);
 		}
@@ -161,6 +163,65 @@ class User extends CI_Controller {
 		  }
 		  
 		  $this->load->view('front/user/change-password',$data);
+		}
+
+		public function myBookings()
+		{
+		   if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+          
+          $userId=$this->session->userdata('WhUserLoggedinId');
+		  $data['getBooking']=$this->Admin_model->getWhere('ticket_request',array('user_id' => $userId,'request_type' => 'booking','payment_status' => 1));
+		  
+		  $this->load->view('front/user/booking',$data);
+		}
+
+
+		public function myEnquiries()
+		{
+		   if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+          
+          $userId=$this->session->userdata('WhUserLoggedinId');
+		  $data['getEnquiry']=$this->Admin_model->getWhere('ticket_request',array('user_id' => $userId,'request_type' => 'enquiry'));
+		  
+		  $this->load->view('front/user/enquiry',$data);
+		}
+
+
+		public function deleteData()
+		{
+			$mode=$_GET['mode'];
+
+			switch($mode)
+			{
+				case "booking":
+				
+					$rowid=$_GET['rowid'];
+
+					$del=$this->Admin_model->deleteData('ticket_request',array('id' => $rowid));
+					$del=$this->Admin_model->deleteData('ticket_billing_details',array('ticket_request_id' => $rowid));
+
+				break;
+
+				case "enquiry":
+				
+					$rowid=$_GET['rowid'];
+
+					$del=$this->Admin_model->deleteData('ticket_request',array('id' => $rowid));
+
+				break;
+			}
 		}
 
 }

@@ -104,6 +104,23 @@ class Merchant extends CI_Controller {
 					}
 					
 				break;
+
+				case "booking":
+				
+					$rowid=$_GET['rowid'];
+
+					$del=$this->Admin_model->deleteData('ticket_request',array('id' => $rowid));
+					$del=$this->Admin_model->deleteData('ticket_billing_details',array('ticket_request_id' => $rowid));
+
+				break;
+
+				case "enquiry":
+				
+					$rowid=$_GET['rowid'];
+
+					$del=$this->Admin_model->deleteData('ticket_request',array('id' => $rowid));
+
+				break;
 			}
 		}
 		
@@ -164,7 +181,7 @@ class Merchant extends CI_Controller {
 		  $data['upcomingeventCount']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tbl WHERE `start_date` > '$date' and `merchant_id`='$merchantId'");
           
           $tblTicket=$this->db->dbprefix.'ticket_request';
-		  $data['totalTickets']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblTicket WHERE `merchant_id`='$merchantId'");
+		  $data['totalTickets']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblTicket WHERE `merchant_id`='$merchantId' and `status`='1'");
 
 		  $tblRvw=$this->db->dbprefix.'customer_review';
 		  $data['totalReviews']=$this->Admin_model->getQuery("SELECT COUNT(id) as cnt FROM $tblRvw WHERE `merchant_id`='$merchantId'");
@@ -173,7 +190,7 @@ class Merchant extends CI_Controller {
 
            $data['ongoingEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE (`start_date` <= '$date' and `end_date` >= '$date') and (`merchant_id`='$merchantId') ORDER BY `start_date`");
 
-          $data['bookedTickets']=$this->Admin_model->getwithLimitOrderBy('ticket_request',array('merchant_id' => $merchantId),10,0,'id','DESC');
+          $data['bookedTickets']=$this->Admin_model->getwithLimitOrderBy('ticket_request',array('merchant_id' => $merchantId,'status' => 1),10,0,'id','DESC');
 		  
 		  $this->load->view('front/merchant/dashboard',$data);
 		}
@@ -278,6 +295,19 @@ class Merchant extends CI_Controller {
 		  $this->load->view('front/merchant/edit-profile',$data);
 		}
 		
+		public function viewTiming()
+		{
+            if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		    $data['siteDetails']=$this->siteDetails();
+		    $data['userDetails']=$this->userDetails();
+            
+		    $this->load->view('front/merchant/timing',$data);
+		}
+
 		public function editTiming()
 		{
 			if($this->session->userdata('WhUserLoggedinId')=='')
@@ -337,7 +367,126 @@ class Merchant extends CI_Controller {
 
 		  $this->load->view('front/merchant/edit-timing',$data);
 		}
-		
+
+		public function profileCover()
+		{
+            if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		    $data['siteDetails']=$this->siteDetails();
+		    $data['userDetails']=$this->userDetails();
+            
+            if(isset($_REQUEST['submit']))
+		  {
+			 $profile_cover_type=$_REQUEST['profile_cover_type'];
+			 $video_iframe=$_REQUEST['video_iframe'];
+			 $file=$_FILES['file']['name']; 
+
+			 $date=date('Y-m-d H:i:s');
+			 
+			 if((!empty($profile_cover_type)) && ((!empty($video_iframe)) || (!empty($file))))
+			 {
+			 	switch($profile_cover_type)
+			 	{
+			 		case "1":
+                       
+                        $config['upload_path']          = './assets/front/uploads/merchant-cover/';
+						$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
+						$config['encrypt_name']         = TRUE;
+						$config['min_width']            = '1000';
+						$config['min_height']           = '300';
+
+
+						$this->load->library('upload', $config);
+
+						if ( ! $this->upload->do_upload('file'))
+						{
+								$error = $this->upload->display_errors();
+								$this->session->set_flashdata('error',$error);
+								redirect('merchant/profile-cover');
+						}
+						else
+						{
+								$data = $this->upload->data();
+								$file_name=$data['file_name'];
+								
+								$merchantId=$this->session->userdata('WhUserLoggedinId');
+
+								$getOldLogo=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+								$CoverTypeOld=$getOldLogo[0]->profile_cover_type;
+								$oldImg=$getOldLogo[0]->profile_cover;
+
+								$upData=array('profile_cover' => $file_name,'profile_cover_type' => $profile_cover_type,'updated_on' => $date);
+								$this->Admin_model->updateData('merchants',$upData,$merchantId);
+
+								if(($CoverTypeOld==1) && ($oldImg!=""))
+								{
+									unlink('assets/front/uploads/merchant-cover/'.$oldImg);
+								}
+
+								$this->session->set_flashdata('success','Profile Cover Updated Successfully');
+								redirect('merchant/profile-cover');
+								
+						}
+
+			 		break;
+
+			 		case "2":
+
+			 		          $merchantId=$this->session->userdata('WhUserLoggedinId');
+                              $upData=array('profile_cover' => $video_iframe,'profile_cover_type' => $profile_cover_type,'updated_on' => $date);
+							  $this->Admin_model->updateData('merchants',$upData,$merchantId);
+							  $this->session->set_flashdata('success','Profile Cover Updated Successfully');
+							  redirect('merchant/profile-cover');
+			 		break;
+			 	}	
+			 }
+			 else
+			 {
+				$this->session->set_flashdata('error','All fields are required');
+			    redirect('merchant/profile-cover'); 
+			 }
+		  }
+
+		    $this->load->view('front/merchant/profile-cover',$data);
+		}
+
+		public function mapLocation()
+		{
+            if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		    $data['siteDetails']=$this->siteDetails();
+		    $data['userDetails']=$this->userDetails();
+            
+            if(isset($_REQUEST['submit']))
+			  {
+				 $map_iframe=$_REQUEST['map_iframe'];
+
+				 $date=date('Y-m-d H:i:s');
+				 
+				 if(!empty($map_iframe))
+				 {
+				 	$merchantId=$this->session->userdata('WhUserLoggedinId');
+	                $upData=array('map_iframe' => $map_iframe,'updated_on' => $date);
+					$this->Admin_model->updateData('merchants',$upData,$merchantId);
+					$this->session->set_flashdata('success','Map Location Updated Successfully');
+					redirect('merchant/map-location');	
+				 }
+				 else
+				 {
+					$this->session->set_flashdata('error','Map Iframe is required');
+				    redirect('merchant/map-location'); 
+				 }
+			  }
+
+		    $this->load->view('front/merchant/map-location',$data);
+		}
+
 		public function changePassword()
 		{
 		  if($this->session->userdata('WhUserLoggedinId')=='')
@@ -862,6 +1011,39 @@ class Merchant extends CI_Controller {
 		  }
 
 		  $this->load->view('front/merchant/edit-gallery',$data);
+		}
+
+		public function myBookings()
+		{
+		   if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+          
+          $merchantId=$this->session->userdata('WhUserLoggedinId');
+		  $data['getBooking']=$this->Admin_model->getWhere('ticket_request',array('merchant_id' => $merchantId,'request_type' => 'booking','payment_status' => 1));
+		  
+		  $this->load->view('front/merchant/booking',$data);
+		}
+
+
+		public function myEnquiries()
+		{
+		   if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['userDetails']=$this->userDetails();
+          
+          $merchantId=$this->session->userdata('WhUserLoggedinId');
+		  $data['getEnquiry']=$this->Admin_model->getWhere('ticket_request',array('merchant_id' => $merchantId,'request_type' => 'enquiry'));
+		  
+		  $this->load->view('front/merchant/enquiry',$data);
 		}
 
 
