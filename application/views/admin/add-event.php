@@ -83,7 +83,7 @@
                                         <optgroup label="Merchant Name"> 
                                             <option value="">---------Select Merchant----------</option>
                                             <?php foreach($merchants as $value) { ?>
-                                                 <option value="<?php echo  $value->id; ?>"><?php echo  ucfirst($value->name);  ?></option> 
+                                                 <option value="<?php echo  $value->id; ?>"><?php echo  ucfirst($value->waterpark_name);  ?></option> 
                                             <?php } ?>
                                             
                                         </optgroup>

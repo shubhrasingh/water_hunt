@@ -56,7 +56,7 @@
                                 }
                                 ?>
 
-
+                        <div id="msgDivAjax"></div>
 
                     </div>
                     <div class="row">
@@ -195,8 +195,17 @@
                     url: '<?php echo base_url(); ?>admin/statusTogg',
                     data: {id: id,table:table},
                     success: function (ht) { 
-                        //alert(ht); 
-                      $('.statuofrow'+id+' button').html(ht); 
+                       if (ht=='Active') {
+                         $('.statuofrow'+id+' button').removeClass("btn-danger");
+                         $('.statuofrow'+id+' button').addClass("btn-info");
+                         $('.statuofrow'+id+' button').html(ht);
+                      }
+                      if(ht=='Deactive')
+                      {
+                         $('.statuofrow'+id+' button').removeClass("btn-info");
+                         $('.statuofrow'+id+' button').addClass("btn-danger");
+                         $('.statuofrow'+id+' button').html(ht);
+                      } 
                     }
                   });
            }
@@ -218,6 +227,7 @@ function delData(tbl,rowid)
               function(data){
                // alert(data); 
                $('#row_' + rowid).remove(); 
+                $('#msgDivAjax').html('<div class="alert alert-success background-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Deleted Successfully</div>');
               }
           });
 

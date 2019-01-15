@@ -89,6 +89,12 @@ $route['paymentfailure']                                            = 'website/p
 $route['thank-you']                                                 = 'website/thankYou';
 $route['payment-failed']                                            = 'website/paymentFailed';
 
+$route['privacy-policy']                                            ='website/privacy'; 
+$route['terms-condition']                                           ='website/termsCondition'; 
+$route['about-us']                                                  ='website/aboutUs'; 
+
+$route['contact']                                                   ='website/conatctUs'; 
+
     //***** Merchant Panel Starts *****//
 
 $route['merchant']                                                  = 'merchant';
@@ -117,7 +123,12 @@ $route['merchant/edit-gallery/(:any)']                              = 'merchant/
 
 $route['merchant/bookings']                                         = 'merchant/myBookings';
 $route['merchant/enquiries']                                        = 'merchant/myEnquiries';
-
+$route['merchant/reviews']                                          = 'merchant/myReviews';
+$route['merchant/compose-message']                                  = 'merchant/composeMessage';
+$route['merchant/messages']                                         = 'merchant/myMessages';
+$route['merchant/messages/(:num)']                                  = 'merchant/myMessages/$1';
+$route['merchant/messages/sent-items']                              = 'merchant/mySentitems';
+$route['merchant/messages/sent-items/(:num)']                       = 'merchant/mySentitems/$1';
     //***** Merchant Panel Ends *****//
 
 
@@ -148,6 +159,16 @@ $route['admin/dashboard']                                            = 'admin/in
 $route['admin/edit-company-profile']                                 = 'admin/editCompanyprofile';
 $route['admin/change-password']                                      = 'admin/changePassword';
 
+$route['admin/commissions']                                           = 'admin/viewCommission';
+
+$route['admin/sliders']                                              = 'admin/viewSlider';
+$route['admin/add-slider']                                           = 'admin/addSlider';
+$route['admin/edit-slider/(:any)']                                   = 'admin/editSlider/$1'; 
+
+$route['admin/testimonials']                                         = 'admin/viewTestimonial';
+$route['admin/add-testimonial']                                      = 'admin/addTestimonial';
+$route['admin/edit-testimonial/(:any)']                              = 'admin/editTestimonial/$1'; 
+
 $route['admin/merchant']                                             = 'admin/merchant';
 $route['admin/allmerchant']                                          ='admin/allmerchant';
 $route['admin/edit-merchant/(:any)']                                 ='admin/edit_merchant/$1';
@@ -163,6 +184,18 @@ $route['admin/event-gallery/(:any)']                                 ='admin/eve
 $route['admin/edit-event-gallery/(:any)/(:any)/(:any)']              ='admin/editeventgallery/$1/$2/$3'; 
 
 $route['admin/allusers']                                             ='admin/allusers'; 
-$route['admin/bookticket']                                           ='admin/bookticket';
+$route['admin/bookticket']                                           ='admin/bookticket'; 
+$route['admin/enquiry']                                              ='admin/viewEnquiry'; 
 
+$route['admin/compose-message']                                      = 'admin/composeMessage';
+$route['admin/messages']                                             = 'admin/myMessages';
+$route['admin/messages/(:num)']                                      = 'admin/myMessages/$1';
+$route['admin/messages/sent-items']                                  = 'admin/mySentitems';
+$route['admin/messages/sent-items/(:num)']                           = 'admin/mySentitems/$1';
+
+$route['admin/reports']                                              ='admin/viewReports'; 
+$route['admin/pdf-report']                                           ='admin/pdfReport'; 
+
+$route['admin/subadmin']                                             ='admin/subadmin'; 
+$route['admin/edit-subadmin/(:any)']                                 ='admin/updatesubadmin/$1'; 
 /*##################  ADMIN ROUTES STARTS ####################*/  

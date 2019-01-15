@@ -253,7 +253,7 @@ class websiteAuthenticate extends CI_Controller {
                                         
                                         $fromName=$data['siteDetails']['companyData'][0]->company_name;
                                         $subject="Verify your merchant account on ".$fromName;
-                                        $from="no-reply@compaddicts.org";
+                                        $from="no-reply@domain.name";
 										$this->mailHtml($email,$subject,$html,$fromName,$from);
 										$this->session->set_flashdata('success','Thank you for registering.A verification link has been sent on your mail.Please check your mail and verify your account to login.');
                               }
@@ -286,7 +286,7 @@ class websiteAuthenticate extends CI_Controller {
                                         
                                         $fromName=$data['siteDetails']['companyData'][0]->company_name;
                                         $subject="Thank you for registering on ".$fromName;
-                                        $from="no-reply@compaddicts.org";
+                                        $from="no-reply@domain.name";
 										$this->mailHtml($email,$subject,$html,$fromName,$from);
                               	        $this->session->set_flashdata('success','Registered Successfully');
                               }

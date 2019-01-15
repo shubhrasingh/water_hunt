@@ -5,10 +5,11 @@
                         <div class="col-md-7 col-sm-12 col-xs-12">
                             <div class="footer-menu">
                                 <ul>
-                                    <li><a href="#">Home</a></li>
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Services</a></li>
-                                    <li><a href="#">Contact Us</a></li>
+                                    <li><a href="<?php echo base_url(); ?>">Home</a></li>
+                                    <li><a href="<?php echo base_url(); ?>about-us">About Us</a></li>
+                                    <li><a href="<?php echo base_url(); ?>terms-condition">Terms & Conditions</a></li>
+                                    <li><a href="<?php echo base_url(); ?>privacy-policy">Privacy Policy</a></li>
+                                    <li><a href="<?php echo base_url(); ?>contact">Contact Us</a></li>
                                 </ul>
                             </div>
                         </div>

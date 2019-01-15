@@ -55,22 +55,14 @@
                                 }
                                 ?>
 
-                            <div class="alertmessage">
-                                
-                            </div>
+                            <div id="msgDivAjax"></div>
 
                     </div>
 
 
                     <div class="row">
                         <div class="col-md-12">
-                            <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Booking</a></li>
-    <li><a data-toggle="tab" href="#menu1">Enquiry</a></li>
-  </ul>
-
-  <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+                           
       <div class="panel panel-white">
                                 <div class="panel-heading clearfix">
                                     <h4 class="panel-title">Booking Ticket List</h4>
@@ -78,135 +70,156 @@
                         <div class="panel-body">
                             <div class="table-responsive">
 
- <?php if(count($getBooking_Ticketbooking)>0) {  ?>
-
                                 <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
-                                        <thead>
+                                         <thead> 
                                             <tr>
+                                                <th>#</th> 
                                                 <th>Name</th>
-                                                <th>Visitors</th>
-                                                <th>Gst</th>
-                                                <th>Total Amount(&#8377;)</th>
-                                                <th>Payment Status</th>
-                                                <th>Action</th>
-                                            </tr>
+                                                <th>Booked For</th>
+                                                <th>Total Amount</th>
+                                                <th>Booked on</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                            </tr> 
                                         </thead>
                                         <tfoot>
                                             <tr>
+                                                <th>#</th> 
                                                 <th>Name</th>
-                                                <th>Visitors</th>
-                                                <th>Gst</th>
-                                                <th>Total Amount(&#8377;)</th>
-                                                <th>Payment Status</th>
-                                                <th>Action</th>
-                                               
-                                            </tr>
+                                                <th>Booked For</th>
+                                                <th>Total Amount</th>
+                                                <th>Booked on</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                            </tr> 
                                         </tfoot>
                                         <tbody>
 
-                                             <?php foreach ($getBooking_Ticketbooking as $key => $value) { ?>
-                                            <tr id="row_<?php echo $value->id;?>">
-                                                <td><?php echo  'Name :'.$value->name.'<br/> Email :'.$value->email.'<br/> Address: '.$value->address; ?></td>
-                                                <td><?php echo  'Adults : '.$value->number_of_adults.'<br/> Children :'.$value->number_of_children; ?></td>
-                                                <td><?php echo  'Gst:'.$value->gst.'<br/> Cgst:'.$value->cgst; ?></td>
-                                                <td><?php echo  $value->gross_total; ?></td>
+                                             <?php
+                                   if(count($getBooking)!='0')
+                                   {
+                                    $a=1;
+                                    foreach($getBooking as $bkr)
+                                    {
+                                        $ticketId=$bkr->id;
+                                        $merchantId=$bkr->merchant_id;
+                                        $eventId=$bkr->event_id;
+                                        $status=$bkr->payment_status;
+
+                                        $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+
+                                         if($eventId!='0')
+                                         {
+                                           $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $eventId));
+                                         }
+
+                                         $getBillingDetail=$this->Admin_model->getWhere('ticket_billing_details',array('ticket_request_id' => $ticketId));
+      
+
+                                    ?>
+                                    <tr id="tr_<?php echo $bkr->id; ?>">
+                                        <th scope="row"><?php echo $a; ?></th>
+                                        <td><?php echo $bkr->name; ?></td> 
+                                        <td>
+                                          <?php
+                                            if($eventId!='0')
+                                             {
+                                               ?>
+                                                 <b style="font-weight:bold">Event : </b> <?php echo $getEvent[0]->name;?> <br/>
+                                                 <b style="font-weight:bold">Water park : </b> <?php echo $getMerchant[0]->waterpark_name;?>
+                                               <?php
+                                             }
+                                             else
+                                             {
+                                               echo $getMerchant[0]->waterpark_name;
+                                             }
+                                              ?>
+                                        </td> 
+                                        <td><i class="fa fa-inr"></i> <?php echo $bkr->gross_total; ?></td> 
+                                        <td><?php echo date('F j,Y g:i a',strtotime($bkr->requested_on)); ?> </td> 
+                                        <td id="st_<?php echo $bkr->id; ?>">
+                                            <?php 
+                                           switch($status)
+                                            {
+                                                case "0":
+                                            ?>
+                                                <button class="btn  btn-danger btn-xs">Unpaid</button>
+                                            <?php
+                                                break;
+
+                                                case "1":
+                                             ?>
+                                                <button class="btn btn-success btn-xs">Paid</button>
+                                            <?php
+                                                break;
+                                            }
+                                            ?>
+                                           </td>
+                                           <td> 
+                                            
+                                            <a href="<?php echo base_url(); ?>assets/front/uploads/ticket/<?php echo $getBillingDetail[0]->ticket; ?>"  download class=" btn btn-xs btn-primary"><i class="fa fa-download"></i></a>
+                                           
+                                            <a href="javascript:void()"  onclick="getbookingDetails(<?php echo  $bkr->id; ?>)" data-toggle="modal" data-target="#myModal"  class=" btn btn-xs btn-warning"><i class="fa fa-eye"></i></a>
+
+                                           <a href="javascript:void();" onclick="delData('ticket_request','<?php echo $bkr->id; ?>')"  class=" btn btn-xs btn-danger" ><i class="fa fa-trash"></i></a>
+                                           
+                                           <span id="sts_<?php echo $bkr->id; ?>">
+                                           <?php
+                                           $visit_date=$bkr->visit_date;
+                                           $cDate=date('Y-m-d');
+                                           $status=$bkr->status;
+                                           if($cDate < $visit_date)
+                                           {
+                                              switch($status)
+                                              {
+                                                case "1";
+                                                   ?>
+                                                   <a href="javascript:void()"  onclick="putBookingId(<?php echo  $bkr->id; ?>)" data-toggle="modal" data-target="#cancel-ticket"  class=" btn btn-xs btn-info">Cancel Booking</a>
+
+                                                   <?php
+                                                break;
+
+                                                case "2":
+                                                   $cancelledBy=$bkr->cancelled_by;
+                                                   ?>
+                                                    <a  class=" btn btn-xs btn-danger">Cancelled</a>
+                                                     <br/>
+                                                    <p>
+                                                      <span>Cancelled By : </span> <?php echo $cancelledBy; ?><br/>
+                                                      <span>Reason : </span> <?php echo $bkr->cancellation_reason; ?>
+                                                    </p>
+                                                   
+                                                   <?php
+                                                break;
+                                              }
+                                             ?>
                                                
-                                                <td>
-                                                  <div class="statuofrow<?php echo $value->id;?>">
-                                                 <?php  if($value->payment_status=='1') {?>
-                                                <button  class="btn btn-xs btn-info">Complete</button>
-                                                    <?php }else if($value->payment_status=='2'){?>
-                                                <button class="btn btn-xs btn-danger">Payment Failed..</button>
-                                                    <?php }else{?>
-                                                <button class="btn btn-xs btn-danger">Pending</button>
-                                                    <?php }?>
-                                                       
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    
-                                                    <a  href="javascript:void()"  onclick="getbookingDetails(<?php echo  $value->id; ?>)"    data-toggle="modal" data-target="#myModal"  class=" btn btn-xs btn-warning"><i class="fa fa-eye"></i></a>
-
-                                                       <a href="javascript:void();" onclick="delData('ticket_request','<?php echo $value->id; ?>')"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-
-                                                       
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
+                                             <?php
+                                           }
+                                           ?>
+                                         </span>
+                                           
+                                                                            
+                                        </td> 
+                                    </tr> 
+                                   <?php
+                                   $a++;
+                                    }
+                                   }
+                                   else
+                                    {
+                                        ?>
+                                       <tr><td colspan="8" style="text-align:center">No Booking Found</td></tr>
+                                        <?php
+                                    }
+                                   ?>
                                             
                                         </tbody>
                                        </table> 
-
-                                       <?php } else{ ?>
-                                         <div class="text-center">No Records ....</div>
-                                       <?php }?> 
                                     </div>
                                 </div>
                             </div>
-    </div>
-    <div id="menu1" class="tab-pane fade">
-        <div class="panel panel-white">
-                                <div class="panel-heading clearfix">
-                                    <h4 class="panel-title">Enquiry Ticket</h4>
-                                </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-
- <?php if(count($getEnquiry_Ticketbooking)>0) { ?>
-                                <table id="example1" class="display table" style="width: 100%; cellspacing: 0;">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Visitors</th>
-                                               
-                                                <th>Message</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
-                                            <tr>
-                                               <th>Name</th>
-                                                <th>Visitors</th>
-                                               
-                                                <th>Message</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
-
-                                             <?php foreach ($getEnquiry_Ticketbooking as $key => $value) { ?>
-                                           <tr id="row_<?php echo $value->id;?>">
-                                                <td><?php echo  'Name :'.$value->name.'<br/> Email :'.$value->email.'<br/> Address: '.$value->address; ?></td>
-                                                <td><?php echo  'Adults : '.$value->number_of_adults.'<br/> Children :'.$value->number_of_children; ?></td>
-                                               
-                                                <td style="width:400px; ">
-                                                 
-                                                 <?php  echo $value->message;?>
-                                              
-                                                </td>
-                                                <td>
-                                                    
-                                                    <a  href="javascript:void()"  onclick="getbookingDetails(<?php echo  $value->id; ?>)"    data-toggle="modal" data-target="#myModal"  class=" btn btn-xs btn-warning"><i class="fa fa-eye"></i></a>
-
-                                                       <a href="javascript:void();" onclick="delData('ticket_request','<?php echo $value->id; ?>')"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-
-                                                       
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                            
-                                        </tbody>
-                                       </table> 
-
-                                       <?php } else{ ?>
-                                         <div class="text-center">No Records ....</div>
-                                       <?php }?> 
-                                    </div>
-                                </div>
-                            </div>
-    </div>
-    
-  </div>
+   
                         </div>
                         
                     </div>
@@ -221,15 +234,7 @@
         
         <div class="cd-overlay"></div>
     
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    
-                    
-                </div>
-            </div>
-        </div>
-
+     
         <!--Start of   Modal -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -241,6 +246,40 @@
         </div><!--  End Of Modal Code -->
 
 
+        <div class="modal fade" id="cancel-ticket" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                 <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h3 class="modal-title" id="myModalLabel">Cancel Ticket</h3>
+                    </div>
+                     <?php
+                               echo form_open_multipart();
+                      ?> 
+                    <div class="modal-body row">
+                       <div class="col-md-12">
+                            <div class="panel panel-white">
+                                <div class="panel-body">
+                                   <input type="hidden" id="booking_id" name="rowid">  
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Reason</label>
+                                             <textarea name="cancellation_reason"  class="form-control m-t-xxs" placeholder="Write here the reason of cancellation" required></textarea>
+                                           
+                                        </div>
+                                       
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                         <button type="submit" name="cancel_ticket" class="btn btn-success">Submit</button>
+                    </div>
+                    <?php echo form_close(); ?>     
+                </div>
+            </div>
+        </div>
+
        
         <?php include('common/footer-js.php'); ?>
        <script type="text/javascript">
@@ -248,6 +287,11 @@
         $(document).ready(function() {
     $('#example1').DataTable();
 } );
+
+         function putBookingId(rid)
+        {
+           $('#booking_id').val(rid);
+        }
             
             function changeStatus(id,table)
             {
@@ -281,7 +325,7 @@ function delData(tbl,rowid)
               function(data){
                // alert(data); 
                $('#row_' + rowid).remove(); 
-                $('.alertmessage').html('<div class="alert alert-success" >Record Delete Successfully..</div>');
+               $('#msgDivAjax').html('<div class="alert alert-success background-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Deleted Successfully</div>');
               }
           });
 

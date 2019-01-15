@@ -175,17 +175,32 @@
 										<div class="merchantDetail col-xs-12 p0" >
 											<div class="col-sm-3 col-xs-12 p0">
 												<div class="detailCounter">
-													<h4 ><?php echo $finalReview; ?></h4> 
-				                                    <h5>  
-				                                    	<?php
-				                                         for($x=1;$x<=$finalReview;$x++)
-				                                         {
-				                                         ?>
-				                                           <i class="fa fa-star eventStarTop"></i> 
-				                                         <?php
-				                                         }
-				                                         ?>
-				                                     </h5>
+													<?php
+
+                                                    if($finalReview==1)
+                                                    {
+                                                        ?>
+                                                          <h4 class="pt5">Not rated yet</h4> 
+                                                        <?php
+                                                    }
+                                                    else
+                                                    {
+                                                    	?>
+	                                                    <h4 ><?php echo $finalReview; ?></h4> 
+					                                    <h5>  
+					                                    	<?php
+					                                         for($x=1;$x<=$finalReview;$x++)
+					                                         {
+					                                         ?>
+					                                           <i class="fa fa-star eventStarTop"></i> 
+					                                         <?php
+					                                         }
+					                                         ?>
+					                                     </h5>
+                                                    	<?php
+                                                    }
+													?>
+													
 			                                    </div> 
 											</div>
 											<div class="col-sm-3 col-xs-12 p0">
@@ -422,16 +437,40 @@
 		                                          
 		                                <?php
 		                                }
+
+		                                    $booking_availability=$getData[0]->booking_availability;
+		                                	if($booking_availability==1)
+		                                	{
+		                                		$clsBook="active";
+			                                	$clsEnquire="";
+			                                	$style='';
+
+			                                	$clsBookDiv="in active";
+			                                	$clsEnquireDiv="";
+			                                	$stylewidth='';
+		                                	}
+		                                	else
+		                                	{
+		                                		$clsBook="";
+			                                	$clsEnquire="active";
+			                                	$style='style="display:none"';
+
+			                                	$clsBookDiv="";
+			                                	$clsEnquireDiv="in active";
+			                                	$stylewidth='style="width:100%"';
+		                                	}
+
 		                                ?>
+
                                      <div class="elements-tab-1">
 				                           
 				                            <ul class="nav nav-tabs requestTabNav" >
-				                            	<li class="active"><a href="#profile_1"  data-toggle="tab">Book Now</a></li>
-				                                <li><a href="#profile_2"  data-toggle="tab">Enquire Now</a></li>
+				                            	<li class="<?php echo $clsBook; ?>" <?php echo $style; ?>><a href="#profile_1"  data-toggle="tab">Book Now </a></li>
+				                                <li class="<?php echo $clsEnquire; ?>" <?php echo $stylewidth; ?>><a href="#profile_2"  data-toggle="tab">Enquire Now</a></li>
 				                            </ul>
 				                            <!-- Tab panes -->
 				                            <div class="tab-content">
-				                                <div class="tab-pane form_tab fade in active" id="profile_1">
+				                                <div class="tab-pane form_tab fade <?php echo $clsBookDiv ?>" id="profile_1" <?php echo $style; ?>>
 				                                     <div class="find_home-box" style="padding:10px 5px">
 				                                     	<p style="color: white;text-align: center;">Book your ticket now and enjoy your day.</p>
 					                                    <div class="find_home-box-inner">
@@ -521,7 +560,7 @@
 					                                        </div>
 					                                    </div>
 				                                </div>
-				                                <div class="tab-pane form_tab fade" id="profile_2">
+				                                <div class="tab-pane form_tab fade <?php echo $clsEnquireDiv; ?>" id="profile_2">
 				                                    <div class="find_home-box" style="padding:10px 5px">
 				                                    	<p style="color: white;text-align:center;">Have any query? Feel free to ask.</p>
 					                                    <div class="find_home-box-inner">

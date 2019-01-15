@@ -83,67 +83,47 @@ if(isset($mode))
                     </div>
                     <div class="modal-body">
                        <div class="panel panel-white">
-                                <div class="panel-heading clearfix">
-                                    <h4 class="panel-title"><b>Booking Details</b></h4>
-                                 
-                              <!-- <button class="btn btn-xs btn-danger pull-right">Payment failed..</button>
-                                    <button class="btn btn-xs btn-danger pull-right">Payment failed..</button> -->
-
-                                </div>
+                               
                                  <?php if(isset($getBooikng)) {
                                     ?>
                                 <div class="panel-body">
                                    
                                     <div class="row">
-                                        <div class="col-md-1"><b>Name:</b></div>
-                                        <div class="col-md-5"><?php echo $getBooikng[0]->name; ?></div>
-                                        <div class="col-md-1"><b>Status:</b></div>
-                                        <div class="col-md-5">
-                                           <?php if($getBooikng[0]->payment_status=='1') {?>
-                                            <button class="btn btn-xs btn-info">Complete</button>
-                                           <?php }else if($getBooikng[0]->payment_status=='2'){  ?>
-                                           <button class="btn btn-xs btn-danger">Payment failed..</button>
-                                           <?php }else{ ?>
-                                            <button class="btn btn-xs btn-danger">Pending..</button>
-                                           <?php }?>
-                                           
+                                        <div class="col-sm-6">
 
+                                            <h3 class="mb3" style="margin-top: 0px;">User Detail</h3>
 
+                                            <p><span style="font-weight:bold">Name : </span><?php echo $getBooikng[0]->name; ?></p>
+
+                                             <p style="word-break: break-all;"><span style="font-weight:bold">Email : </span><?php echo $getBooikng[0]->email; ?></p>
+
+                                             <p><span style="font-weight:bold">Mobile : </span><?php echo $getBooikng[0]->mobile; ?></p>
+
+                                             <p><span style="font-weight:bold">Address : </span><?php echo $getBooikng[0]->address; ?></p>
+
+                                             <p><span style="font-weight:bold">Visit date : </span><?php echo date('M j,Y',strtotime($getBooikng[0]->visit_date)); ?></p>
+                                        </div>
+
+                                        <div class="col-sm-6">
+
+                                             <h3 class="mb3" style="margin-top: 0px;">Booking Detail</h3>
+
+                                             <p><span style="font-weight:bold">Total Visitors : </span><?php echo $getBooikng[0]->total_visitors; ?></p>
+
+                                              <p><span style="font-weight:bold">Total Amount : </span><i class="fa fa-inr"></i> <?php echo $getBillingDetail[0]->total_amount; ?></p>
+
+                                             <p><span style="font-weight:bold">Total GST : </span> <i class="fa fa-inr"></i> <?php echo $getBillingDetail[0]->total_gst; ?></p>
+
+                                            <p><span style="font-weight:bold">Final Amount  : </span><i class="fa fa-inr"></i> <?php echo $getBillingDetail[0]->final_amount; ?></p>
+
+                                            <p><span style="font-weight:bold">Booked On : </span><?php echo date('M j,Y g:i a',strtotime($getBooikng[0]->requested_on)); ?> </p>
+
+                                            <p><span style="font-weight:bold">Download Ticket : </span>
+                                                <a href="<?php echo base_url(); ?>assets/front/uploads/ticket/<?php echo $getBillingDetail[0]->ticket; ?>"  download class=" btn btn-xs btn-primary"><i class="fa fa-download"></i></a> 
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-1"><b>Email:</b></div>
-                                        <div class="col-md-5"><?php echo $getBooikng[0]->email; ?></div>
-                                        <div class="col-md-1"><b>Visit:</b></div>
-                                        <div class="col-md-5"><?php echo $getBooikng[0]->visit_date; ?></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-1"><b>Mobile:</b></div>
-                                        <div class="col-md-5"><?php echo $getBooikng[0]->name; ?></div>
-                                        <div class="col-md-2"><b>Address:</b></div>
-                                        <div class="col-md-4"><?php echo $getBooikng[0]->name; ?></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-2"><b>Adults:</b></div>
-                                        <div class="col-md-4"><?php echo $getBooikng[0]->number_of_adults; ?></div>
-                                        <div class="col-md-1"><b>Visitor</b></div>
-                                        <div class="col-md-5"><?php echo $getBooikng[0]->total_visitors; ?></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-2"><b>Children:</b></div>
-                                        <div class="col-md-4"><?php echo $getBooikng[0]->number_of_children; ?></div>
-                                        <div class="col-md-1"><b>GST</b></div>
-                                        <div class="col-md-5"><?php echo 'Gst:'.$getBooikng[0]->gst.'&nbsp; cgst:'.$getBooikng[0]->cgst; ?></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-2"><b>Amount:</b></div>
-                                        <div class="col-md-4"><?php echo $getBooikng[0]->gross_total; ?>&nbsp; &#8377;</div>
-                                        <div class="col-md-2"><b>Message</b></div>
-                                        <div class="col-md-4"><?php echo $getBooikng[0]->message; ?></div>
-                                    </div>
-                                    
-
-
+                                   
 
                                 </div>
                                 <?php }else{ ?>
@@ -159,6 +139,77 @@ if(isset($mode))
 
        <?php 
        break; 
+
+       case "reportData":
+
+         ?>
+
+         <div class="panel panel-white">
+           
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title"><?php echo $reportOf; ?></h4>
+                <span class="pull-right" style="width: 40%;text-align: right;">
+                     
+                    <b>Total sale : </b> <i class="fa fa-inr"></i> <?php echo $totalSale[0]->grossAmt; ?> ,
+                    <b>Total Commission : </b> <i class="fa fa-inr"></i> <?php echo $totalCommission[0]->comAmt; ?>
+
+                    <a href="<?php echo base_url(); ?>admin/pdf-report" style="margin-left: 3%;"class="btn btn-xs btn-danger pull-right" download>PDF</a> 
+                </span>    
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table id="example1" class="display table" style="width: 100%; cellspacing: 0;">
+                        <thead> 
+                            <tr>
+                                <th>#</th> 
+                                <th>Water Park</th>
+                                <th>Booked By</th>
+                                <th>Final Amount</th>
+                                <th>Commission Amount</th>
+                                <th>Booked On</th>
+                            </tr> 
+                         </thead>
+                         <tfoot>
+                            <tr>
+                                <th>#</th> 
+                                <th>Water Park</th>
+                                <th>Booked By</th>
+                                <th>Final Amount</th>
+                                <th>Commission Amount</th>
+                                <th>Booked On</th>
+                            </tr> 
+                        </tfoot>
+                        <tbody>
+                           <?php
+                           $a=1;
+                           foreach($getReport as $rt)
+                           {
+                              $merchantId=$rt->merchant_id;
+                              $ticketId=$rt->ticket_request_id;
+                              $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+                              $getTicket=$this->Admin_model->getWhere('ticket_request',array('id' => $ticketId));
+                             ?>
+                              <tr>
+                                <td><?php echo $a; ?></td> 
+                                <td><?php echo $getMerchant[0]->waterpark_name; ?></td>
+                                <td><?php echo $getTicket[0]->name; ?></td>
+                                <td><i class="fa fa-inr"></i> <?php echo $rt->final_amount; ?></td>
+                                <td><i class="fa fa-inr"></i> <?php echo $rt->commission_amount; ?></td>
+                                <td><?php echo date('M j,Y g:i a',strtotime($rt->added_on)); ?></td>
+                              </tr> 
+                             <?php
+                             $a++;
+                           }  
+                           ?>
+                        </tbody>
+                </table> 
+               </div>           
+            </div>
+         </div>
+
+         <?php
+
+       break;
 	}
 
 

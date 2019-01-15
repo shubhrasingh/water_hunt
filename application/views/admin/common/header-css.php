@@ -9,7 +9,7 @@
         
         <!-- Styles -->
         <link href="<?php echo base_url(); ?>assets/admin/plugins/pace-master/themes/blue/pace-theme-flash.css" rel="stylesheet"/>
-        <link href="<?php echo base_url(); ?>assets/admin/plugins/uniform/css/default.css" rel="stylesheet"/>
+        <!--<link href="<?php echo base_url(); ?>assets/admin/plugins/uniform/css/default.css" rel="stylesheet"/>-->
         <link href="<?php echo base_url(); ?>assets/admin/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>assets/admin/plugins/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>assets/admin/plugins/line-icons/simple-line-icons.css" rel="stylesheet" type="text/css"/>	

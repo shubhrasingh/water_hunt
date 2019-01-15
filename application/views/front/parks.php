@@ -143,7 +143,7 @@
                                                                       <select class="selectpicker" name="merchant_id" title="Select Park" data-hide-disabled="true" data-live-search="true" required>
                                                                         <?php
                                                                         $tblMerchants=$this->db->dbprefix.'merchants';
-                                                                        $getCity=$this->Admin_model->getQuery("SELECT DISTINCT waterpark_city FROM $tblMerchants WHERE status='1'");
+                                                                        $getCity=$this->Admin_model->getQuery("SELECT DISTINCT waterpark_city FROM $tblMerchants WHERE status='1'  and `booking_availability`='1'");
                                                                         foreach($getCity as $crt)
                                                                         {
                                                                             $ctyNm=$crt->waterpark_city;

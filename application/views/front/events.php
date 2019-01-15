@@ -143,7 +143,8 @@
                                                                       <select class="selectpicker" onchange="selEvent('book',this.value)" name="event_id" title="Select Event" data-hide-disabled="true" data-live-search="true" required>
                                                                         <?php
                                                                         $tblEvent=$this->db->dbprefix.'merchants_events';
-                                                                        $getMer=$this->Admin_model->getQuery("SELECT DISTINCT merchant_id FROM $tblEvent WHERE status='1'");
+                                                                        $tblMerchant=$this->db->dbprefix.'merchants';
+                                                                        $getMer=$this->Admin_model->getQuery("SELECT DISTINCT merchant_id FROM $tblEvent WHERE status='1' and (merchant_id IN (SELECT id FROM $tblMerchant WHERE `status`='1' and `booking_availability`='1'))");
                                                                         foreach($getMer as $crt)
                                                                         {
                                                                             $merchant_id=$crt->merchant_id;

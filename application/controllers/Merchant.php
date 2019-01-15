@@ -121,6 +121,32 @@ class Merchant extends CI_Controller {
 					$del=$this->Admin_model->deleteData('ticket_request',array('id' => $rowid));
 
 				break;
+
+				case "reviews":
+
+                    $rowid=$_GET['rowid'];
+
+					$del=$this->Admin_model->deleteData('customer_review',array('id' => $rowid));
+
+				break;
+
+				case "messageInbox":
+
+                    $rowid=$_GET['rowid'];
+                    
+                    $tblMessage=$this->db->dbprefix."merchant_contact_request";
+					$del=$this->db->query("UPDATE $tblMessage SET `delete_for_merchant`='2' WHERE id IN ($rowid)");
+
+				break;
+
+				case "messageSentItems":
+
+                    $rowid=$_GET['rowid'];
+
+					$tblMessage=$this->db->dbprefix."merchant_contact_request";
+					$del=$this->db->query("DELETE FROM $tblMessage WHERE id IN ($rowid)");
+
+				break;
 			}
 		}
 		
@@ -153,6 +179,29 @@ class Merchant extends CI_Controller {
 						break;
 					}
 					
+				break;
+
+				case "booking_availability":
+
+                    switch($action)
+					{
+						case "ON":
+						  
+						  $rowid=$this->session->userdata('WhUserLoggedinId');	
+					
+					      $this->Admin_model->updateData('merchants',array('booking_availability' => 1),$rowid);
+					
+						break;
+						
+						case "OFF":
+						   
+						   $rowid=$this->session->userdata('WhUserLoggedinId');	
+					
+					       $this->Admin_model->updateData('merchants',array('booking_availability' => 2),$rowid);
+
+						break;
+					}
+
 				break;
 
 			}
@@ -1023,6 +1072,104 @@ class Merchant extends CI_Controller {
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['userDetails']=$this->userDetails();
           
+          if(isset($_REQUEST['cancel_ticket']))
+          {
+            $booking_id=$_REQUEST['rowid'];
+            $cancellation_reason=$_REQUEST['cancellation_reason'];
+            $cancelled_by='merchant';
+            
+            $getTicket=$this->Admin_model->getWhere('ticket_request',array('id' => $booking_id));
+            $userId=$getTicket[0]->user_id;
+            $merchantId=$getTicket[0]->merchant_id;
+            $eventId=$getTicket[0]->event_id;
+            $visit_date=$getTicket[0]->visit_date;
+            $visitDate=date('M j,Y',strtotime($visit_date));
+
+            $getUser=$this->Admin_model->getWhere('users',array('id' => $userId));
+            $userName=$getUser[0]->name;
+            $toUserEmail=$getUser[0]->email;
+
+            $getMerchant=$this->userDetails();
+            $waterParkName=$getMerchant[0]->waterpark_name;
+            $merchantName=$getMerchant[0]->name;
+            $toMerchantEmail=$getMerchant[0]->email;
+
+            $this->Admin_model->updateData('ticket_request',array('status' => 2,'cancellation_reason' => $cancellation_reason,'cancelled_by' => $cancelled_by),$booking_id);
+            
+             if($eventId!='0')
+             {
+                $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $eventId));
+                $bookedFor="event ".$getEvent[0]->name;
+             }
+             else
+             {
+             	$bookedFor="water park ".$waterParkName;
+             }
+
+            $data['siteDetails']=$this->siteDetails();
+            $htmlUser='<center> 
+				<table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+					<tbody>
+					  <tr> 
+						<td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center;"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width:120px;"></a></font></td> 
+					  </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello '.$userName.'</td> 
+					 </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">Your ticket which was booked for '.$bookedFor.' , to be visited on '.$visitDate.' , has been cancelled by the merchant.</td> 
+					 </tr> 	
+					  <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Reason : </b> '.$cancellation_reason.'</td> 
+					 </tr> 	   
+				    </tbody>
+				</table> 
+			</center>';
+
+			$fromName=$data['siteDetails']['companyData'][0]->company_name;
+			$from="no-reply@compaddicts.org";
+
+	        $subjectUser='Ticket cancelled - '.$waterParkName;
+			$this->mailHtml($toUserEmail,$subjectUser,$htmlUser,$fromName,$from);
+            
+            $htmlMerchant='<center> 
+				<table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+					<tbody>
+					  <tr> 
+						<td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center;"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width:120px;"></a></font></td> 
+					  </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello '.$merchantName.'</td> 
+					 </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">The ticket which was booked for '.$bookedFor.' , to be visited on '.$visitDate.' , has been cancelled successfully.Here are the customer details : </td> 
+					 </tr> 	
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Name : </b> '.$getTicket[0]->name.'</td> 
+					 </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Email : </b> '.$getTicket[0]->email.'</td> 
+					 </tr>
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Mobile : </b> '.$getTicket[0]->mobile.'</td> 
+					 </tr>
+					  <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Reason : </b> '.$cancellation_reason.'</td> 
+					 </tr> 	   
+				    </tbody>
+				</table> 
+			</center>';
+
+			$fromName=$data['siteDetails']['companyData'][0]->company_name;
+			$from="no-reply@compaddicts.org";
+
+	        $subjectMerchant='Ticket cancelled - '.$bookedFor;
+			$this->mailHtml($toMerchantEmail,$subjectMerchant,$htmlMerchant,$fromName,$from);
+
+            $this->session->set_flashdata('success','Ticket has been cancelled');
+            redirect('merchant/bookings');
+          }
+
           $merchantId=$this->session->userdata('WhUserLoggedinId');
 		  $data['getBooking']=$this->Admin_model->getWhere('ticket_request',array('merchant_id' => $merchantId,'request_type' => 'booking','payment_status' => 1));
 		  
@@ -1044,6 +1191,214 @@ class Merchant extends CI_Controller {
 		  $data['getEnquiry']=$this->Admin_model->getWhere('ticket_request',array('merchant_id' => $merchantId,'request_type' => 'enquiry'));
 		  
 		  $this->load->view('front/merchant/enquiry',$data);
+		}
+        
+        public function myReviews()
+        {
+            if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		   $data['siteDetails']=$this->siteDetails();
+		   $data['userDetails']=$this->userDetails();
+          
+           $merchantId=$this->session->userdata('WhUserLoggedinId');
+		   $data['getProfileReview']=$this->Admin_model->getWhere('customer_review',array('merchant_id' => $merchantId,'event_id' => '0'));
+
+		   $tblReview=$this->db->dbprefix.'customer_review';
+		   $data['getEventReview']=$this->Admin_model->getQuery("SELECT * FROM $tblReview WHERE merchant_id='$merchantId' and `event_id`!='0'");
+		  
+		   $this->load->view('front/merchant/reviews',$data);
+        }
+
+
+        public function myMessages($page=0)
+        {
+        	if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		   $data['siteDetails']=$this->siteDetails();
+		   $data['userDetails']=$this->userDetails();
+           
+           $merchantId=$this->session->userdata('WhUserLoggedinId');
+           
+            $data['fetchLimit']=10;
+			if($page==0)
+	        {
+	          $limit=0;
+	        }
+	        else
+	        {
+	          $limit=($page - 1) * $data['fetchLimit'];
+	        }
+            
+
+	        $fetchLimit=$data['fetchLimit'];
+	        
+	       
+
+	       $tblMessage=$this->db->dbprefix.'merchant_contact_request';
+	       $inboxCnt=$this->Admin_model->getQuery("SELECT * FROM $tblMessage WHERE merchant_id='$merchantId' and `sender_type`!='merchant' and `delete_for_merchant`='1'");
+	       $data['inboxCount']=count($inboxCnt);
+
+          
+		   $data['getInbox']=$this->Admin_model->getQuery("SELECT * FROM $tblMessage WHERE merchant_id='$merchantId' and `sender_type`!='merchant' and `delete_for_merchant`='1' ORDER BY added_on DESC LIMIT $limit,$fetchLimit");
+
+		   $data['getSentItems']=$this->Admin_model->getDataCount('merchant_contact_request',array('merchant_id' => $merchantId,'sender_type' => 'merchant'));
+		   
+		   $data['unseenCount']=$this->Admin_model->getQuery("SELECT * FROM $tblMessage WHERE merchant_id='$merchantId' and `sender_type`!='merchant' and `seen_status`='2'");
+	       $data['inboxCount']=count($inboxCnt);
+           
+            $data['fromData']=$limit + 1;
+	        $data['toData']=$limit + $fetchLimit;
+            
+            if($data['toData']>$data['inboxCount'])
+            {
+            	$data['toData']=$data['inboxCount'];
+            }
+		   $this->load->library('pagination');
+
+		   $config['base_url'] = base_url().'merchant/messages';
+		   $config['total_rows'] = $data['inboxCount'];
+		   $config['per_page'] = $data['fetchLimit'];
+	       $config['use_page_numbers'] = TRUE;
+
+			$this->pagination->initialize($config);
+		   $this->load->view('front/merchant/messages',$data);
+        }
+
+        
+        public function mySentitems($page=0)
+        {
+        	if($this->session->userdata('WhUserLoggedinId')=='')
+			{
+			  redirect('login');
+			}
+			
+		   $data['siteDetails']=$this->siteDetails();
+		   $data['userDetails']=$this->userDetails();
+           
+           $merchantId=$this->session->userdata('WhUserLoggedinId');
+           
+            $data['fetchLimit']=2;
+			if($page==0)
+	        {
+	          $limit=0;
+	        }
+	        else
+	        {
+	          $limit=($page - 1) * $data['fetchLimit'];
+	        }
+            
+
+	       $fetchLimit=$data['fetchLimit'];
+
+	       $tblMessage=$this->db->dbprefix.'merchant_contact_request';
+	       $sentItemsCnt=$this->Admin_model->getDataCount('merchant_contact_request',array('merchant_id' => $merchantId,'sender_type' => 'merchant'));
+	       $data['sentItemsCount']=$sentItemsCnt;
+
+          
+		   $data['getSentItems']=$this->Admin_model->getwithLimitOrderBy('merchant_contact_request',array('merchant_id' => $merchantId,'sender_type' => 'merchant'),$data['fetchLimit'],$limit,'added_on','DESC');
+
+		   $data['unseenCount']=$this->Admin_model->getQuery("SELECT * FROM $tblMessage WHERE merchant_id='$merchantId' and `sender_type`!='merchant' and `seen_status`='2'");
+           
+            $data['fromData']=$limit + 1;
+	        $data['toData']=$limit + $fetchLimit;
+            
+            if($data['toData']>$data['sentItemsCount'])
+            {
+            	$data['toData']=$data['sentItemsCount'];
+            }
+		   $this->load->library('pagination');
+
+		   $config['base_url'] = base_url().'merchant/messages/sent-items';
+		   $config['total_rows'] = $data['sentItemsCount'];
+		   $config['per_page'] = $data['fetchLimit'];
+	       $config['use_page_numbers'] = TRUE;
+
+			$this->pagination->initialize($config);
+		   $this->load->view('front/merchant/sent-items',$data);
+        }
+
+
+        public function composeMessage()
+        {
+        	  if(isset($_REQUEST['compose_message']))
+	           {
+	           	  $message=nl2br($_REQUEST['message']);
+	           	  if(!empty($message))
+	           	  {
+	           	  	 $data['siteDetails']=$this->siteDetails();
+	           	  	 $merchantId=$this->session->userdata('WhUserLoggedinId');
+	           	  	 $adminId=$data['siteDetails']['companyData'][0]->id;
+	                 $date=date('Y-m-d H:i:s');
+	                 $this->Admin_model->insertData('merchant_contact_request',array('merchant_id' => $merchantId,'admin_id' => $adminId,'message' => $message,'sender_type' => 'merchant','added_on' => $date));
+
+	                 $this->session->set_flashdata('success','Message sent Successfully');
+	           	  	 redirect('merchant/messages/sent-items');
+	           	  }
+	           	  else
+	           	  {
+	           	  	$this->session->set_flashdata('error','Message is required field');
+	           	  	redirect('merchant/messages/sent-items');
+	           	  }
+	              
+	           }
+        }
+
+
+		public function viewBookingDetailAjax()
+		{
+			$rowId=$_REQUEST['rowid'];
+
+			$data['getTicket']=$this->Admin_model->getWhere('ticket_request',array('id' => $rowId));
+			$data['getBillingDetail']=$this->Admin_model->getWhere('ticket_billing_details',array('ticket_request_id' => $rowId));
+            
+            $data['mode']="bookingDetail";
+
+			$this->load->view('front/merchant/ajax-page',$data);
+		}
+
+		public function readMessageAjax()
+		{
+			$rowId=$_REQUEST['rowid'];
+			$mode=$_REQUEST['mode'];
+
+			if($mode=='readMessage')
+			{
+			  $this->Admin_model->updateData('merchant_contact_request',array('seen_status' => '1'),$rowId);
+			}
+            
+            
+			$data['getMessage']=$this->Admin_model->getWhere('merchant_contact_request',array('id' => $rowId));
+			
+            $data['mode']="readMessage";
+
+			$this->load->view('front/merchant/ajax-page',$data);
+		}
+
+		public function markAsRead()
+		{
+			$rowid=$_GET['rowid'];
+                    
+            $tblMessage=$this->db->dbprefix."merchant_contact_request";
+			$del=$this->db->query("UPDATE $tblMessage SET `seen_status`='1' WHERE id IN ($rowid)");
+		}
+
+		public function mailHtml($to,$subject,$template,$fromName,$from)
+		{
+			
+		                $headers = "MIME-Version: 1.0" . "\r\n";
+						$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+						// More headers
+						$headers .= "From: $fromName"." <".$from.">";
+	                    
+	                    mail($to,$subject,$template,$headers);
+
 		}
 
 

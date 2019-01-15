@@ -4,14 +4,20 @@
                     <div class="row">
                         <div class="col-md-4 col-sm-4 hidden-xs">
                             <div class="haven-call">
-                                <p><i class="fa fa-phone"></i> <?php echo $siteDetails['companyData'][0]->company_phone; ?></p>
+                                <p>
+                                    <i class="fa fa-phone"></i> <?php echo substr($siteDetails['companyData'][0]->company_phone,0,10); ?> || 
+                                    <i class="fa fa-envelope" ></i> <?php echo $siteDetails['companyData'][0]->company_email; ?>
+                                </p>
                             </div>
                         </div>
                         <div class="col-md-8 col-sm-8 col-xs-12">
                             <div class="header-1-top-inner">
                                 <div class="header-topbar-menu header-menu">
                                     <ul>
-                                        <li><span><i class="fa fa-envelope"></i> </span> <?php echo $siteDetails['companyData'][0]->company_email; ?></li>
+                                        <!-- <li><span><i class="fa fa-envelope"></i> </span> <?php echo $siteDetails['companyData'][0]->company_email; ?></li> -->
+
+                                        <li><a href="<?php echo base_url(); ?>parks" style="padding: 0px; background:#f6921e none repeat scroll 0 0; padding:5px 10px; ">
+                                        BOOK TICKET</a></li>
                                         <?php
                                         if(($this->session->userdata('WhUserLoggedinId')!="") && ($this->session->userdata('WhUserLoggedinId')!='0'))
                                         {
@@ -42,11 +48,21 @@
                                                     ?>
                                                       <li><a href="<?php echo base_url(); ?>merchant/gallery">My Gallery</a></li>
                                                       <li><a href="<?php echo base_url(); ?>merchant/events">Events</a></li>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/bookings">Bookings</a></li>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/enquiries">Enquiries</a></li>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/reviews">Reviews</a></li>
+                                                      <li><a href="<?php echo base_url(); ?>merchant/messages">Messages</a></li>
                                                     <?php
                                                     }
+                                                    else
+                                                    {
+                                                        ?>
+                                                       <li><a href="<?php echo base_url(); ?>user/bookings">Bookings</a></li>
+                                                       <li><a href="<?php echo base_url(); ?>user/enquiries">Enquiries</a></li>
+                                                        <?php
+                                                    }
                                                     ?>
-                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/bookings">Bookings</a></li>
-                                                    <li><a href="<?php echo base_url(); ?><?php echo $folder ?>/enquiries">Enquiries</a></li>
+                                                   
                                                 </ul>
                                             </li>
                                            <li><a href="<?php echo base_url(); ?>logout" style="    padding: 0px;"><i class="fa fa-lock"></i> Logout</a></li>
@@ -86,7 +102,7 @@
                                     <nav>
                                         <ul>
                                             <li><a href="<?php echo base_url(); ?>">Home</a></li>
-                                            <li><a href="#">About Us</a></li>
+                                            <li><a href="<?php echo base_url(); ?>about-us">About Us</a></li>
                                             <li><a href="#"> Water Park</a>
                                                 <ul class="dropdown_menu">
                                                     <?php
@@ -116,8 +132,8 @@
                                                 </ul>
                                             </li>
                                             <li><a href="<?php echo base_url() ?>events">Events</a></li>
-                                            <li><a href="#">Services</a></li>
-                                            <li><a href="#"> Contact Us</a></li>
+                                           
+                                            <li><a href="<?php echo  base_url(); ?>contact"> Contact Us</a></li>
                                            
                                         </ul>
                                     </nav>
@@ -132,7 +148,7 @@
                             <nav id="dropdown">
                                 <ul>
                                     <li><a href="<?php echo base_url(); ?>">Home</a></li>
-                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="<?php echo  base_url(); ?>about-us">About Us</a></li>
                                     <li><a href="#"> Water Park</a>
                                         <ul class="dropdown_menu">
                                                     <?php
@@ -162,8 +178,7 @@
                                                 </ul>
                                     </li>
                                     <li><a href="<?php echo base_url() ?>events">Events</a></li>
-                                    <li><a href="#">Services</a></li>
-                                    <li><a href="#"> Contact Us</a></li>
+                                    <li><a href="<?php echo  base_url(); ?>contact"> Contact Us</a></li>
                                     <?php
                                         if(($this->session->userdata('WhUserLoggedinId')!="") && ($this->session->userdata('WhUserLoggedinId')!='0'))
                                         {
@@ -218,7 +233,7 @@
                     </div>
                 </div>
             </div>
-            <div class="header-bottom">
+           <!--  <div class="header-bottom">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -244,7 +259,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!--Search box inner start-->
             <div class="search-box-area">

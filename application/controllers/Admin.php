@@ -41,87 +41,7 @@ class Admin extends CI_Controller {
 			$data=$this->Admin_model->getWhere('master_admin',$where);
 			return $data;
 		}
-		
-        public function deleteData()
-		{
-			$mode=$_GET['mode'];
 
-			switch($mode)
-			{
-				case "questions":
-				
-					$rowid=$_GET['rowid'];	
-					$del=$this->Admin_model->deleteData('questions',array('id' => $rowid));
-					$del=$this->Admin_model->deleteData('answer_set',array('question_id' => $rowid));
-					
-				break;
-
-				case "slider":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('sliders',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('sliders',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/slider/'.$file_name);
-					}
-					
-				break;
-
-				case "staff":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('staff',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('staff',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/staff/'.$file_name);
-					}
-					
-				break;
-
-				case "gallery":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('gallery',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('gallery',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/gallery/'.$file_name);
-					}
-					
-				break;
-
-				case "content":
-				
-					$rowid=$_GET['rowid'];	
-
-					$getData=$this->Admin_model->getWhere('content',array('id' => $rowid));
-					$file_name=$getData[0]->image;
-
-					$del=$this->Admin_model->deleteData('content',array('id' => $rowid));
-
-					if($file_name!="")
-					{
-						unlink('assets/front/uploads/content/'.$file_name);
-					}
-					
-				break;
-			
-			}
-		}
 		
 		
 		public function statusToggle()
@@ -131,7 +51,7 @@ class Admin extends CI_Controller {
 
 			switch($mode)
 			{
-				case "questions":
+				case "testimonial":
 				    
 					switch($action)
 					{
@@ -139,18 +59,16 @@ class Admin extends CI_Controller {
 						  
 						  $rowid=$_GET['rowid'];	
 					
-					      $this->Admin_model->updateData('questions',array('status' => 1),$rowid);
-					      $this->Admin_model->updateWhere('answer_set',array('status' => 1),array('question_id' => $rowid));
-					
+					      $this->Admin_model->updateData('testimonial',array('status' => 1),$rowid);
+					      
 						break;
 						
 						case "deactivate":
 						   
 						   $rowid=$_GET['rowid'];	
 					
-					       $this->Admin_model->updateData('questions',array('status' => 2),$rowid);
-					       $this->Admin_model->updateWhere('answer_set',array('status' => 2),array('question_id' => $rowid));
-
+					       $this->Admin_model->updateData('testimonial',array('status' => 2),$rowid);
+					       
 						break;
 					}
 					
@@ -165,7 +83,7 @@ class Admin extends CI_Controller {
 						  
 						  $rowid=$_GET['rowid'];	
 					
-					      $this->Admin_model->updateData('slider',array('status' => 1),$rowid);
+					      $this->Admin_model->updateData('sliders',array('status' => 1),$rowid);
 					
 						break;
 						
@@ -173,14 +91,14 @@ class Admin extends CI_Controller {
 						   
 						   $rowid=$_GET['rowid'];	
 					
-					       $this->Admin_model->updateData('slider',array('status' => 2),$rowid);
+					       $this->Admin_model->updateData('sliders',array('status' => 2),$rowid);
 
 						break;
 					}
 					
 				break;
 
-				case "staff":
+				case "subadmin":
 				    
 					switch($action)
 					{
@@ -188,7 +106,7 @@ class Admin extends CI_Controller {
 						  
 						  $rowid=$_GET['rowid'];	
 					
-					      $this->Admin_model->updateData('staff',array('status' => 1),$rowid);
+					      $this->Admin_model->updateData('master_admin',array('status' => 1),$rowid);
 					
 						break;
 						
@@ -196,7 +114,7 @@ class Admin extends CI_Controller {
 						   
 						   $rowid=$_GET['rowid'];	
 					
-					       $this->Admin_model->updateData('staff',array('status' => 2),$rowid);
+					       $this->Admin_model->updateData('master_admin',array('status' => 2),$rowid);
 
 						break;
 					}
@@ -253,7 +171,7 @@ class Admin extends CI_Controller {
 			
 			$data['action']=$action;
 			$data['rowid']=$rowid;
-			$this->load->view('admin/ajax',$data);
+			$this->load->view('admin/ajax-status',$data);
 		}
 
 		public function index()
@@ -266,12 +184,234 @@ class Admin extends CI_Controller {
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['adminDetails']=$this->adminDetails();
 		  
-		 
+		 $condition=array('status' =>'1');
+		  $allmerchant=$this->Admin_model->getWhere('merchants',$condition);
+		  $data['allmerchants']=count($allmerchant); 
+
+          $condition=array('status' =>'1');
+		  $allevent=$this->Admin_model->getWhere('merchants_events',$condition);
+		  $data['allevents']=count($allevent);
+
+		  $condition=array('request_type' =>'booking');
+		  $bookingticket=$this->Admin_model->getWhere('ticket_request',$condition);
+		  $data['allbooikngticket']=count($bookingticket);
+
+		  $condition=array('request_type' =>'enquiry');
+		  $enquirybooking=$this->Admin_model->getWhere('ticket_request',$condition);
+		  $data['allenquirybooking']=count($enquirybooking);
+
+		  $condition=array('status' =>'1');
+		  $users=$this->Admin_model->getWhere('users',$condition);
+		  $data['allusers']=count($users); 
+           
+          $cy=date('Y'); 
+          $cm=date('m'); 
+          $cd=date('d');
+		  $tblbilling=$this->db->dbprefix.'ticket_billing_details';
+          $data['thismonthsCommission']=$this->Admin_model->getQuery("SELECT SUM(commission_amount)  as cmt from $tblbilling WHERE month(added_on)='$cm' and year(added_on)='$cy'");
+         
+          $data['TodayCommission']=$this->Admin_model->getQuery("SELECT SUM(commission_amount)  as cmt from $tblbilling WHERE DATE(added_on)=CURDATE() ");
+
+          $data['yearCommission']=$this->Admin_model->getQuery("SELECT SUM(commission_amount)  as cmt from $tblbilling WHERE year(added_on)='$cy' ");
+
+           $data['merchants']=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => '1'),'5','0','id','DESC');
+           $data['bookingticket']=$this->Admin_model->getwithLimitOrderBy('ticket_request',array('request_type' => 'booking'),'5','0','id','DESC');
+
+           $data['bookingrequest']=$this->Admin_model->getwithLimitOrderBy('ticket_request',array('request_type' => 'enquiry'),'7','0','id','DESC');
+
+           $data['users']=$this->Admin_model->getwithLimitOrderBy('users',array('status' => '1'),'5','0','id','DESC');
+
 		  
 		  $this->load->view('admin/dashboard',$data);
 		  
 		}
 		
+		
+		public function subadmin()
+		 {
+		 	if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			$data['siteDetails']=$this->siteDetails();
+		    $data['adminDetails']=$this->adminDetails();
+           
+           $condition=array('role' =>'2');
+		   $data['subadmins']=$this->Admin_model->getWhere('master_admin',$condition);
+
+         if(isset($_REQUEST['submit']))
+		  {
+		  	      $role='2';
+		  	      $name=$_REQUEST['name'];
+		  	      $email=$_REQUEST['email'];
+		  	      $password=$_REQUEST['password'];
+
+                  $addedOn=date('Y-m-d H:i:s');
+                 
+                if($name!="" && $email!='' && $password!='')
+                {
+                   
+                    $tbl="master_admin";
+          	   	    $dataArray=array('name' => $name,'email' => $email,'password' => $password,'added_on' => $addedOn,'role'=>$role,'status' => '1');
+
+          	   	       $where=array('email' => $email);
+					   $queryCount=$this->Admin_model->getWhere($tbl,$where);
+					   $countData=count($queryCount);
+
+						  if($countData!=0)
+						  {
+							$this->session->set_flashdata('error','Email id already registered');
+							redirect(base_url('admin/subadmin')); 
+						  }
+						  else
+						  {
+						  	  $lastId=$this->Admin_model->insertData($tbl,$dataArray);
+                              $date=date('Y-m-d H:i:s');
+                              $encodedprefixDate=base64_encode(base64_encode(base64_encode(base64_encode($date))));
+                              $encodedsubfixDate=base64_encode(base64_encode(base64_encode($date)));
+                              $encodedUrl=$encodedprefixDate.'='.$lastId.'='.$encodedsubfixDate;
+
+                                  $data['siteDetails']=$this->siteDetails();
+		                         
+							   $html='<center>  
+										  <table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+										   
+										   <tbody><tr> 
+										<td style="padding:5px;background:#00a1ff;font-weight:bold;font-size:26px" align="center"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails'][0]->company_logo.'" style="width: 80px;"></a></font></td> 
+										   </tr> 
+										   <tr align="center"> 
+											<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello <span class="il">'.$name.'</span> </td> 
+										   </tr> 
+										   <tr align="center"> 
+										<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">Thank you for registering with us. login to your account , list your water park and start posting your events too.You can use the details below to login to your account. </td> 
+									    </tr> 
+									    <tr align="center"> 
+										<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Email : </b> '.$email.'</td> 
+										    </tr> 
+										     <tr align="center"> 
+										 	<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Password : </b> '.$password.'</td> 
+										    </tr> 
+										   <tr> 
+										<td style="background:#000;padding-top:25px;padding-bottom:25px" align="center"><a style="outline:none;border:0px;padding-top:10px;padding-bottom:10px;padding-left:30px;padding-right:30px;border-radius:50px;text-decoration:none;color:#000;font-weight:bold;font-size:14px;background-color:#fff" href="'.base_url().'admin/login" target="_blank" data-saferedirecturl="'.base_url().'admin/login">Login </a></td> 
+										    </tr> 
+										   
+										  </tbody></table> 
+										 </center>';
+                                      
+                                        $fromName=$data['siteDetails'][0]->company_name;
+                                        $subject="Registered successfully on ".$fromName;
+                                        $from="no-reply@compaddicts.org";
+										$this->mailHtml($email,$subject,$html,$fromName,$from);
+										
+										$this->session->set_flashdata('success','New SubAdmin Registered Successfully..');
+							            redirect('admin/subadmin'); 
+						  }
+                }
+                else
+                {
+                   $this->session->set_flashdata('error','All * Fields Are Required..');
+				   redirect(base_url('admin/subadmin')); 
+                }
+		  }
+
+
+           $this->load->view('admin/subadmin',$data);
+		 }
+
+		 /*#####   EDIT Subadmin #######*/
+		 public function  updatesubadmin($id)
+		 {
+		 	if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			$data['siteDetails']=$this->siteDetails();
+		    $data['adminDetails']=$this->adminDetails();
+           
+           $condition=array('role' =>'2');
+		   $data['subadmins']=$this->Admin_model->getWhere('master_admin',$condition);
+
+		   $condition2=array('role' =>'2','id'=>$id);
+		   $data['singlesubadmin']=$this->Admin_model->getWhere('master_admin',$condition2);
+          
+         if(isset($_REQUEST['update']))
+		  {
+            $role='2';
+		  	$id=$_REQUEST['id']; 
+		  	$name=$_REQUEST['name']; 
+		  	$email=$_REQUEST['email']; 
+		  	$password=$_REQUEST['password']; 
+
+             if($name!="" && $email!='' && $password!='')
+                {  
+                    $tbl="master_admin";
+          	   	    $dataArray=array('name' => $name,'email' => $email,'password' => $password,'added_on' => $addedOn,'role'=>$role,'status' => '1');
+
+          	   	       $where=array('email' => $email);
+					   $queryCount=$this->Admin_model->getWhere($tbl,$where);
+					   $countData=count($queryCount);
+
+						  if($countData!=0)
+						  {
+							$this->session->set_flashdata('error','Email id already registered');
+							redirect(base_url('admin/edit-subadmin/'.$id)); 
+						  }
+						  else
+						  {
+						  	  //$lastId=$this->Admin_model->insertData($tbl,$dataArray);
+
+						  	   $this->Admin_model->updateData($tbl,$dataArray,$id); 
+                              
+                               $lastId=$id; 
+                              $date=date('Y-m-d H:i:s');
+                              $encodedprefixDate=base64_encode(base64_encode(base64_encode(base64_encode($date))));
+                              $encodedsubfixDate=base64_encode(base64_encode(base64_encode($date)));
+                              $encodedUrl=$encodedprefixDate.'='.$lastId.'='.$encodedsubfixDate;
+
+                                  $data['siteDetails']=$this->siteDetails();
+		                         
+							   $html='<center>  
+										  <table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+										   
+										   <tbody><tr> 
+										<td style="padding:5px;background:#00a1ff;font-weight:bold;font-size:26px" align="center"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails'][0]->company_logo.'" style="width: 80px;"></a></font></td> 
+										   </tr> 
+										   <tr align="center"> 
+											<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello <span class="il">'.$name.'</span> </td> 
+										   </tr> 
+										   <tr align="center"> 
+										<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">Thank you for registering with us. login to your account , list your water park and start posting your events too.You can use the details below to login to your account. </td> 
+									    </tr> 
+									    <tr align="center"> 
+										<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Email : </b> '.$email.'</td> 
+										    </tr> 
+										     <tr align="center"> 
+										 	<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Password : </b> '.$password.'</td> 
+										    </tr> 
+										   <tr> 
+										<td style="background:#000;padding-top:25px;padding-bottom:25px" align="center"><a style="outline:none;border:0px;padding-top:10px;padding-bottom:10px;padding-left:30px;padding-right:30px;border-radius:50px;text-decoration:none;color:#000;font-weight:bold;font-size:14px;background-color:#fff" href="'.base_url().'admin/login" target="_blank" data-saferedirecturl="'.base_url().'admin/login">Login </a></td> 
+										    </tr> 
+										   
+										  </tbody></table> 
+										 </center>';
+                                      
+                                        $fromName=$data['siteDetails'][0]->company_name;
+                                        $subject="Registered successfully on ".$fromName;
+                                        $from="no-reply@compaddicts.org";
+										$this->mailHtml($email,$subject,$html,$fromName,$from);
+										
+										 $this->session->set_flashdata('success','Updates Successfully ..');
+							            redirect('admin/subadmin'); 
+						  }
+                }
+                else
+                {
+                   $this->session->set_flashdata('error','All * Fields Are Required..');
+				   redirect(base_url('admin/edit-subadmin/'.$id)); 
+                }
+		  }
+             $this->load->view('admin/edit-subadmin',$data);
+		 }
 		
 		public function profile()
 		{
@@ -528,7 +668,7 @@ class Admin extends CI_Controller {
 											<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello <span class="il">'.$name.'</span> </td> 
 										   </tr> 
 										   <tr align="center"> 
-										<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">Thank you for registering with us. login to your account list your water park and start posting your events too.You can use the details below to login to your account. </td> 
+										<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">Thank you for registering with us. login to your account , list your water park and start posting your events too.You can use the details below to login to your account. </td> 
 									    </tr> 
 									    <tr align="center"> 
 										<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Email : </b> '.$email.'</td> 
@@ -544,7 +684,7 @@ class Admin extends CI_Controller {
 										 </center>';
                                        
                                         $fromName=$data['siteDetails'][0]->company_name;
-                                        $subject="Verify your merchant account on ".$fromName;
+                                        $subject="Registered successfully on ".$fromName;
                                         $from="no-reply@compaddicts.org";
 										$this->mailHtml($email,$subject,$html,$fromName,$from);
 										
@@ -693,7 +833,7 @@ public function delete_merchant($id)
 public function deleteRecord() 
 {
         $id=$_REQUEST['id']; 
-        $tbl=$_REQUEST['table']; 
+        $tbl=$_REQUEST['table'];
 
         $getData=$this->Admin_model->getWhere($tbl,array('id' => $id));
 		
@@ -703,18 +843,29 @@ public function deleteRecord()
 			{
 				unlink('assets/front/uploads/gallery/'.$file_name);
 				unlink('assets/front/uploads/events/'.$file_name);
-
+			} 
+		}
+		else if($tbl=='merchants')
+		{
+           $file_name=$getData[0]->waterpark_logo;
+			if($file_name!="" or $file_name!=null)
+			{
+				unlink('assets/front/uploads/merchant-logo/'.$file_name);
 			} 
 		}
         
 		$del=$this->Admin_model->deleteData($tbl,array('id' => $id));
+
         if ($del) {
+        	
         	echo '200';  
         }
         else
         {
         	echo '500'; 
         }
+
+
 	   //$this->session->set_flashdata('success','Delete Gallery Successfully ..');
 	   //redirect('admin/allmerchant');
 }
@@ -1128,7 +1279,7 @@ public function editTiming($id)
           $condition3=array('id' => $id); 
           $data['merchants']=$this->Admin_model->getWhere('merchants',$condition3);
 
-          $condition4=array('merchant_id' => $id); 
+          $condition4=array('id' => $rowid); 
           $data['singlegallery']=$this->Admin_model->getWhere('gallery',$condition4);
 
 
@@ -1216,16 +1367,24 @@ public function editTiming($id)
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['adminDetails']=$this->adminDetails();
 		  $uid=$this->session->userdata('WhAdminLoggedinId');
+
+
+
 		  $condition=array('id' => $uid);
 		  $data['getProfile']=$this->Admin_model->getWhere('master_admin',$condition);
           $data['eventid']=$evetid; 
 
           $condition3=array('id' => $evetid); 
           $data['event']=$this->Admin_model->getWhere('merchants_events',$condition3);
-        
-         $condition2=array('merchant_id' => $data['event'][0]->merchant_id,'event_id'=>$evetid); 
-          $data['Gallery']=$this->Admin_model->getWhere('gallery',$condition2);
          
+
+         $condition2=array('merchant_id' => $data['event'][0]->merchant_id,'event_id'=>$data['event'][0]->id); 
+          $data['Gallery']=$this->Admin_model->getWhere('gallery',$condition2);
+          
+
+          
+
+
           $condition4=array('id' => $data['event'][0]->merchant_id); 
           $data['merchants']=$this->Admin_model->getWhere('merchants',$condition4);
 
@@ -1260,7 +1419,7 @@ public function editTiming($id)
 							$data = $this->upload->data();
 							$file_name=$data['file_name'];
 							
-							$merchantId=$this->session->userdata('WhUserLoggedinId');
+							$merchantId=$merchantId;
 
 							$inData=array('merchant_id' => $merchantId,'event_id' => $eventId,'title' => $title,'description' => $description,'image' => $file_name,'added_on' => $date);
 							$this->Admin_model->insertData('gallery',$inData);
@@ -1404,15 +1563,330 @@ public  function bookticket()
 		  $data['siteDetails']=$this->siteDetails();
 		  $data['adminDetails']=$this->adminDetails();
 
-        $condition=array('request_type' =>'enquiry');
-        $data['getEnquiry_Ticketbooking']=$this->Admin_model->getWhere('ticket_request',$condition);
+        $data['getBooking']=$this->Admin_model->getWhere('ticket_request',array('request_type' => 'booking','payment_status' => 1));
 
-        $condition2=array('request_type' =>'booking');
-        $data['getBooking_Ticketbooking']=$this->Admin_model->getWhere('ticket_request',$condition2);
         
+		  if(isset($_REQUEST['cancel_ticket']))
+          {
+            $booking_id=$_REQUEST['rowid'];
+            $cancellation_reason=$_REQUEST['cancellation_reason'];
+            $cancelled_by='admin';
+            
+            $getTicket=$this->Admin_model->getWhere('ticket_request',array('id' => $booking_id));
+            $userId=$getTicket[0]->user_id;
+            $merchantId=$getTicket[0]->merchant_id;
+            $eventId=$getTicket[0]->event_id;
+            $visit_date=$getTicket[0]->visit_date;
+            $visitDate=date('M j,Y',strtotime($visit_date));
+
+            $getUser=$this->Admin_model->getWhere('users',array('id' => $userId));
+            $userName=$getUser[0]->name;
+            $toUserEmail=$getUser[0]->email;
+
+            $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+            $waterParkName=$getMerchant[0]->waterpark_name;
+            $merchantName=$getMerchant[0]->name;
+            $toMerchantEmail=$getMerchant[0]->email;
+
+            $this->Admin_model->updateData('ticket_request',array('status' => 2,'cancellation_reason' => $cancellation_reason,'cancelled_by' => $cancelled_by),$booking_id);
+            
+             if($eventId!='0')
+             {
+                $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $eventId));
+                $bookedFor="event ".$getEvent[0]->name;
+             }
+             else
+             {
+             	$bookedFor="water park ".$waterParkName;
+             }
+
+            $data['siteDetails']=$this->siteDetails();
+            $htmlUser='<center> 
+				<table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+					<tbody>
+					  <tr> 
+						<td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center;"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails'][0]->company_logo.'" style="width:120px;"></a></font></td> 
+					  </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello '.$userName.'</td> 
+					 </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">Your ticket which was booked for '.$bookedFor.' , to be visited on '.$visitDate.' , has been cancelled by the admin.</td> 
+					 </tr> 	
+					  <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Reason : </b> '.$cancellation_reason.'</td> 
+					 </tr> 	   
+				    </tbody>
+				</table> 
+			</center>';
+
+			$fromName=$data['siteDetails'][0]->company_name;
+			$from="no-reply@compaddicts.org";
+
+	        $subjectUser='Ticket cancelled - '.$waterParkName;
+			$this->mailHtml($toUserEmail,$subjectUser,$htmlUser,$fromName,$from);
+            
+            $htmlMerchant='<center> 
+				<table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+					<tbody>
+					  <tr> 
+						<td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center;"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails'][0]->company_logo.'" style="width:120px;"></a></font></td> 
+					  </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello '.$merchantName.'</td> 
+					 </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">The ticket which was booked for '.$bookedFor.' , to be visited on '.$visitDate.' , has been cancelled by admin.Here are the customer details : </td> 
+					 </tr> 	
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Name : </b> '.$getTicket[0]->name.'</td> 
+					 </tr> 
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Email : </b> '.$getTicket[0]->email.'</td> 
+					 </tr>
+					 <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Mobile : </b> '.$getTicket[0]->mobile.'</td> 
+					 </tr>
+					  <tr align="center"> 
+						<td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Reason : </b> '.$cancellation_reason.'</td> 
+					 </tr> 	   
+				    </tbody>
+				</table> 
+			</center>';
+
+			$fromName=$data['siteDetails'][0]->company_name;
+			$from="no-reply@compaddicts.org";
+
+	        $subjectMerchant='Ticket cancelled - '.$bookedFor;
+			$this->mailHtml($toMerchantEmail,$subjectMerchant,$htmlMerchant,$fromName,$from);
+
+            $this->session->set_flashdata('success','Ticket has been cancelled');
+            redirect('admin/bookticket');
+          }
+
 	$this->load->view('admin/book-ticket',$data);
 }
 
+
+public  function viewEnquiry()
+{
+    if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login'); 
+			}
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+
+          $data['getEnquiry']=$this->Admin_model->getWhere('ticket_request',array('request_type' => 'enquiry'));
+		
+
+	$this->load->view('admin/enquiry',$data);
+}
+
+public function myMessages($page=0)
+ {
+        	if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login'); 
+			}
+			
+		   $data['siteDetails']=$this->siteDetails();
+		   $data['adminDetails']=$this->adminDetails();
+           
+         
+            $data['fetchLimit']=10;
+			if($page==0)
+	        {
+	          $limit=0;
+	        }
+	        else
+	        {
+	          $limit=($page - 1) * $data['fetchLimit'];
+	        }
+            
+
+	        $fetchLimit=$data['fetchLimit'];
+	        
+	       
+
+	       $tblMessage=$this->db->dbprefix.'merchant_contact_request';
+	       $inboxCnt=$this->Admin_model->getDataCount('merchant_contact_request',array('delete_for_admin' => 1,'sender_type' => 'merchant'));
+	       $data['inboxCount']=$inboxCnt;
+
+          
+		   $data['getInbox']=$this->Admin_model->getwithLimitOrderBy('merchant_contact_request',array('delete_for_admin' => 1,'sender_type' => 'merchant'),$data['fetchLimit'],$limit,'added_on','DESC');
+
+		   $getSentItems=$this->Admin_model->getQuery("SELECT id FROM $tblMessage WHERE `sender_type`!='merchant'");
+
+		   $data['getSentItems']=count($getSentItems);
+		   
+		   $data['unseenCount']=$this->Admin_model->getDataCount('merchant_contact_request',array('seen_status' => 2,'sender_type' => 'merchant'));
+	       
+            $data['fromData']=$limit + 1;
+	        $data['toData']=$limit + $fetchLimit;
+            
+            if($data['toData']>$data['inboxCount'])
+            {
+            	$data['toData']=$data['inboxCount'];
+            }
+		   $this->load->library('pagination');
+
+		   $config['base_url'] = base_url().'admin/messages';
+		   $config['total_rows'] = $data['inboxCount'];
+		   $config['per_page'] = $data['fetchLimit'];
+	       $config['use_page_numbers'] = TRUE;
+
+			$this->pagination->initialize($config);
+		   $this->load->view('admin/messages',$data);
+        }
+
+
+        public function mySentitems($page=0)
+        {
+        	if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		   $data['siteDetails']=$this->siteDetails();
+		   $data['adminDetails']=$this->adminDetails();
+
+            $data['fetchLimit']=10;
+			if($page==0)
+	        {
+	          $limit=0;
+	        }
+	        else
+	        {
+	          $limit=($page - 1) * $data['fetchLimit'];
+	        }
+            
+
+	       $fetchLimit=$data['fetchLimit'];
+
+	       $tblMessage=$this->db->dbprefix.'merchant_contact_request';
+	       $sentItemsCnt=$this->Admin_model->getQuery("SELECT * FROM $tblMessage WHERE `sender_type`!='merchant'");
+	       $data['sentItemsCount']=count($sentItemsCnt);
+
+          
+		   $data['getSentItems']=$this->Admin_model->getQuery("SELECT * FROM $tblMessage WHERE `sender_type`!='merchant' ORDER BY added_on DESC LIMIT $limit,$fetchLimit");
+
+		   $data['unseenCount']=$this->Admin_model->getDataCount('merchant_contact_request',array('seen_status' => 2,'sender_type' => 'merchant'));
+           
+            $data['fromData']=$limit + 1;
+	        $data['toData']=$limit + $fetchLimit;
+            
+            if($data['toData']>$data['sentItemsCount'])
+            {
+            	$data['toData']=$data['sentItemsCount'];
+            }
+		   $this->load->library('pagination');
+
+		   $config['base_url'] = base_url().'admin/messages/sent-items';
+		   $config['total_rows'] = $data['sentItemsCount'];
+		   $config['per_page'] = $data['fetchLimit'];
+	       $config['use_page_numbers'] = TRUE;
+
+			$this->pagination->initialize($config);
+		   $this->load->view('admin/sent-items',$data);
+        }
+
+ public function composeMessage()
+        {
+        	  if(isset($_REQUEST['compose_message']))
+	           {
+	           	  $message=nl2br($_REQUEST['message']);
+	           	  if(!empty($message))
+	           	  {
+	           	  	 $data['siteDetails']=$this->siteDetails();
+	           	  	 $adminDetails=$this->adminDetails();
+	           	  	 $role=$adminDetails[0]->role;
+	           	  	 $merchantId=$_REQUEST['merchant_id'];
+	           	  	 $adminId=$this->session->userdata('WhAdminLoggedinId');
+	                 $date=date('Y-m-d H:i:s');
+
+	                 if($role==1)
+	                 {
+                       $sender_type="admin";
+	                 }
+	                 else
+	                 {
+                       $sender_type="subadmin";
+	                 }
+
+	                 $this->Admin_model->insertData('merchant_contact_request',array('merchant_id' => $merchantId,'admin_id' => $adminId,'message' => $message,'sender_type' => $sender_type,'added_on' => $date));
+
+	                 $this->session->set_flashdata('success','Message sent Successfully');
+	           	  	 redirect('admin/messages/sent-items');
+	           	  }
+	           	  else
+	           	  {
+	           	  	$this->session->set_flashdata('error','Message is required field');
+	           	  	redirect('admin/messages/sent-items');
+	           	  }
+	              
+	           }
+        }
+
+
+        public function markAsRead()
+		{
+			$rowid=$_GET['rowid'];
+                    
+            $tblMessage=$this->db->dbprefix."merchant_contact_request";
+			$del=$this->db->query("UPDATE $tblMessage SET `seen_status`='1' WHERE id IN ($rowid)");
+		}
+
+		public function deleteMsgData()
+		{
+			$mode=$_GET['mode'];
+
+			switch($mode)
+			{
+				
+				case "messageInbox":
+
+                    $rowid=$_GET['rowid'];
+                    
+                    $tblMessage=$this->db->dbprefix."merchant_contact_request";
+					$del=$this->db->query("UPDATE $tblMessage SET `delete_for_admin`='2' WHERE id IN ($rowid)");
+
+				break;
+
+				case "messageSentItems":
+
+                    $rowid=$_GET['rowid'];
+
+					$tblMessage=$this->db->dbprefix."merchant_contact_request";
+					$del=$this->db->query("DELETE FROM $tblMessage WHERE id IN ($rowid)");
+
+				break;
+
+				case "slider":
+				
+					$rowid=$_GET['rowid'];	
+
+					$getData=$this->Admin_model->getWhere('sliders',array('id' => $rowid));
+					$file_name=$getData[0]->image;
+
+					$del=$this->Admin_model->deleteData('sliders',array('id' => $rowid));
+
+					if($file_name!="")
+					{
+						unlink('assets/front/uploads/slider/'.$file_name);
+					}
+					
+				break;
+
+				case "testimonial":
+				
+					$rowid=$_GET['rowid'];	
+
+					$del=$this->Admin_model->deleteData('testimonial',array('id' => $rowid));
+
+				break;
+			}
+		}
 
 /*#################  End  All Booking Ticket Listing  ###################*/
 
@@ -1426,18 +1900,458 @@ public function getbookingDetails()
     $condition2=array('id' => $data['bookingid']);
     $data['getBooikng']=$this->Admin_model->getWhere('ticket_request',$condition2);
    
+    $data['getBillingDetail']=$this->Admin_model->getWhere('ticket_billing_details',array('ticket_request_id' => $data['bookingid']));
+
     $condition=array('id' => $data['getBooikng'][0]->merchant_id);
     $data['merchants']=$this->Admin_model->getWhere('merchants',$condition);
     
     //$data['waterparkname']=$merchant[0]->waterpark_name;
 
    
-	 
-	$this->load->view('admin/ajax',$data); 
+	$this->load->view('admin/ajax',$data);  
 }
 
 
+public function viewSlider()
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
 
+		  $data['getData']=$this->Admin_model->getData('sliders');
+
+		  $this->load->view('admin/sliders',$data);
+		}
+
+
+		public function addSlider()
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+		  
+		  if(isset($_REQUEST['submit']))
+		  {
+             $title=$_REQUEST['title'];
+             $description=$_REQUEST['description']; 
+			
+			 $date=date('Y-m-d H:i:s');
+			 
+			 if((!empty($_FILES['file']['name'])))
+			 {
+
+					$config['upload_path']          = './assets/front/uploads/slider/';
+					$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
+					$config['encrypt_name']         = TRUE;
+					$config['min_width']            = '1300';
+				    $config['min_height']           = '500';
+
+                    $addedBy=$this->session->userdata('WhAdminLoggedinId');
+
+					$this->load->library('upload', $config);
+
+					if ( ! $this->upload->do_upload('file'))
+					{
+							$error = $this->upload->display_errors();
+							$this->session->set_flashdata('error',$error);
+							redirect('admin/add-slider');
+					}
+					else
+					{
+							$data = $this->upload->data();
+							$file_name=$data['file_name'];
+							
+							$inData=array('title' => $title,'description' => $description,'image' => $file_name,'added_on' => $date,'added_by' => $addedBy,'status' => 1);
+							$this->Admin_model->insertData('sliders',$inData);
+							$this->session->set_flashdata('success','Slider Added Successfully');
+							redirect('admin/sliders');
+							
+					}	
+			 }
+			 else
+			 {
+				$this->session->set_flashdata('error','Slider image is required field');
+			    redirect('admin/add-slider'); 
+			 }
+		  }
+
+		  $this->load->view('admin/add-slider',$data);
+		}
+
+
+		public function editSlider($id)
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+		  
+		  $condition=array('id' => $id);
+		  $data['getData']=$this->Admin_model->getWhere('sliders',$condition);
+		  
+		  
+		  if(isset($_REQUEST['update']))
+		  {
+			     $rowid=$_REQUEST['rowid'];  
+			     $title=$_REQUEST['title'];  
+                 $description=$_REQUEST['description']; 
+                 
+			     $date=date('Y-m-d H:i:s');
+                 $updatedBy=$this->session->userdata('WhAdminLoggedinId');
+
+                 $upData=array('title' => $title,'description' => $description,'updated_on' => $date,'updated_by' => $updatedBy);
+				 $this->Admin_model->updateData('sliders',$upData,$rowid);
+				 
+				 if(!empty($_FILES['file']['name']))
+				 {
+					$config['upload_path']          = './assets/front/uploads/slider/';
+					$config['allowed_types']        = 'gif|jpg|png|jpeg|PNG|JPG|JPEG|GIF';
+					$config['encrypt_name']         = TRUE;
+
+
+					$this->load->library('upload', $config);
+
+					if ( ! $this->upload->do_upload('file'))
+					{
+							$error = $this->upload->display_errors();
+							$this->session->set_flashdata('error',$error);
+							redirect('admin/edit-slider/'.$rowid);
+					}
+					else
+					{
+							$data = $this->upload->data();
+							$file_name=$data['file_name'];
+							
+							$getoldData=$this->Admin_model->getWhere('sliders',array('id' => $rowid));
+                            $oldImg=$getoldData[0]->image;
+
+							$upData=array('image' => $file_name,'updated_on' => $date);
+							$this->Admin_model->updateData('sliders',$upData,$rowid);
+
+							if($oldImg!="")
+							{
+								unlink('assets/front/uploads/slider/'.$oldImg);
+							}
+
+							$this->session->set_flashdata('success','Slider Updated Successfully');
+							redirect('admin/sliders');
+							
+					}
+				}
+				else
+				{
+				   $this->session->set_flashdata('success','Slider Updated Successfully');
+				   redirect('admin/sliders');
+				}	
+		  }
+		  
+
+		  $this->load->view('admin/edit-slider',$data);
+		}
+
+
+
+        public function viewTestimonial()
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+
+		  $data['getData']=$this->Admin_model->getData('testimonial');
+
+		  $this->load->view('admin/testimonial',$data);
+		}
+
+
+		public function addTestimonial()
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+		  
+		  if(isset($_REQUEST['submit']))
+		  {
+             $name=$_REQUEST['name'];
+             $comment=nl2br($_REQUEST['comment']); 
+			
+			 $date=date('Y-m-d H:i:s');
+			 
+			 if((!empty($name)) && (!empty($comment)))
+			 {
+                    $addedBy=$this->session->userdata('WhAdminLoggedinId');
+							
+					$inData=array('name' => $name,'comment' => $comment,'added_on' => $date,'added_by' => $addedBy,'status' => 1);
+					$this->Admin_model->insertData('testimonial',$inData);
+					$this->session->set_flashdata('success','Testimonial Added Successfully');
+					redirect('admin/testimonials');
+								
+			 }
+			 else
+			 {
+				    $this->session->set_flashdata('error','All fields are required');
+			        redirect('admin/add-testimonial'); 
+			 }
+		  }
+
+		  $this->load->view('admin/add-testimonial',$data);
+		}
+
+
+		public function editTestimonial($id)
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+		  
+		  $condition=array('id' => $id);
+		  $data['getData']=$this->Admin_model->getWhere('testimonial',$condition);
+		  
+		  
+		  if(isset($_REQUEST['update']))
+		  {
+			     $rowid=$_REQUEST['rowid'];  
+			     $name=$_REQUEST['name'];  
+                 $comment=nl2br($_REQUEST['comment']); 
+                 
+			     $date=date('Y-m-d H:i:s');
+                 $updatedBy=$this->session->userdata('WhAdminLoggedinId');
+
+                 if((!empty($name)) && (!empty($comment)))
+			     {
+                   $upData=array('name' => $name,'comment' => $comment,'updated_on' => $date,'updated_by' => $updatedBy);
+				   $this->Admin_model->updateData('testimonial',$upData,$rowid);
+				   $this->session->set_flashdata('success','Updated Successfully');
+				    redirect('admin/testimonials');
+				}
+				else
+				{
+					$this->session->set_flashdata('error','All fields are required');
+				    redirect('admin/edit-testimonial/'.$rowid); 
+				}
+	
+		  }
+		  
+
+		  $this->load->view('admin/edit-testimonial',$data);
+		}
+
+		public function viewCommission()
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+           
+          if(isset($_REQUEST['submit']))
+		  {
+			     $rowid=$_REQUEST['rowid'];  
+			     $amount=$_REQUEST['amount'];   
+                 
+			     $date=date('Y-m-d H:i:s');
+                 $updatedBy=$this->session->userdata('WhAdminLoggedinId');
+
+                 if(!empty($amount))
+			     {
+                   $upData=array('amount' => $amount,'updated_on' => $date,'updated_by' => $updatedBy);
+				   $this->Admin_model->updateData('commission_setting',$upData,$rowid);
+				   $this->session->set_flashdata('success','Updated Successfully');
+				    redirect('admin/commissions');
+				}
+				else
+				{
+					$this->session->set_flashdata('error','All fields are required');
+				    redirect('admin/commissions/'); 
+				}
+	
+		  }
+
+		  $data['getData']=$this->Admin_model->getData('commission_setting');
+
+		  $this->load->view('admin/commission-setting',$data);
+		}
+
+
+		public function viewReports()
+		{
+		  if($this->session->userdata('WhAdminLoggedinId')=='')
+			{
+			  redirect('admin/login');
+			}
+			
+		  $data['siteDetails']=$this->siteDetails();
+		  $data['adminDetails']=$this->adminDetails();
+
+		  $data['getMerchant']=$this->Admin_model->getData('merchants');
+
+		  $this->load->view('admin/reports',$data);
+		}
+
+		public function getReportAjax()
+		{
+			$selTyp=$_REQUEST['selTyp'];
+			$merchantId=$_REQUEST['merchantId'];
+			$month=$_REQUEST['month'];
+			$year=$_REQUEST['year'];
+			$fromDate=$_REQUEST['fromDate'];
+			$toDate=$_REQUEST['toDate'];
+			$mode=$_REQUEST['mode'];
+            
+            if($merchantId!=0)
+            {
+              $whereOne=" AND `merchant_id`='$merchantId'";
+
+              $getMerchant=$this->Admin_model->getWhere('merchants',array('id' => $merchantId));
+            }
+            else
+            {
+              $whereOne='';
+            }
+
+			switch($selTyp)
+			{
+				case "today":
+                   $cDate=date('Y-m-d');
+                   $whereTwo=" AND date(added_on)='$cDate'";
+                   
+                   if($merchantId!=0)
+		           {
+                     $data['reportOf']="Report of ".$getMerchant[0]->waterpark_name." of ".date('M j,Y',strtotime($cDate));
+		           }
+		           else
+		           {
+                     $data['reportOf']="Report of ".date('M j,Y',strtotime($cDate));
+		           }
+                   
+		        break;
+
+		        case "yearly":
+                  $whereTwo=" AND year(added_on)='$year'";
+
+                  if($merchantId!=0)
+		           {
+                     $data['reportOf']="Report of ".$getMerchant[0]->waterpark_name." of year ".$year;
+		           }
+		           else
+		           {
+                     $data['reportOf']="Report of year ".$year;
+		           }
+		        break;
+
+		        case "monthly":
+                  $whereTwo=" AND ((year(added_on)='$year') AND (month(added_on)='$month'))";
+                  
+                  $monthArray=array('01' => 'January' , '02' => 'February' , '03' => 'March' , '04' => 'April' ,'05' => 'May' , '06' => 'June' , '07' => 'July' , '08' => 'August' , '09' => 'September' , '10' => 'October' , '11' => 'November' ,'12' => 'December');
+
+                  if($merchantId!=0)
+		           {
+                     $data['reportOf']="Report of ".$getMerchant[0]->waterpark_name." of ".$monthArray[$month] ." ".$year;
+		           }
+		           else
+		           {
+                     $data['reportOf']="Report of ".$monthArray[$month] ." ".$year;
+		           }
+
+		        break;
+
+		        case "between_dates":
+
+		          $fromDate=date('Y-m-d',strtotime($fromDate));
+		          $toDate=date('Y-m-d',strtotime($toDate));
+                  $whereTwo=" AND (date(added_on) BETWEEN '$fromDate' AND '$toDate')";
+
+                  if($merchantId!=0)
+		           {
+                     $data['reportOf']="Report of ".$getMerchant[0]->waterpark_name." from ".date('M j,Y',strtotime($fromDate))." to ".date('M j,Y',strtotime($toDate));
+		           }
+		           else
+		           {
+                     $data['reportOf']="Report from ".date('M j,Y',strtotime($fromDate))." to ".date('M j,Y',strtotime($toDate));
+		           }
+		        break;
+			}
+
+            $tblReport=$this->db->dbprefix."ticket_billing_details";
+			$data['getReport']=$this->Admin_model->getQuery("SELECT * FROM $tblReport WHERE `payment_status`='1' $whereOne $whereTwo");
+
+			$data['totalSale']=$this->Admin_model->getQuery("SELECT SUM(final_amount) as grossAmt FROM $tblReport WHERE `payment_status`='1' $whereOne $whereTwo");
+
+			$data['totalCommission']=$this->Admin_model->getQuery("SELECT SUM(commission_amount) as comAmt FROM $tblReport WHERE `payment_status`='1' $whereOne $whereTwo");
+            
+            $data['mode']=$mode;
+
+            $this->session->set_userdata('queryData',"SELECT * FROM $tblReport WHERE `payment_status`='1' $whereOne $whereTwo");
+            $this->session->set_userdata('totalSaleData',"SELECT SUM(final_amount) as grossAmt FROM $tblReport WHERE `payment_status`='1' $whereOne $whereTwo");
+            $this->session->set_userdata('totalCommissionData',"SELECT SUM(commission_amount) as comAmt FROM $tblReport WHERE `payment_status`='1' $whereOne $whereTwo");
+
+            $this->session->set_userdata('reportOfPdf',$data['reportOf']);
+
+			$this->load->view('admin/ajax',$data);
+
+		}
+
+		public function pdfReport()
+		{
+			$queryData=$this->session->userdata('queryData');
+			$totalSaleData=$this->session->userdata('totalSaleData');
+			$totalCommissionData=$this->session->userdata('totalCommissionData');
+			$reportOfPdf=$this->session->userdata('reportOfPdf');
+			$merchantId=$this->session->userdata('reportmerchantId');
+            
+
+            $data['siteDetails']=$this->siteDetails();
+
+            $data['getReport']=$this->Admin_model->getQuery($queryData);
+
+			$data['totalSale']=$this->Admin_model->getQuery($totalSaleData);
+
+			$data['totalCommission']=$this->Admin_model->getQuery($totalCommissionData);
+
+			$data['reportOf']=$reportOfPdf;
+
+            $data['mode']='reportData';
+
+			ini_set('memory_limit', '256M');
+			   // load library
+			$this->load->library('pdf');
+			$pdf = $this->pdf->load('c','A4','10');
+
+			$htmlPdf = $this->load->view('admin/report-pdf', $data, true);
+		 	$date=date('F j,Y',strtotime(date('Y-m-d')));
+			$pdf->Setheader($date);
+			$pdf->SetWatermarkText($data['siteDetails'][0]->company_name,0.1);
+			$pdf->showWatermarkText = true;
+			$pdf->SetDisplayMode('fullpage');
+			$pdf->WriteHTML($htmlPdf);
+			
+			$output='report_' . date('Y_m_d_H_i_s') . '_.pdf';				  
+			$pdf->Output("$output", 'D');
+		}
 
 
 

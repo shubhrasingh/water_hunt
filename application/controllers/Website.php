@@ -70,9 +70,137 @@ class Website extends CI_Controller {
 		$tbl=$this->db->dbprefix.'merchants_events';
 		$data['upcomingEvents']=$this->Admin_model->getQuery("SELECT * FROM $tbl WHERE `status`='1' AND (`start_date` > '$date') ORDER BY `start_date` ASC LIMIT 0,3");
         
+        $data['waterpark_brand']=$this->Admin_model->getwithLimitOrderBy('merchants',array('status' => '1'),'10','0','id','ASC');
+        $data['testimonial']=$this->Admin_model->getwithOrderBy('testimonial',array('status' => '1'),'id','DESC');
+        $data['sliderimage']=$this->Admin_model->getwithOrderBy('sliders',array('status' => '1'),'id','DESC');
+
 		$this->load->view('front/index',$data);
 	}
     
+    public  function privacy()
+    {
+         $data['siteDetails']=$this->siteDetails();
+
+            if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+            {
+              $data['userDetails']=$this->userDetails();
+            }
+
+         $this->load->view('front/privacy_policy',$data);
+    }
+
+    public  function  termsCondition()
+    {
+        $data['siteDetails']=$this->siteDetails();
+
+        if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+        {
+          $data['userDetails']=$this->userDetails();
+        }
+
+     $this->load->view('front/terms_condition',$data);
+    }
+
+    public  function  aboutUs()
+    {
+        $data['siteDetails']=$this->siteDetails();
+
+        if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+        {
+          $data['userDetails']=$this->userDetails();
+        }
+
+
+     $this->load->view('front/about-us',$data);
+    }
+
+    public  function  conatctUs()
+    {
+        $data['siteDetails']=$this->siteDetails();
+
+        if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
+        {
+          $data['userDetails']=$this->userDetails();
+        }
+       if (isset($_REQUEST['submit'])) {
+
+                $this->form_validation->set_rules('name', 'Name', 'required');
+                $this->form_validation->set_rules('email', 'Email', 'required');
+                $this->form_validation->set_rules('message', 'Email', 'required');
+
+                if ($this->form_validation->run() == FALSE)
+                {
+                        
+                        $this->session->set_flashdata('errorMsg','All *  Fields are required');
+                        redirect(base_url('contact')); 
+                }
+                else
+                {
+                    $email=$_REQUEST['email']; 
+                    $name=$_REQUEST['name']; 
+                    $contact=$_REQUEST['contact']; 
+
+                    $message=$_REQUEST['message']; 
+                     
+                        
+                   $date=date('Y-m-d h:i:s');
+
+                   $visitDate=date('F j,Y',strtotime($date));
+                   $htmlAdmin='<center> 
+                <table style="max-width:550px;border-radius:5px;background:#fff;font-family:Arial,Helvetica,sans-serif;table-layout:fixed;margin:0 auto" border="0" width="100%" cellspacing="0" cellpadding="0" align="center"> 
+                    <tbody>
+                      <tr> 
+                        <td style="padding:5px;background:#fff;font-weight:bold;font-size:26px;border-bottom: 2px solid #262261;" align="center;"><font color="#FFFFFF"><a href="'.base_url().'" target="_blank" data-saferedirecturl="'.base_url().'"><img alt="'.$data['siteDetails']['companyData'][0]->company_name.'" src="'.base_url().'assets/front/uploads/logo/'.$data['siteDetails']['companyData'][0]->company_logo.'" style="width:120px;"></a></font></td> 
+                      </tr> 
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:18px;color:#000;font-weight:bold;text-align:justify">Hello </td> 
+                     </tr> 
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:18px;color:#000;text-align:justify">You have received a new Contact Message. Below are the detials of customer : .</td> 
+                     </tr> 
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Name : </b> '.$name.'</td> 
+                     </tr> 
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Email : </b> '.$email.'</td> 
+                     </tr> 
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Mobile : </b> '.$contact.'</td> 
+                     </tr> 
+                     
+                    
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Date : </b> '.$date.'</td> 
+                     </tr>
+
+                     <tr align="center"> 
+                        <td style="background:#ffffff;padding:10px;font-size:14px;line-height:22px;color:#000;text-align:justify"><b> Message : </b> '.$message.'</td> 
+                     </tr> 
+                     
+                     
+                    
+                                           
+                    </tbody>
+                </table> 
+            </center>';
+
+        $fromName=$data['siteDetails']['companyData'][0]->company_name;
+        $from="no-reply@compaddicts.org";
+
+        $subjectAdmin=" A New Contact ";
+        $to=$data['siteDetails']['companyData'][0]->company_email;
+        $this->mailHtml($to,$subjectAdmin,$htmlAdmin,$fromName,$from);
+
+                 //print_r($to.'<br/>'.$subjectAdmin.'<br/>'.$htmlAdmin.'<br/>'.$fromName.'<br/>'.$from); die();
+                   $this->session->set_flashdata('successMsg',' Thanks For Contact...');
+                   redirect(base_url('contact'));
+
+
+                }
+       }
+     $this->load->view('front/contact',$data);
+    }
+
     public function allParks($page=0)
     {
        $data['siteDetails']=$this->siteDetails();
@@ -204,7 +332,7 @@ class Website extends CI_Controller {
 
         $data['fetchLimit']=8;
         $fetchLimit=$data['fetchLimit'];
-		if($page==0)
+		    if($page==0)
         {
           $limit=0;
         }
@@ -402,8 +530,9 @@ class Website extends CI_Controller {
 			{
 
                 $total_visitors=$number_of_adults + $number_of_children;
+                $requested_on=date('Y-m-d H:i:s');
                 $visiting_date=date('Y-m-d',strtotime($visiting_date));
-				$inArray=array('user_id' => $user_id,'merchant_id' => $merchant_id,'event_id' => $event_id,'name' => $name,'email' => $email,'mobile' => $mobile,'address' => $address,'number_of_adults' => $number_of_adults,'number_of_children' => $number_of_children,'total_visitors' => $total_visitors,'visit_date' => $visiting_date,'message' => $message,'requested_on' => $date,'request_type' => 'enquiry','status' => '1');
+				$inArray=array('user_id' => $user_id,'merchant_id' => $merchant_id,'event_id' => $event_id,'name' => $name,'email' => $email,'mobile' => $mobile,'address' => $address,'number_of_adults' => $number_of_adults,'number_of_children' => $number_of_children,'total_visitors' => $total_visitors,'visit_date' => $visiting_date,'message' => $message,'requested_on' => $requested_on,'request_type' => 'enquiry','status' => '1');
 				$this->Admin_model->insertData('ticket_request',$inArray);
                 
                 if($message!='')
@@ -588,7 +717,8 @@ class Website extends CI_Controller {
                $gross_total=round($gross_total);
 
                 $visiting_date=date('Y-m-d',strtotime($visiting_date));
-				$inArray=array('user_id' => $user_id,'merchant_id' => $merchant_id,'event_id' => $event_id,'name' => $name,'email' => $email,'mobile' => $mobile,'address' => $address,'number_of_adults' => $number_of_adults,'number_of_children' => $number_of_children,'visit_date' => $visiting_date,'total_visitors' => $total_visitors,'ticket_charge_per_person' => $ticket_charge_per_person,'total_amount' => $total_amount,'gst' => $gst,'cgst' => $cgst,'gross_total' => $gross_total, 'requested_on' => $date,'request_type' => 'booking','status' => '0');
+                $requested_on=date('Y-m-d H:i:s');
+				$inArray=array('user_id' => $user_id,'merchant_id' => $merchant_id,'event_id' => $event_id,'name' => $name,'email' => $email,'mobile' => $mobile,'address' => $address,'number_of_adults' => $number_of_adults,'number_of_children' => $number_of_children,'visit_date' => $visiting_date,'total_visitors' => $total_visitors,'ticket_charge_per_person' => $ticket_charge_per_person,'total_amount' => $total_amount,'gst' => $gst,'cgst' => $cgst,'gross_total' => $gross_total, 'requested_on' => $requested_on,'request_type' => 'booking','status' => '0');
 
 				$lastId=$this->Admin_model->insertData('ticket_request',$inArray);
 
@@ -840,8 +970,8 @@ class Website extends CI_Controller {
        $data['siteDetails']=$this->siteDetails();
 
 	    if(($this->session->userdata('WhUserLoggedinId')!='') && ($this->session->userdata('WhUserLoggedinId')!='0'))
-		{
-		  $data['userDetails']=$this->userDetails();
+		  {
+		   $data['userDetails']=$this->userDetails();
 	    }
 
         $data['getData']=$this->Admin_model->getWhere('ticket_billing_details',array('id' => $orderId));
@@ -1003,7 +1133,7 @@ class Website extends CI_Controller {
         $toMerchant=$data['getMerchant'][0]->email;
 		$this->mailHtml($toMerchant,$subjectMerchant,$htmlMerchant,$fromName,$from);
         
-        ini_set('memory_limit', '256M');
+    ini_set('memory_limit', '256M');
 			   // load library
 		$this->load->library('pdf');
 		$pdf = $this->pdf->load('c','A4','10');

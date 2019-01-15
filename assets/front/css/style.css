@@ -257,7 +257,7 @@ img{max-width: 100%}
   margin-bottom: 6px;
 }
 .property-desc-top h4.price {
-    color: #fff;
+    color:#fff;
     font-size: 20px;
     margin-bottom: 0;
     position: absolute;
@@ -1848,7 +1848,7 @@ aside.single-side-box.tags {
     23.1 Agent Details css here
 ------------*/
 .agent-profile .single-team:hover .team-member-title {
-  padding-bottom: 6px;
+  padding-bottom: 0px;
 }
 .agent-text > p {
     color: #606060;

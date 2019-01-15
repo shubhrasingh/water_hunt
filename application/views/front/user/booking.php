@@ -93,10 +93,8 @@
                                 <thead> 
                                     <tr>
                                         <th>#</th> 
-                                        <th>User Detail</th>
+                                        <th>Name</th>
                                         <th>Booked For</th>
-                                        <th>Visit Date</th>
-                                        <th>Total Visitors</th>
                                         <th>Total Amount</th>
                                         <th>Booked on</th>
                                         <th>Status</th>
@@ -110,6 +108,7 @@
                                     $a=1;
                                     foreach($getBooking as $bkr)
                                     {
+                                        $ticketId=$bkr->id;
                                         $merchantId=$bkr->merchant_id;
                                         $eventId=$bkr->event_id;
                                         $status=$bkr->payment_status;
@@ -121,15 +120,13 @@
                                            $getEvent=$this->Admin_model->getWhere('merchants_events',array('id' => $eventId));
                                          }
 
+                                         $getBillingDetail=$this->Admin_model->getWhere('ticket_billing_details',array('ticket_request_id' => $ticketId));
+
+
                                     ?>
                                     <tr id="tr_<?php echo $bkr->id; ?>">
                                         <th scope="row"><?php echo $a; ?></th>
-                                        <td>
-                                            <b style="font-weight:bold">Name : </b> <?php echo $bkr->name; ?> <br/>
-                                            <b style="font-weight:bold">Email : </b> <?php echo $bkr->email; ?> <br/>
-                                            <b style="font-weight:bold">Mobile : </b> <?php echo $bkr->mobile; ?> <br/>
-                                            <b style="font-weight:bold">Address : </b> <?php echo $bkr->address; ?> <br/>
-                                        </td> 
+                                        <td><?php echo $bkr->name; ?></td> 
                                          <td>
                                           <?php
                                             if($eventId!='0')
@@ -145,10 +142,8 @@
                                              }
                                               ?>
                                             </td> 
-                                        <td><?php echo date('F j,Y',strtotime($bkr->visit_date)); ?> </td> 
-                                        <td><?php echo $bkr->total_visitors; ?> </td> 
                                         <td><i class="fa fa-inr"></i> <?php echo $bkr->gross_total; ?></td> 
-                                        <td><?php echo date('F j,Y g:i a',strtotime($bkr->requested_on)); ?> </td> 
+                                        <td><?php echo date('F j,Y g:i a',strtotime($bkr->requested_on)); ?> </td>
                                         <td id="st_<?php echo $bkr->id; ?>">
                                             <?php 
                                            switch($status)
@@ -168,8 +163,45 @@
                                             ?>
                                            </td>
                                            <td> 
+
+                                           <a href="<?php echo base_url(); ?>assets/front/uploads/ticket/<?php echo $getBillingDetail[0]->ticket; ?>"  download class=" btn btn-mini btn-primary"><i class="fa fa-download"></i></a>
+
+                                           <button data-target="#quick-view"  data-toggle="modal" onclick="viewDetail(<?php echo $bkr->id; ?>)"   class="btn btn-sm btn-success btn-mini"><i class="fa fa-eye"></i></button>
+
                                            <button  onclick="delData(<?php echo $bkr->id; ?>)"  class="btn btn-sm btn-danger btn-mini"><i class="fa fa-trash"></i></button>
-                                                                            
+
+                                           <span id="sts_<?php echo $bkr->id; ?>">
+                                           <?php
+                                           $visit_date=$bkr->visit_date;
+                                           $cDate=date('Y-m-d');
+                                           $status=$bkr->status;
+                                           if($cDate < $visit_date)
+                                           {
+                                              switch($status)
+                                              {
+                                                case "1";
+                                                   ?>
+                                                    <button data-target="#cancel-ticket"  data-toggle="modal" onclick="putBookingId(<?php echo $bkr->id; ?>)" class="btn btn-sm btn-info btn-mini">Cancel Booking</button>
+                                                   <?php
+                                                break;
+
+                                                case "2":
+                                                   $cancelledBy=$bkr->cancelled_by;
+                                                   ?>
+                                                   <button class="btn btn-sm btn-danger btn-mini">Cancelled</button><br/>
+                                                    <p>
+                                                      <span>Cancelled By : </span> <?php echo $cancelledBy; ?><br/>
+                                                      <span>Reason : </span> <?php echo $bkr->cancellation_reason; ?>
+                                                    </p>
+                                                   <?php
+                                                break;
+                                              }
+                                             ?>
+                                               
+                                             <?php
+                                           }
+                                           ?>
+                                         </span>                                
                                         </td> 
                                     </tr> 
                                    <?php
@@ -197,7 +229,68 @@
         </div>
     
         
-        
+        <!-- quick view start -->
+    <div  class="modal fade" role="dialog" tabindex="-1" id="cancel-ticket">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:540px">
+                <div class="modal-body">
+                    <div class="contact-inquiry" style="padding: 5% 0px;">
+                        <div aria-label="Close" data-dismiss="modal" class="modal-header">
+                          <span>x</span>
+                        </div>
+                
+                        <div class="contact-inquiry-title" style="padding-bottom: 2%;border-bottom: 1px solid #ccc;padding-left: 3%;">
+                            <h5 style="margin-bottom: 0px;">Cancel Ticket</h5>               
+                        </div>
+
+                        <div class="contact-inquiry-form" style="padding: 3%;">
+                            <?php
+                               echo form_open_multipart();
+                             ?>   
+
+                           <input type="hidden" id="booking_id" name="rowid">   
+                           <div class="form-bottom" >
+                             <textarea name="cancellation_reason" placeholder="Write here the reason of cancellation" required></textarea>
+                           </div>
+                    
+                          <div class="submit-form">
+                             <button type="submit" name="cancel_ticket">Submit</button>
+                          </div>
+                         <?php echo form_close(); ?>                                
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- quick view end -->
+
+
+    <!-- quick view start -->
+    <div  class="modal fade" role="dialog" tabindex="-1" id="quick-view">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:600px">
+                <div class="modal-body">
+                    <div class="contact-inquiry" style="padding: 5% 0px;">
+                        <div aria-label="Close" data-dismiss="modal" class="modal-header">
+                          <span>x</span>
+                        </div>
+                
+                        <div class="contact-inquiry-title" style="padding-bottom: 2%;border-bottom: 1px solid #ccc;padding-left: 3%;">
+                            <h5 style="margin-bottom: 0px;">View Detail</h5>               
+                        </div>
+
+                        <div class="contact-inquiry-form" id="ajaxDetail" style="padding: 3%;">
+                                                        
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- quick view end -->
         
         <?php $this->load->view('front/common/footer.php'); ?>
         
@@ -207,6 +300,12 @@
     
 
     <script type="text/javascript">
+
+         function putBookingId(rid)
+        {
+           $('#booking_id').val(rid);
+        }
+
         function delData(rid)
             {   
              if (confirm('Are you sure you want to delete this?')) {
@@ -228,6 +327,24 @@
                           }
                       });// you have missed this bracket
                }
+            }
+
+            function viewDetail(rid)
+            {   
+                 
+                 var base_url='<?php echo base_url(); ?>';
+                
+                 $.ajax({
+                     type: "GET",
+                     url: base_url + "merchant/viewBookingDetailAjax", 
+                     data: {rowid: rid},
+                     dataType: "text",  
+                     cache:false,
+                     success: 
+                          function(data){
+                            $('#ajaxDetail').html(data);  //as a debugging message.
+                          }
+                      });// you have missed this bracket
             }
     </script>
 

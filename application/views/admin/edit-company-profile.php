@@ -150,29 +150,7 @@
                 </div>
             </div><!-- Page Inner -->
         </main><!-- Page Content -->
-        <nav class="cd-nav-container" id="cd-nav">
-            <header>
-                <h3>DEMOS</h3>
-            </header>
-            <div class="col-md-6 demo-block demo-selected demo-active">
-                <p>Dark<br>Design</p>
-            </div>
-            <div class="col-md-6 demo-block">
-                <a href="http://stacksthemes.com/meteor/admin2/index.html"><p>Light<br>Design</p></a>
-            </div>
-            <div class="col-md-6 demo-block">
-                <a href="http://stacksthemes.com/meteor/admin3/index.html"><p>Material<br>Design</p></a>
-            </div>
-            <div class="col-md-6 demo-block demo-coming-soon">
-                <p>Horizontal<br>(Coming)</p>
-            </div>
-            <div class="col-md-6 demo-block demo-coming-soon">
-                <p>Coming<br>Soon</p>
-            </div>
-            <div class="col-md-6 demo-block demo-coming-soon">
-                <p>Coming<br>Soon</p>
-            </div>
-        </nav>
+       
         <div class="cd-overlay"></div>
 	
 

@@ -57,12 +57,22 @@
                                     <li>Customer Rating : </li>
                                     <li>
                                          <?php
-                                         for($x=1;$x<=$finalReview;$x++)
+                                         if($finalReview==1)
                                          {
-                                         ?>
-                                           <i class="fa fa-star customerStar"></i> 
-                                         <?php
+                                           ?>
+                                             Not rated yet
+                                           <?php
                                          }
+                                         else
+                                         {
+                                             for($x=1;$x<=$finalReview;$x++)
+                                             {
+                                             ?>
+                                               <i class="fa fa-star customerStar"></i> 
+                                             <?php
+                                             }
+                                         }
+                                         
                                          ?>
                                     </li>
                                     
@@ -150,6 +160,7 @@
                          $mobile_number=$userDetails[0]->mobile_number;
                          $alternate_mobile_number=$userDetails[0]->alternate_mobile_number;
                          $email=$userDetails[0]->email;
+                         $booking_availability=$userDetails[0]->booking_availability;
                          $entry_fee_per_person=$userDetails[0]->entry_fee_per_person;
                          if(empty($waterpark_address))
                          {
@@ -170,8 +181,41 @@
                            $entry_fee_per_person='<i class="fa fa-inr"></i> '.$entry_fee_per_person .' / person';
                          }
                         ?>
-                        <div class="col-md-4 col-sm-6 col-xs-12 bg-1" style="padding: 2%;">
-                            <div class="contact-details">
+                        <div class="col-md-4 col-sm-6 col-xs-12" >
+                            <div class="contact-details bg-1">
+                                <div class="contact-title" style="padding: 2%;">
+                                    <h5 style="margin-bottom: 7px;font-size: 20px;margin-top: 7px;">Booking Availability   : 
+                                      <span id="booking_availability"> 
+                                          <?php
+                                              switch($booking_availability)
+                                              {
+                                                case "1":
+                                                   ?>
+                                                     <a onclick="changeStatus('OFF')" class="btn btn-sm btn-success pull-right" style="font-size: 13px;padding: 0px 15px;height: 25px;line-height: 24px;">ON</a>
+                                                   <?php
+                                                   $txtMsg="User can book ticket online for your park.";
+                                                   $color="green";
+                                                break;
+
+                                                case "2":
+                                                   ?>
+                                                     <a onclick="changeStatus('ON')"  class="btn btn-sm btn-danger pull-right"  style="font-size: 13px;padding: 0px 15px;height: 25px;line-height: 24px;">OFF</a>
+                                                   <?php
+                                                   $txtMsg="Online ticket booking is OFF for your park.";
+                                                   $color="red";
+                                                break;
+                                              }
+
+                                          ?>
+                                      </span>
+                                    </h5>
+                                    <p id="booking_availability_text" style="font-size:12px;text-align:center;margin-bottom: 0px;color:<?php echo $color; ?>"><?php echo $txtMsg; ?></p>
+                                   </div>
+                                </div>
+
+                             <div style="clear:both"></div>
+
+                             <div class="contact-details bg-1" style="padding: 5%;margin-top: 10px;">
                                 <div class="contact-title">
                                     <h5>Contact Details</h5>
                                     <p><i class="fa fa-home"></i> <?php echo $waterpark_address; ?> ,<?php echo $userDetails[0]->waterpark_city; ?>,<?php echo $userDetails[0]->waterpark_state; ?> </p>
@@ -310,6 +354,42 @@
     </div>
 	
 	<?php $this->load->view('front/common/js.php'); ?>
+
+    <script type="text/javascript">
+        function changeStatus(act)
+            {   
+             if (confirm('Are you sure you want to ' + act + ' this?')) {
+                 
+                 var base_url='<?php echo base_url(); ?>';
+                 var md="booking_availability";
+                 
+                 $.ajax({
+                     type: "GET",
+                     url: base_url + "merchant/statusToggle", 
+                     data: { mode : md , action : act},
+                     dataType: "text",  
+                     cache:false,
+                     success: 
+                          function(data){
+                            $('#booking_availability').html(data);  //as a debugging message.
+                            switch(act)
+                            {
+                                case "ON":
+                                   $('#booking_availability_text').html('User can book ticket online for your park');
+                                   $('#booking_availability_text').css('color','green');
+                                break;
+                                
+                                case "OFF":
+                                   $('#booking_availability_text').html('Online ticket booking is OFF for your park.');
+                                   $('#booking_availability_text').css('color','red');
+                                break;
+                            }
+                            
+                          }
+                      });// you have missed this bracket
+               }
+            }
+    </script>
 	
 </body>
 </html>

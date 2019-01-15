@@ -19,14 +19,39 @@
       
 	  <?php $this->load->view('front/common/header.php'); ?>
 	  
+       
         <div class="slider-area">
         <div class="slider-container overlay home-2" >
             <div id="mainSlider" class="nivoSlider slider-image">
+                <?php 
+                if (count($sliderimage))
+                { 
+                    $i=1; 
+                    foreach($sliderimage as $image) {
+                ?>
+
+                     <img src="<?php echo base_url(); ?>assets/front/uploads/slider/<?php echo $image->image; ?>" alt="<?php echo $siteDetails['companyData']['0']->company_name; ?>" title="#htmlcaption<?php echo $i; ?>"/>
+
+                <?php  $i++; 
+                }
+            }
+            else
+                { ?>
                 <img src="<?php echo base_url(); ?>assets/front/images/banner-2.jpg" alt="" title="#htmlcaption1"/>
                 <img src="<?php echo base_url(); ?>assets/front/images/banner-2.jpg" alt="" title="#htmlcaption2"/>
                 <img src="<?php echo base_url(); ?>assets/front/images/banner-3.jpg" alt="" title="#htmlcaption3"/>
+                <?php }  ?>
+               
+
             </div>
-            <div id="htmlcaption1" class="nivo-html-caption slider-caption-1">
+
+             <?php 
+                if (count($sliderimage))
+                {   
+                    $i=1; 
+                    foreach($sliderimage as $rw) {
+                ?>
+        <div id="htmlcaption<?php echo  $i; ?>" class="nivo-html-caption slider-caption-1">
                <div class="display-table">
                     <div class="display-tablecell">
                         <div class="container ">
@@ -34,82 +59,39 @@
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="slide1-text">
                                         <div class="middle-text">
-                                            <div class="title-1 wow fadeUp" data-wow-duration="0.9s" data-wow-delay="0s">
+                                           <!--  <div class="title-1 wow fadeUp" data-wow-duration="0.9s" data-wow-delay="0s">
                                                 <h3>WANT TO BOOK WATER PARK TICKET?</h3>
-                                            </div>	
+                                            </div>  --> 
                                             <div class="title-2 wow fadeUp" data-wow-duration="1.9s" data-wow-delay="0.1s">
-                                                <h1><span>WATER HUNT</span> SOLVE <br> YOUR PROBLEMS</h1>
-                                            </div>	
+                                                <h1><?php echo $rw->title; ?></h1>
+                                            </div>  
                                             <div class="desc wow fadeUp" data-wow-duration="1.2s" data-wow-delay="0.2s">
-                                                <p>We have a lot of water parks. <br> You want to choose and book any water park</p>
+                                               <?php
+												if($rw->description!="")
+												{
+												?>
+                                                <p><?php echo $rw->description; ?></p>
+												<?php
+												  }
+												?>
                                             </div>
                                             <div class="contact-us wow fadeUp" data-wow-duration="1.3s" data-wow-delay=".5s">
-                                                <a href="#">BOOK NOW</a>
+                                               <!--  <a href="#">BOOK NOW</a> -->
                                             </div>
-                                        </div>	
+                                        </div>  
                                     </div>
                                 </div>
-                            </div>	
+                            </div>  
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="htmlcaption2" class="nivo-html-caption slider-caption-1">
-                <div class="display-table">
-                    <div class="display-tablecell">
-                        <div class="container ">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <div class="slide1-text">
-                                        <div class="middle-text">
-                                            <div class="title-1 wow fadeUp" data-wow-duration="0.9s" data-wow-delay="0s">
-                                                <h3>WANT TO BOOK WATER PARK TICKET?</h3>
-                                            </div>	
-                                            <div class="title-2 wow fadeUp" data-wow-duration="1.9s" data-wow-delay="0.1s">
-                                                <h1><span>WATER HUNT</span> SOLVE <br> YOUR PROBLEMS</h1>
-                                            </div>	
-                                            <div class="desc wow fadeUp" data-wow-duration="1.2s" data-wow-delay="0.2s">
-                                                <p>We have a lot of water parks. <br> You want to choose and book any water park</p>
-                                            </div>
-                                            <div class="contact-us wow fadeUp" data-wow-duration="1.3s" data-wow-delay=".5s">
-                                                <a href="#">BOOK NOW</a>
-                                            </div>
-                                        </div>	
-                                    </div>
-                                </div>
-                            </div>	
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="htmlcaption3" class="nivo-html-caption slider-caption-1">
-                <div class="display-table">
-                    <div class="display-tablecell">
-                        <div class="container ">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <div class="slide1-text">
-                                        <div class="middle-text">
-                                            <div class="title-1 wow fadeUp" data-wow-duration="0.9s" data-wow-delay="0s">
-                                                <h3>WANT TO BOOK WATER PARK TICKET?</h3>
-                                            </div>	
-                                            <div class="title-2 wow fadeUp" data-wow-duration="1.9s" data-wow-delay="0.1s">
-                                                <h1><span>WATER HUNT</span> SOLVE <br> YOUR PROBLEMS</h1>
-                                            </div>	
-                                            <div class="desc wow fadeUp" data-wow-duration="1.2s" data-wow-delay="0.2s">
-                                                <p>We have a lot of water parks. <br> You want to choose and book any water park</p>
-                                            </div>
-                                            <div class="contact-us wow fadeUp" data-wow-duration="1.3s" data-wow-delay=".5s">
-                                                <a href="#">BOOK NOW</a>
-                                            </div>
-                                        </div>		
-                                    </div>
-                                </div>
-                            </div>	
-                        </div>
-                    </div>
-                </div>
-            </div>
+                     
+                <?php  $i++; 
+                }
+            }
+			?>
+            
         </div>
         <!--Find home area start-->
             <div class="finde-home-postion">
@@ -153,7 +135,7 @@
                                                 <select class="selectpicker" name="merchant_id" title="Select Park" data-hide-disabled="true" data-live-search="true" required>
                                                     <?php
                                                     $tblMerchants=$this->db->dbprefix.'merchants';
-                                                    $getCity=$this->Admin_model->getQuery("SELECT DISTINCT waterpark_city FROM $tblMerchants WHERE status='1'");
+                                                    $getCity=$this->Admin_model->getQuery("SELECT DISTINCT waterpark_city FROM $tblMerchants WHERE status='1' and `booking_availability`='1'");
                                                     foreach($getCity as $crt)
                                                     {
                                                         $ctyNm=$crt->waterpark_city;
@@ -709,141 +691,52 @@
                 </div>
                 <div class="row">
                     <div class="happy-client-list">
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p> Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>James Bond, <span>CEO</span></h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>Nirob Khan, <span>COO</span></h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>Lara Craft, <span>CEO</span></h6> 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>Zenefer Lopez, <span>CEO</span></h6> 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>James Bond, <span>CEO</span></h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>Nirob Khan, <span>COO</span></h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>Lara Craft, <span>CEO</span></h6> 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="client-reveiw">
-                                <div class="review-quote">
-                                    <i class="fa fa-quote-right"></i>
-                                </div>
-                                <div class="review-desc">
-                                    <p>Water hunt is the best theme for elit sed do od tempor dolor sit amet conse tetur adipiscingit</p>
-                                </div>
-                                <div class="happy-client-name">
-                                    <h6>Zenefer Lopez, <span>CEO</span></h6> 
-                                </div>
-                            </div>
-                        </div>
+					
+                         <?php foreach($testimonial as $testimonials) {  ?>
+								<div class="col-md-3">
+									<div class="client-reveiw">
+										<div class="review-quote">
+											<i class="fa fa-quote-right"></i>
+										</div>
+										<div class="review-desc">
+											<p><?php echo  $testimonials->comment; ?></p>
+										</div>
+										<div class="happy-client-name">
+											<h6><?php echo  $testimonials->name; ?></h6>
+										</div>
+									</div>
+								</div>
+								<?php 
+								}
+								?>
                     </div>
                 </div>
             </div>
         </div>
         
+         <?php if(count($waterpark_brand)) {?>
         <div class="brand-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="brand-list">
+                            
+                           <?php foreach($waterpark_brand as $parkimage) {?>
                             <div class="single-brand">
-                                <a href="#"><img src="<?php echo base_url(); ?>assets/front/images/water-parks/anandi.png" alt="" style="height:100px"></a>
+                                <a href="#"><img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo  $parkimage->waterpark_logo; ?>" alt="" style="height:100px; "></a>
                             </div>
-                            <div class="single-brand">
-                                <a href="#"><img src="<?php echo base_url(); ?>assets/front/images/water-parks/dreamworld.png" alt="" style="height:100px"></a>
-                            </div>
-                            <div class="single-brand">
-                                <a href="#"><img src="<?php echo base_url(); ?>assets/front/images/water-parks/nilansh.png" style="height:100px" alt=""></a>
-                            </div>
-                            <div class="single-brand">
-                                <a href="#"><img src="<?php echo base_url(); ?>assets/front/images/water-parks/swaraaj.png" alt="" style="height:100px"></a>
-                            </div>
-							<div class="single-brand">
-                                <a href="#"><img src="<?php echo base_url(); ?>assets/front/images/water-parks/dream-world.png" alt="" style="height:100px"></a>
-                            </div>
+
+                        <?php } ?>
+                            
+
+
                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+         <?php } ?>
         
         <?php $this->load->view('front/common/footer.php'); ?>
 		

@@ -64,7 +64,7 @@
                                             </div>
                                             <button type="submit" class="btn btn-success btn-block" name="signin">Login</button>
                                           <!--   <a href="forgot.html" class="display-block text-center m-t-md text-sm">Forgot Password?</a> -->
-                                            <p class="text-center m-t-xs text-sm">Do not have an account?</p>
+                                           
                                             <!-- <a href="register.html" class="btn btn-default btn-block m-t-md">Create an account</a> -->
                                         </form>
                                         <p class="text-center m-t-xs text-sm"><?php echo date('Y');?> &copy; <?php echo $siteDetails['0']->company_name; ?></p>

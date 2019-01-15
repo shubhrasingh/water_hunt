@@ -80,6 +80,7 @@
                            <div class="agent-funt-fact">
                                         <div class="row">
                                             <div class="col-md-3 col-sm-3 col-xs-12">
+                                               <a href="<?php echo base_url(); ?>user/bookings"> 
                                                 <div class="singe-fun-fact dashboardCount">
                                                     <div class="fun-head">
                                                         <div class="fun-icon">
@@ -93,6 +94,7 @@
                                                         <p>Booked Tickets</p>
                                                     </div>
                                                 </div>
+                                               </a> 
                                             </div>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <div class="singe-fun-fact dashboardCount">
@@ -110,6 +112,7 @@
                                                 </div>
                                             </div>
                                              <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <a href="<?php echo base_url(); ?>user/enquiries"> 
                                                 <div class="singe-fun-fact dashboardCount">
                                                     <div class="fun-head">
                                                         <div class="fun-icon">
@@ -123,6 +126,7 @@
                                                         <p>Total Enquiries</p>
                                                     </div>
                                                 </div>
+                                               </a> 
                                             </div>
                                         </div>
                             </div>

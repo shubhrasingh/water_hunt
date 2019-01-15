@@ -6,7 +6,7 @@
         <script src="<?php echo base_url(); ?>assets/admin/plugins/bootstrap/js/bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/admin/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/admin//plugins/switchery/switchery.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/admin/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+        <script src="<?php echo base_url(); ?>assets/admin/plugins/uniform/js/jquery.uniform.standalone.js"></script>>
         <script src="<?php echo base_url(); ?>assets/admin/plugins/offcanvasmenueffects/js/classie.js"></script>
         <script src="<?php echo base_url(); ?>assets/admin/plugins/waves/waves.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/admin/plugins/3d-bold-navigation/js/main.js"></script>

@@ -56,7 +56,9 @@
                                 }
                                 ?>
 
-
+                           <div id="msgDivAjax">
+                            
+                       </div>
 
                     </div>
                     <div class="row">
@@ -148,16 +150,9 @@
                                                 
                                                 <td>
                                                     <a href="<?php echo  base_url(); ?>admin/edit-gallery/<?php echo $value->id; ?>/<?php echo  $merchants[0]->id; ?>" class=" btn btn-xs btn-success"><i class="fa fa-edit"></i></a>
+                                                    
                                                     <a href="javascript:void();" onclick="delData('gallery','<?php echo $value->id; ?>')"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-                                                       <!-- <?php echo  base_url(); ?>admin/delete_gallery/<?php echo $value->id;?> -->
-                                                    <div class="statuofrow<?php echo $value->id;?>">
-                                                        <br/>
-                                                        <?php  if($value->status=='0') {?>
-                                                     <button onclick="changeStatus(<?php echo $value->id;?>,'gallery')" class="btn btn-xs btn-info">Deactive</button>
-                                                    <?php }else{?> 
-                                                   <button onclick="changeStatus(<?php echo $value->id;?>,'gallery')" class="btn btn-xs btn-info">Active</button>
-                                                    <?php }?>
-                                                    </div>
+                                                  
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -190,8 +185,17 @@
                     url: '<?php echo base_url(); ?>admin/statusTogg',
                     data: {id: id,table:table},
                     success: function (ht) { 
-                        //alert(ht); 
-                      $('.statuofrow'+id+' button').html(ht); 
+                       if (ht=='Active') {
+                             $('.statuofrow'+id+' button').removeClass("btn-danger");
+                             $('.statuofrow'+id+' button').addClass("btn-info");
+                             $('.statuofrow'+id+' button').html(ht);
+                          }
+                          if(ht=='Deactive')
+                          {
+                             $('.statuofrow'+id+' button').removeClass("btn-info");
+                             $('.statuofrow'+id+' button').addClass("btn-danger");
+                             $('.statuofrow'+id+' button').html(ht);
+                          }
                     }
                   });
            }
@@ -213,6 +217,7 @@ function delData(tbl,rowid)
               function(data){
                // alert(data); 
                $('#row_' + rowid).remove(); 
+               $('#msgDivAjax').html('<div class="alert alert-success background-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Deleted Successfully</div>');
               }
           });
 

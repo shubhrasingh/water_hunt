@@ -55,7 +55,7 @@
                                 }
                                 ?>
 
-
+                         <div id="msgDivAjax"></div>
 
                     </div>
                     <div class="row">
@@ -90,7 +90,7 @@
                                         <tbody>
                                              
                                              <?php   foreach ($events as $key => $value) { ?>
-                                            <tr>
+                                            <tr id="row_<?php echo $value->id;  ?>" >
                                                 <td>
                                                     <?php $mrid=$value->merchant_id; 
 
@@ -106,7 +106,7 @@
                                                 <td><?php echo  $value->entry_fee_per_person; ?></td>
                                                 <td>
                                                    <a href="<?php echo  base_url(); ?>admin/edit-event/<?php echo $value->id;?>" class=" btn btn-xs btn-success"><i class="fa fa-edit"></i></a>
-                                                    <a href="<?php echo  base_url(); ?>admin/delete_merchant/<?php echo $value->id;?>"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                                                <a href="javascript:void();" onclick="delData('merchants_events',<?php echo  $value->id; ?>)"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                                                     
 
                                                    <!--  <a href="#" class="btn btn-xs btn-warning"><i class="fa fa-eye"></i></a> -->
@@ -114,7 +114,7 @@
                                                     <div class="statuofrow<?php echo $value->id;?>">
                                                         <br/>
                                                         <?php  if($value->status=='0') {?>
-                                             <button onclick="changeStatus(<?php echo $value->id;?>,'merchants_events')" class="btn btn-xs btn-info">Deactive</button>
+                                             <button onclick="changeStatus(<?php echo $value->id;?>,'merchants_events')" class="btn btn-xs btn-danger">Deactive</button>
                                                     <?php }else{?> 
                                              <button onclick="changeStatus(<?php echo $value->id;?>,'merchants_events')" class="btn btn-xs btn-info">Active</button>
                                                     <?php }?>
@@ -156,10 +156,43 @@
                     data: {id: id,table:table},
                     success: function (ht) { 
 
-                      $('.statuofrow'+id+' button').html(ht); 
+                       
+                      if (ht=='Active') {
+                         $('.statuofrow'+id+' button').removeClass("btn-danger");
+                         $('.statuofrow'+id+' button').addClass("btn-info");
+                         $('.statuofrow'+id+' button').html(ht);
+                      }
+                      if(ht=='Deactive')
+                      {
+                         $('.statuofrow'+id+' button').removeClass("btn-info");
+                         $('.statuofrow'+id+' button').addClass("btn-danger");
+                         $('.statuofrow'+id+' button').html(ht);
+                      }
+
                     }
                   });
             }
+
+            function delData(tbl,rowid)
+            {   
+                
+             if (confirm('Are you sure you want to delete this?')) {
+                 var base_url='<?php echo  base_url(); ?>';
+                 $.ajax({
+                     type: "post",
+                     url: base_url + "admin/deleteRecord", 
+                     data: { id: rowid , table : tbl},
+                     success: 
+                          function(data){
+                          // alert(data); 
+                           $('#row_' + rowid).remove(); 
+                           $('#msgDivAjax').html('<div class="alert alert-success background-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Deleted Successfully</div>');
+                          }
+                      });
+               }
+            }
+
+
         </script>
 
 

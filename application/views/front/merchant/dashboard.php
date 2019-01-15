@@ -57,12 +57,22 @@
                                     <li>Customer Rating : </li>
                                     <li>
                                          <?php
-                                         for($x=1;$x<=$finalReview;$x++)
+                                         if($finalReview==1)
                                          {
-                                         ?>
-                                           <i class="fa fa-star customerStar"></i> 
-                                         <?php
+                                           ?>
+                                             Not rated yet
+                                           <?php
                                          }
+                                         else
+                                         {
+                                             for($x=1;$x<=$finalReview;$x++)
+                                             {
+                                             ?>
+                                               <i class="fa fa-star customerStar"></i> 
+                                             <?php
+                                             }
+                                         }
+                                         
                                          ?>
                                     </li>
                                     
@@ -111,6 +121,7 @@
                            <div class="agent-funt-fact">
                                         <div class="row">
                                             <div class="col-md-3 col-sm-3 col-xs-12">
+                                              <a href="<?php echo base_url(); ?>merchant/events">
                                                 <div class="singe-fun-fact dashboardCount">
                                                     <div class="fun-head">
                                                         <div class="fun-icon">
@@ -124,8 +135,10 @@
                                                         <p>Upcoming Events</p>
                                                     </div>
                                                 </div>
+                                              </a>
                                             </div>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
+                                              <a href="<?php echo base_url(); ?>merchant/events">
                                                 <div class="singe-fun-fact dashboardCount">
                                                     <div class="fun-head">
                                                         <div class="fun-icon">
@@ -139,8 +152,10 @@
                                                         <p>Past Events</p>
                                                     </div>
                                                 </div>
+                                               </a> 
                                             </div>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
+                                              <a href="<?php echo base_url(); ?>merchant/bookings">
                                                 <div class="singe-fun-fact dashboardCount">
                                                     <div class="fun-head">
                                                         <div class="fun-icon">
@@ -154,8 +169,10 @@
                                                         <p>Booked Tickets</p>
                                                     </div>
                                                 </div>
+                                               </a> 
                                             </div>
                                              <div class="col-md-3 col-sm-3 col-xs-12">
+                                               <a href="<?php echo base_url(); ?>merchant/reviews">
                                                 <div class="singe-fun-fact dashboardCount">
                                                     <div class="fun-head">
                                                         <div class="fun-icon">
@@ -169,12 +186,13 @@
                                                         <p>Customer's Comments</p>
                                                     </div>
                                                 </div>
+                                               </a> 
                                             </div>
                                         </div>
                                     </div>
                     </div>
 
-<div class="row">
+                    <div class="row">
                         <div class="col-md-8 col-md-offset-2">
                             <div class="section-title text-center">
                                 <h3>Ongoing <span>Events</span></h3>

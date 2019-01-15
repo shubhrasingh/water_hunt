@@ -54,7 +54,9 @@
                                 <?php
                                 }
                                 ?>
-
+                       <div id="msgDivAjax">
+                            
+                       </div>
 
 
                     </div>
@@ -90,7 +92,7 @@
                                         <tbody>
 
                                              <?php foreach ($merchants as $key => $value) { ?>
-                                            <tr>
+                                            <tr id="row_<?php echo $value->id;  ?>">
                                                 <td><?php echo  'Name:-'.$value->name.', Mobile :-'.$value->mobile_number.',<br/> Email:-'.$value->email.', Password :-'.$value->password; ?></td>
                                                 <td><?php echo  $value->waterpark_name; ?></td>
                                                 <td><img src="<?php echo base_url(); ?>assets/front/uploads/merchant-logo/<?php echo  $value->waterpark_logo; ?>" style="height: 63px;"></td>
@@ -98,9 +100,9 @@
                                                 <td><?php echo  $value->entry_fee_per_person; ?></td>
                                                 <td>
                                                     <a href="<?php echo  base_url(); ?>admin/edit-merchant/<?php echo $value->id;?>" class=" btn btn-xs btn-success"><i class="fa fa-edit"></i></a>
-                                                    <a href="<?php echo  base_url(); ?>admin/delete_merchant/<?php echo $value->id;?>"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-                                                    
 
+                                                    <a href="javascript:void();" onclick="delData('merchants',<?php echo  $value->id; ?>)"  class=" btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                                                    
                                                     <a href="javascript:void()"  onclick="gettimingSchedule(<?php echo  $value->id; ?>)"    data-toggle="modal" data-target="#myModal" class="btn btn-xs btn-warning"><i class="icon icon-clock"></i></a>
 
                                                     <a href="<?php echo  base_url(); ?>admin/add-gallery/<?php echo $value->id;?>" class="btn btn-xs btn-info"><i class="fa fa-file-image-o" aria-hidden="true"></i></a>
@@ -108,7 +110,7 @@
                                                     <div class="statuofrow<?php echo $value->id;?>">
                                                         <br/>
                                                         <?php  if($value->status=='0') {?>
-                                                     <button onclick="changeStatus(<?php echo $value->id;?>,'merchants')" class="btn btn-xs btn-info">Deactive</button>
+                                                     <button onclick="changeStatus(<?php echo $value->id;?>,'merchants')" class="btn btn-xs btn-danger">Deactive</button>
                                                     <?php }else{?> 
                                                    <button onclick="changeStatus(<?php echo $value->id;?>,'merchants')" class="btn btn-xs btn-info">Active</button>
                                                     <?php }?>
@@ -157,15 +159,42 @@
                     url: '<?php echo base_url(); ?>admin/statusTogg',
                     data: {id: id,table:table},
                     success: function (ht) { 
-                        //alert(ht); 
-                      $('.statuofrow'+id+' button').html(ht); 
-                    }
+                        if (ht=='Active') {
+                         $('.statuofrow'+id+' button').removeClass("btn-danger");
+                         $('.statuofrow'+id+' button').addClass("btn-info");
+                         $('.statuofrow'+id+' button').html(ht);
+                      }
+                      if(ht=='Deactive')
+                      {
+                         $('.statuofrow'+id+' button').removeClass("btn-info");
+                         $('.statuofrow'+id+' button').addClass("btn-danger");
+                         $('.statuofrow'+id+' button').html(ht);
+                      }
+                       
+                       }
                   });
             }
-
+           function delData(tbl,rowid)
+            {   
+                
+             if (confirm('Are you sure you want to delete this?')) {
+                 var base_url='<?php echo  base_url(); ?>';
+                 $.ajax({
+                     type: "post",
+                     url: base_url + "admin/deleteRecord", 
+                     data: { id: rowid , table : tbl},
+                     success: 
+                          function(data){
+                          // alert(data); 
+                           $('#row_' + rowid).remove(); 
+                           $('#msgDivAjax').html('<div class="alert alert-success background-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Deleted Successfully</div>');
+                          }
+                      });
+               }
+            }
             function gettimingSchedule(MerchantId)
             {
-              $.ajax({
+              $.ajax({  
                     type: 'post',
                     url: '<?php echo base_url(); ?>admin/getTimeSchedule',
                     data: {mId: MerchantId},

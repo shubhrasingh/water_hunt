@@ -57,12 +57,22 @@
                                     <li>Customer Rating : </li>
                                     <li>
                                          <?php
-                                         for($x=1;$x<=$finalReview;$x++)
+                                         if($finalReview==1)
                                          {
-                                         ?>
-                                           <i class="fa fa-star customerStar"></i> 
-                                         <?php
+                                           ?>
+                                             Not rated yet
+                                           <?php
                                          }
+                                         else
+                                         {
+                                             for($x=1;$x<=$finalReview;$x++)
+                                             {
+                                             ?>
+                                               <i class="fa fa-star customerStar"></i> 
+                                             <?php
+                                             }
+                                         }
+                                         
                                          ?>
                                     </li>
                                     
